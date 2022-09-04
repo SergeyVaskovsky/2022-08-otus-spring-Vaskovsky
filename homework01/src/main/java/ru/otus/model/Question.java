@@ -1,4 +1,4 @@
-package model;
+package ru.otus.model;
 
 import java.util.ArrayList;
 import java.util.List;

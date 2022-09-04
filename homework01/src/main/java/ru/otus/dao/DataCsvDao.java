@@ -1,9 +1,9 @@
-package dao;
+package ru.otus.dao;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import model.Answer;
-import model.Question;
+import ru.otus.model.Answer;
+import ru.otus.model.Question;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,18 +37,23 @@ public class DataCsvDao implements DataDao{
             Question question = null;
             for (String[] strings : lineInArray ) {
                 //Если вопрос то:
-                if ("q".equals(strings[0])) {
+                if (strings.length == 3 && "q".equals(strings[0])) {
                     question = new Question(
                             Integer.parseInt(strings[1]),
                             strings[2]);
                     questions.add(question);
                 //иначе, если ответ то:
-                } else if ("a".equals(strings[0]) && question.getId() == Integer.parseInt(strings[1])) {
+                } else if (
+                        strings.length == 5 &&
+                        "a".equals(strings[0]) &&
+                        question.getId() == Integer.parseInt(strings[1])) {
                     Answer answer = new Answer(
                             Integer.parseInt(strings[2]),
                             strings[3],
                             "t".equals(strings[4]));
                     question.getAnswers().add(answer);
+                } else {
+                    throw new RuntimeException(String.format("File %s has wrong format", dataFileName));
                 }
             }
         } catch (IOException e) {

@@ -1,7 +1,7 @@
-package service;
+package ru.otus.service;
 
-import dao.DataDao;
-import model.Question;
+import ru.otus.dao.DataDao;
+import ru.otus.model.Question;
 
 public class TestServiceImpl implements TestService {
 

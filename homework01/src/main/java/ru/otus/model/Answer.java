@@ -1,4 +1,4 @@
-package model;
+package ru.otus.model;
 
 public class Answer {
     private int id;

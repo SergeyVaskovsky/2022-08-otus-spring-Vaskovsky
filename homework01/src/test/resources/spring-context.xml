@@ -4,9 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="dataDao" class="ru.otus.dao.DataCsvDao">
-        <constructor-arg name="dataFileName" value="data.csv"/>
-    </bean>
+    <bean id="dataDao" class="ru.otus.DataForTestDao"></bean>
 
     <bean id="testService" class="ru.otus.service.TestServiceImpl">
         <constructor-arg name="dao" ref="dataDao"/>

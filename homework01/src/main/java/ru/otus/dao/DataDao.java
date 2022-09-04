@@ -1,6 +1,6 @@
-package dao;
+package ru.otus.dao;
 
-import model.Question;
+import ru.otus.model.Question;
 
 public interface DataDao {
     Question findByNum(int num);

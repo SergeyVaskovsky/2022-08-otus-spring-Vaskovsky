@@ -1,6 +1,6 @@
-package service;
+package ru.otus.service;
 
-import model.Question;
+import ru.otus.model.Question;
 
 public interface TestService {
     Question findByNum(int num);
