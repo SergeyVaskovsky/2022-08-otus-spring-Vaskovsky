@@ -6,7 +6,7 @@ import ru.otus.model.Question;
 public class DataForTestDao implements DataDao {
 
     @Override
-    public Question findByNum(int id) {
+    public Question findById(int id) {
         switch (id) {
             case 1: return new Question(1, "Question 1");
             default: throw new RuntimeException(String.format("Question #%d not found", id));
@@ -14,7 +14,7 @@ public class DataForTestDao implements DataDao {
     }
 
     @Override
-    public int questionCount() {
+    public int questionsCount() {
         return 1;
     }
 

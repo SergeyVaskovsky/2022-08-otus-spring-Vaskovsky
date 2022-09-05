@@ -12,13 +12,13 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Question findByNum(int num){
-        return dao.findByNum(num);
+    public Question findById(int id){
+        return dao.findById(id);
     }
 
     @Override
-    public int questionCount() {
-        return dao.questionCount();
+    public int questionsCount() {
+        return dao.questionsCount();
     }
 
 }

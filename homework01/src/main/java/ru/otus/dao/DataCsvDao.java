@@ -15,7 +15,7 @@ public class DataCsvDao implements DataDao{
     private List<Question> questions = new ArrayList<>();
     
     @Override
-    public Question findByNum(int id) {
+    public Question findById(int id) {
         return questions
                 .stream()
                 .filter(question -> question.getId() == id)
@@ -24,7 +24,7 @@ public class DataCsvDao implements DataDao{
     }
 
     @Override
-    public int questionCount() {
+    public int questionsCount() {
         return questions.size();
     }
 
@@ -46,12 +46,14 @@ public class DataCsvDao implements DataDao{
                 } else if (
                         strings.length == 5 &&
                         "a".equals(strings[0]) &&
+                        question != null &&
                         question.getId() == Integer.parseInt(strings[1])) {
                     Answer answer = new Answer(
                             Integer.parseInt(strings[2]),
                             strings[3],
                             "t".equals(strings[4]));
                     question.getAnswers().add(answer);
+                //иначе - исключение
                 } else {
                     throw new RuntimeException(String.format("File %s has wrong format", dataFileName));
                 }

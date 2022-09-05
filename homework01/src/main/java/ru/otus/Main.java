@@ -15,8 +15,8 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        for (int i = 1; i <= service.questionCount(); i++) {
-            Question question = service.findByNum(i);
+        for (int i = 1; i <= service.questionsCount(); i++) {
+            Question question = service.findById(i);
             System.out.printf("#%d %s%n", question.getId(), question.getQuestionText());
             question.getAnswers().forEach(
                     answer -> System.out.printf("  #%d %s%n", answer.getId(), answer.getAnswerText()));

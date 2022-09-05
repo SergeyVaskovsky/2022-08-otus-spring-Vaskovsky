@@ -24,7 +24,7 @@ public class TestServiceImplTest {
     @DisplayName("Finding test by id is correct")
     @Test
     public void shouldCorrectFindTestById() {
-        Question question = testService.findByNum(1);
+        Question question = testService.findById(1);
         assertEquals(1, question.getId());
         assertEquals("Question 1", question.getQuestionText());
     }
@@ -33,7 +33,7 @@ public class TestServiceImplTest {
     @Test
     public void shouldInCorrectFindTestById() {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            Question question = testService.findByNum(2);
+            Question question = testService.findById(2);
         });
         assertEquals("Question #2 not found", exception.getMessage());
     }

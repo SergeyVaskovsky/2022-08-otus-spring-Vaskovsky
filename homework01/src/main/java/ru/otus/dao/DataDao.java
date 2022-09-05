@@ -3,6 +3,6 @@ package ru.otus.dao;
 import ru.otus.model.Question;
 
 public interface DataDao {
-    Question findByNum(int num);
-    int questionCount();
+    Question findById(int id);
+    int questionsCount();
 }
