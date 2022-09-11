@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="dataDao" class="ru.otus.dao.DataCsvDao">
-        <constructor-arg name="dataFileName" value="data.csv"/>
+    <bean id="dataDao" class="ru.otus.dao.QuestionCsvDao">
+        <constructor-arg name="testFileName" value="data.csv"/>
     </bean>
 
-    <bean id="testService" class="ru.otus.service.TestServiceImpl">
+    <bean id="questionService" class="ru.otus.service.QuestionServiceImpl">
         <constructor-arg name="dao" ref="dataDao"/>
+    </bean>
+
+    <!--К сожалению, напрямую подставить эти параметры в конструктор у меня не получилось-->
+    <util:constant id="out" static-field="java.lang.System.out"/>
+    <util:constant id="in" static-field="java.lang.System.in"/>
+
+    <bean id="ioServiceStreams" class="ru.otus.service.IOServiceStreams">
+        <constructor-arg name="outputStream" ref="out"/>
+        <constructor-arg name="inputStream" ref="in"/>
+    </bean>
+
+
+    <bean id="testService" class="ru.otus.service.TestServiceImpl">
+        <constructor-arg name="questionService" ref="questionService"/>
+        <constructor-arg name="ioServiceStreams" ref="ioServiceStreams"/>
     </bean>
 
 </beans>

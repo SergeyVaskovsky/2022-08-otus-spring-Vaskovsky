@@ -4,6 +4,6 @@ import ru.otus.model.Question;
 
 import java.util.List;
 
-public interface TestService {
-    void test();
+public interface QuestionService {
+    List<Question> findAll();
 }

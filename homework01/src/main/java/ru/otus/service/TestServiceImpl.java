@@ -1,24 +1,26 @@
 package ru.otus.service;
 
-import ru.otus.dao.DataDao;
+import ru.otus.exception.MismatchInput;
 import ru.otus.model.Question;
+import java.util.Scanner;
 
-public class TestServiceImpl implements TestService {
+public class TestServiceImpl implements TestService{
 
-    private final DataDao dao;
+    private final QuestionService questionService;
+    private final IOServiceStreams ioServiceStreams;
 
-    public TestServiceImpl(DataDao dao) {
-        this.dao = dao;
+    public TestServiceImpl(QuestionService questionService, IOServiceStreams ioServiceStreams) {
+        this.questionService = questionService;
+        this.ioServiceStreams = ioServiceStreams;
     }
 
     @Override
-    public Question findById(int id){
-        return dao.findById(id);
+    public void test() {
+        for (Question question: questionService.findAll()) {
+            ioServiceStreams.outputString(String.format("#%d %s", question.getId(), question.getQuestionText()));
+            question.getAnswers().forEach(
+                    answer -> ioServiceStreams.outputString(String.format("  #%d %s", answer.getId(), answer.getAnswerText())));
+            ioServiceStreams.readInt();
+        }
     }
-
-    @Override
-    public int questionsCount() {
-        return dao.questionsCount();
-    }
-
 }

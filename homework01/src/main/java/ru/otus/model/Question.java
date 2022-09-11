@@ -24,4 +24,8 @@ public class Question {
     public List<Answer> getAnswers() {
         return answers;
     }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
 }
