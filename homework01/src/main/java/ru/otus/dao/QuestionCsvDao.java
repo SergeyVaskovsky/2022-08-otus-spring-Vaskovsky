@@ -29,7 +29,10 @@ public class QuestionCsvDao implements QuestionDao {
         List<TestDto> beans;
 
         try (InputStream resource = this.getClass().getClassLoader().getResourceAsStream(testFileName)) {
-                 beans =
+                if (resource == null) {
+                    throw new ResourceIsNull("Cannot get resource from the file with the filename " + testFileName);
+                }
+                beans =
                     new CsvToBeanBuilder(new InputStreamReader(resource))
                             .withType(TestDto.class)
                             .build()
