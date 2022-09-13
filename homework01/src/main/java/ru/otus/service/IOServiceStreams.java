@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class IOServiceStreams implements InputService, OutputService{
+public class IOServiceStreams implements IOService {
 
     private static final String WRONG_INPUT = "wrong";
     private final PrintStream output;
@@ -19,21 +19,21 @@ public class IOServiceStreams implements InputService, OutputService{
 
     @Override
     public int readInt() {
-        String result = getInput();
-        while (WRONG_INPUT.equals(result)){
-            outputString("It is wrong input. Try again");
+        String inputString;
+        inputString = getInput();
+        if (WRONG_INPUT.equals(inputString)) {
             input.next();
-            result = getInput();
+            throw new MismatchInput("Input is not an integer");
         }
-        return Integer.parseInt(result);
-    }
-
-    private String getInput() {
-        return input.hasNextInt() ? input.next() : WRONG_INPUT;
+        return Integer.parseInt(inputString);
     }
 
     @Override
     public void outputString(String s) {
         output.println(s);
+    }
+
+    private String getInput() {
+        return input.hasNextInt() ? input.next() : WRONG_INPUT;
     }
 }

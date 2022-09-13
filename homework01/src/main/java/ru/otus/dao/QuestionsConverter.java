@@ -1,16 +1,15 @@
-package ru.otus.service;
+package ru.otus.dao;
 
 import ru.otus.model.Answer;
 import ru.otus.model.Question;
 import ru.otus.model.dto.TestDto;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConverterService {
+public class QuestionsConverter {
     public Question convert(TestDto dto) {
         Question question = new Question(Integer.parseInt(dto.getNumber()), dto.getText());
         for(String answerIdDto : dto.getAnswer().keySet()) {

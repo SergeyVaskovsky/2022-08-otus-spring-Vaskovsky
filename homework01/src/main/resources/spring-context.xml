@@ -7,8 +7,11 @@
         http://www.springframework.org/schema/util
         http://www.springframework.org/schema/util/spring-util.xsd">
 
+    <bean id="questionsConverter" class="ru.otus.dao.QuestionsConverter"></bean>
+
     <bean id="dataDao" class="ru.otus.dao.QuestionCsvDao">
         <constructor-arg name="testFileName" value="data.csv"/>
+        <constructor-arg name="questionsConverter" ref="questionsConverter"/>
     </bean>
 
     <bean id="questionService" class="ru.otus.service.QuestionServiceImpl">
@@ -23,7 +26,6 @@
         <constructor-arg name="outputStream" ref="out"/>
         <constructor-arg name="inputStream" ref="in"/>
     </bean>
-
 
     <bean id="testService" class="ru.otus.service.TestServiceImpl">
         <constructor-arg name="questionService" ref="questionService"/>

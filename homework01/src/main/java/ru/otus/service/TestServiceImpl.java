@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class TestServiceImpl implements TestService{
 
     private final QuestionService questionService;
-    private final IOServiceStreams ioServiceStreams;
+    private final IOService ioServiceStreams;
 
     public TestServiceImpl(QuestionService questionService, IOServiceStreams ioServiceStreams) {
         this.questionService = questionService;
@@ -20,7 +20,15 @@ public class TestServiceImpl implements TestService{
             ioServiceStreams.outputString(String.format("#%d %s", question.getId(), question.getQuestionText()));
             question.getAnswers().forEach(
                     answer -> ioServiceStreams.outputString(String.format("  #%d %s", answer.getId(), answer.getAnswerText())));
-            ioServiceStreams.readInt();
+            while (true) {
+                try {
+                    ioServiceStreams.readInt();
+                    break;
+                } catch (MismatchInput ex) {
+                    ioServiceStreams.outputString("It is wrong input. Try again");
+
+                }
+            }
         }
     }
 }
