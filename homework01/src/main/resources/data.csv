@@ -1,0 +1,6 @@
+question_number,question_text,answer 1,answer 1,answer 1,answer 2,answer 2,answer 2,answer 3,answer 3,answer 3
+1,How many planets are there in the solar system?,1,7,f,2,8,t,3,9,f
+2,How many oceans are there on the Earth?,1,4,f,2,5,t,3,6,f
+3,How many presidents were there in the USSR?,1,0,f,2,1,t,3,2,f
+4,How much did the most expensive medicine cost in 2020?,1,150 000 rub,f,2,1 500 000 rub,f,3,150 000 000 rub,t
+5,What is the operating system better for an user?,1,macOS,t,2,Windows,f,3,Linux,f
