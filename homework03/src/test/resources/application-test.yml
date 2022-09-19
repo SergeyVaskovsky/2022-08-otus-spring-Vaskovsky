@@ -1,0 +1,9 @@
+application:
+  fileName: data.csv
+  score: 2
+  locale: ru_RU
+
+spring:
+  messages:
+    basename: "i18n/appmessages"
+    encoding: "UTF-8"

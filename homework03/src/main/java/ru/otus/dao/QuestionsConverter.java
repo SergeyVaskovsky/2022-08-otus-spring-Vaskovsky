@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class QuestionsConverter {
     public Question convert(TestDto dto) {
         Question question = new Question(Integer.parseInt(dto.getNumber()), dto.getText());
-        for(String answerIdDto : dto.getAnswer().keySet()) {
+        for (String answerIdDto : dto.getAnswer().keySet()) {
             List<String> answerDto = new ArrayList<>(dto
                     .getAnswer()
                     .get(answerIdDto));

@@ -8,7 +8,7 @@ public class Question {
     private final String questionText;
     private List<Answer> answers = new ArrayList<>();
 
-    public Question(int id, String text){
+    public Question(int id, String text) {
         this.id = id;
         this.questionText = text;
     }

@@ -26,18 +26,19 @@ public class QuestionCsvDao implements QuestionDao {
         this.testFileName = appConfig.getFileName();
         this.questionsConverter = questionsConverter;
     }
+
     @Override
-    public List<Question> findAll(){
+    public List<Question> findAll() {
         if (testFileName == null) {
             throw new ResourceIsNullException("The filename of the file with data for test is null");
         }
         List<TestDto> beans;
 
         try (InputStream resource = this.getClass().getClassLoader().getResourceAsStream(testFileName)) {
-                if (resource == null) {
-                    throw new ResourceIsNullException("Cannot get resource from the file with the filename " + testFileName);
-                }
-                beans =
+            if (resource == null) {
+                throw new ResourceIsNullException("Cannot get resource from the file with the filename " + testFileName);
+            }
+            beans =
                     new CsvToBeanBuilder<TestDto>(new InputStreamReader(resource))
                             .withType(TestDto.class)
                             .build()

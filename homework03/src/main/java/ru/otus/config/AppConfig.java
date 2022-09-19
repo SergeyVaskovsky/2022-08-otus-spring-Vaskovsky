@@ -32,28 +32,28 @@ public class AppConfig {
         return fileName;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public InputStream getInput() {
-        return input;
-    }
-
-    public PrintStream getOutput() {
-        return output;
-    }
-
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public void setScore(int score) {
         this.score = score;
     }
 
+    public InputStream getInput() {
+        return input;
+    }
+
     public void setInput(InputStream input) {
         this.input = input;
+    }
+
+    public PrintStream getOutput() {
+        return output;
     }
 
     public void setOutput(PrintStream output) {

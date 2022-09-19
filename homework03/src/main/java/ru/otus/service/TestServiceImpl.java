@@ -9,7 +9,7 @@ import ru.otus.model.Answer;
 import ru.otus.model.Question;
 
 @Service
-public class TestServiceImpl implements TestService{
+public class TestServiceImpl implements TestService {
 
     private final int score;
     private final QuestionService questionService;
@@ -31,7 +31,7 @@ public class TestServiceImpl implements TestService{
     public void test() {
         getName();
         int testScore = 0;
-        for (Question question: questionService.findAll()) {
+        for (Question question : questionService.findAll()) {
             while (true) {
                 try {
                     if (outputQuestion(question) == ioServiceStreams.readInt()) testScore++;
