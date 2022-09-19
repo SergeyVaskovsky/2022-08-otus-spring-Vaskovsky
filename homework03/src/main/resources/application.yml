@@ -1,0 +1,11 @@
+application:
+  fileName: data.csv
+  score: 3
+  locale: ru_RU
+  #input_for_fail: #{T(System).in}
+  #output: #{T(System).out}
+
+spring:
+  messages:
+    basename: "i18n/appmessages"
+    encoding: "UTF-8"
