@@ -1,24 +1,40 @@
 package ru.otus.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import ru.otus.dao.QuestionCsvDao;
+import ru.otus.dao.QuestionDao;
+import ru.otus.dao.QuestionsConverter;
+import ru.otus.service.IOService;
+import ru.otus.service.IOServiceStreams;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Locale;
 
 
-@ConfigurationProperties(prefix = "application")
+@ConfigurationProperties(prefix = "app")
 @Component
 public class AppConfig {
 
     private final static InputStream in = System.in;
     private final static PrintStream out = System.out;
-    private String fileName;
+    private String fileNamePattern;
     private int score;
     private InputStream input = in;
     private PrintStream output = out;
     private Locale locale;
+
+    @Bean
+    public QuestionDao questionCsvDao(QuestionsConverter questionsConverter) {
+        return new QuestionCsvDao(questionsConverter, String.format(fileNamePattern, locale.toString()));
+    }
+
+    @Bean
+    public IOService ioService() {
+        return new IOServiceStreams(out, in);
+    }
 
     public Locale getLocale() {
         return locale;
@@ -28,12 +44,12 @@ public class AppConfig {
         this.locale = locale;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFileNamePattern() {
+        return fileNamePattern;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFileNamePattern(String fileNamePattern) {
+        this.fileNamePattern = fileNamePattern;
     }
 
     public int getScore() {

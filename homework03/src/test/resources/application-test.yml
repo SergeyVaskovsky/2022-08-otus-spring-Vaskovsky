@@ -1,7 +1,7 @@
-application:
-  fileName: data.csv
+app-test:
+  fileNamePattern: data.csv
   score: 2
-  locale: ru_RU
+  locale: en
 
 spring:
   messages:

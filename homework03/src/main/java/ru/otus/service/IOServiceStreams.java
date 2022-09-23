@@ -1,31 +1,22 @@
 package ru.otus.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Service;
-import ru.otus.config.AppConfig;
 import ru.otus.exception.MismatchInputException;
 
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-@Service
-@PropertySource("classpath:application.yml")
 public class IOServiceStreams implements IOService {
 
     private static final String WRONG_INPUT = "wrong";
 
-
     private final PrintStream output;
-
 
     private final Scanner input;
 
-    @Autowired
-    public IOServiceStreams(
-            AppConfig appConfig) {
-        this.output = appConfig.getOutput();
-        this.input = new Scanner(appConfig.getInput());
+    public IOServiceStreams(PrintStream out, InputStream in) {
+        this.output = out;
+        this.input = new Scanner(in);
     }
 
     @Override

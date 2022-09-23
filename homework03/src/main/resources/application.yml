@@ -1,9 +1,7 @@
-application:
-  fileName: data.csv
+app:
+  fileNamePattern: data_%s.csv
   score: 3
   locale: ru_RU
-  #input_for_fail: #{T(System).in}
-  #output: #{T(System).out}
 
 spring:
   messages:

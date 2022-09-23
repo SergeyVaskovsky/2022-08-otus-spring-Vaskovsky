@@ -1,9 +1,6 @@
 package ru.otus.dao;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.otus.config.AppConfig;
 import ru.otus.exception.IOOrCloseException;
 import ru.otus.exception.ResourceIsNullException;
 import ru.otus.model.Question;
@@ -15,22 +12,20 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class QuestionCsvDao implements QuestionDao {
     private final String testFileName;
 
     private final QuestionsConverter questionsConverter;
 
-    @Autowired
-    public QuestionCsvDao(QuestionsConverter questionsConverter, AppConfig appConfig) {
-        this.testFileName = appConfig.getFileName();
+    public QuestionCsvDao(QuestionsConverter questionsConverter, String testFileName) {
+        this.testFileName = testFileName;
         this.questionsConverter = questionsConverter;
     }
 
     @Override
     public List<Question> findAll() {
         if (testFileName == null) {
-            throw new ResourceIsNullException("The filename of the file with data for test is null");
+            throw new ResourceIsNullException("The filename of the file with data for the test is null");
         }
         List<TestDto> beans;
 
