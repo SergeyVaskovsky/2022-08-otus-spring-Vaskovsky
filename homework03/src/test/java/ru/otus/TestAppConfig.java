@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
-@ConfigurationProperties(prefix = "app-test")
+@ConfigurationProperties(prefix = "app")
 @Component
 public class TestAppConfig {
 

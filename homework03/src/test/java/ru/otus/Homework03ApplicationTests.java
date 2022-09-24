@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
-import org.springframework.test.context.ActiveProfiles;
 import ru.otus.config.AppConfig;
 import ru.otus.dao.QuestionCsvDao;
 import ru.otus.dao.QuestionDao;
@@ -30,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = TestAppConfig.class)
 @ImportAutoConfiguration(MessageSourceAutoConfiguration.class)
-@ActiveProfiles("test")
 class Homework03ApplicationTests {
 
 	@Autowired

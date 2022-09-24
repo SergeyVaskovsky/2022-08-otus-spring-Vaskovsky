@@ -1,4 +1,4 @@
-app-test:
+app:
   fileNamePattern: data.csv
   score: 2
   locale: en
