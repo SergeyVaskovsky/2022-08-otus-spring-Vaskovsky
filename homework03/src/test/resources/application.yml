@@ -1,4 +1,4 @@
-app:
+prop:
   fileNamePattern: data.csv
   score: 2
   locale: en

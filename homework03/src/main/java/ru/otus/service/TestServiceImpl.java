@@ -1,9 +1,8 @@
 package ru.otus.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import ru.otus.config.AppConfig;
+import ru.otus.config.ScoreProvider;
 import ru.otus.exception.MismatchInputException;
 import ru.otus.model.Answer;
 import ru.otus.model.Question;
@@ -14,22 +13,23 @@ public class TestServiceImpl implements TestService {
     private final int score;
     private final QuestionService questionService;
     private final IOService ioService;
-    private final AppConfig appConfig;
-
-    private final MessageSource messageSource;
+    private final MessageSourceWrapper messageSourceWrapper;
 
     @Autowired
-    public TestServiceImpl(QuestionService questionService, IOService ioService, AppConfig appConfig, MessageSource messageSource) {
+    public TestServiceImpl(
+            QuestionService questionService,
+            IOService ioService,
+            ScoreProvider scoreProvider,
+            MessageSourceWrapper messageSourceWrapper) {
         this.questionService = questionService;
         this.ioService = ioService;
-        this.appConfig = appConfig;
-        score = appConfig.getScore();
-        this.messageSource = messageSource;
+        this.messageSourceWrapper = messageSourceWrapper;
+        this.score = scoreProvider.getScore();
     }
 
     @Override
     public void test() {
-        getName();
+        String studentName = getName();
         int testScore = 0;
         for (Question question : questionService.findAll()) {
             while (true) {
@@ -37,16 +37,16 @@ public class TestServiceImpl implements TestService {
                     if (outputQuestion(question) == ioService.readInt()) testScore++;
                     break;
                 } catch (MismatchInputException ex) {
-                    ioService.outputString(messageSource.getMessage("not.number", null, appConfig.getLocale()));
+                    ioService.outputString(messageSourceWrapper.getMessage("not.number", null));
 
                 }
             }
         }
 
         if (testScore >= score)
-            ioService.outputString(messageSource.getMessage("success.message", null, appConfig.getLocale()));
+            ioService.outputString(messageSourceWrapper.getMessage("success.message", null));
         else
-            ioService.outputString(messageSource.getMessage("fail.message", null, appConfig.getLocale()));
+            ioService.outputString(messageSourceWrapper.getMessage("fail.message", null));
     }
 
     private int outputQuestion(Question question) {
@@ -59,10 +59,11 @@ public class TestServiceImpl implements TestService {
         return rightAnswerId;
     }
 
-    private void getName() {
-        ioService.outputString(messageSource.getMessage("lastname", null, appConfig.getLocale()));
-        ioService.readString();
-        ioService.outputString(messageSource.getMessage("firstname", null, appConfig.getLocale()));
-        ioService.readString();
+    private String getName() {
+        ioService.outputString(messageSourceWrapper.getMessage("lastname", null));
+        String lastname = ioService.readString();
+        ioService.outputString(messageSourceWrapper.getMessage("firstname", null));
+        String firstname = ioService.readString();
+        return String.format("%s %s", lastname, firstname);
     }
 }

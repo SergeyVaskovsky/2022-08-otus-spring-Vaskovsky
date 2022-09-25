@@ -1,11 +1,13 @@
 package ru.otus.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.otus.exception.MismatchInputException;
 
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+@Service
 public class IOServiceStreams implements IOService {
 
     private static final String WRONG_INPUT = "wrong";
@@ -14,9 +16,10 @@ public class IOServiceStreams implements IOService {
 
     private final Scanner input;
 
-    public IOServiceStreams(PrintStream out, InputStream in) {
-        this.output = out;
-        this.input = new Scanner(in);
+    @Autowired
+    public IOServiceStreams(IOProvider ioProvider) {
+        this.output = ioProvider.getOutput();
+        this.input = new Scanner(ioProvider.getInput());
     }
 
     @Override
