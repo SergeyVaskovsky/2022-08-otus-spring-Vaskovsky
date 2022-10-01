@@ -37,16 +37,16 @@ public class TestServiceImpl implements TestService {
                     if (outputQuestion(question) == ioService.readInt()) testScore++;
                     break;
                 } catch (MismatchInputException ex) {
-                    ioService.outputString(messageSourceWrapper.getMessage("not.number", null));
+                    ioService.outputString(messageSourceWrapper.getMessage("not.number"));
 
                 }
             }
         }
 
         if (testScore >= score)
-            ioService.outputString(messageSourceWrapper.getMessage("success.message", null));
+            ioService.outputString(messageSourceWrapper.getMessage("success.message"));
         else
-            ioService.outputString(messageSourceWrapper.getMessage("fail.message", null));
+            ioService.outputString(messageSourceWrapper.getMessage("fail.message"));
     }
 
     private int outputQuestion(Question question) {
@@ -60,9 +60,9 @@ public class TestServiceImpl implements TestService {
     }
 
     private String getName() {
-        ioService.outputString(messageSourceWrapper.getMessage("lastname", null));
+        ioService.outputString(messageSourceWrapper.getMessage("lastname"));
         String lastname = ioService.readString();
-        ioService.outputString(messageSourceWrapper.getMessage("firstname", null));
+        ioService.outputString(messageSourceWrapper.getMessage("firstname"));
         String firstname = ioService.readString();
         return String.format("%s %s", lastname, firstname);
     }
