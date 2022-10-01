@@ -26,7 +26,7 @@ public class TestServiceFailTest {
     @Autowired
     private TestService testService;
 
-    @DisplayName("Test TestService success")
+    @DisplayName("Test TestService fail")
     @Test
     public void shouldPassTest() throws IOException {
         testService.test();
