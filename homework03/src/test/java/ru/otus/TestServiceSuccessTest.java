@@ -3,11 +3,13 @@ package ru.otus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import ru.otus.service.IOProvider;
+import ru.otus.service.IOProviderImpl;
 import ru.otus.service.TestService;
 
 import java.io.FileInputStream;
@@ -19,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class TestServiceSuccessTest {
@@ -39,7 +43,10 @@ public class TestServiceSuccessTest {
     static class NestedTestConfiguration {
         @Bean
         IOProvider ioProvider() throws FileNotFoundException {
-            return new IOProviderImplForTest(new PrintStream("output_success"), new FileInputStream("input_for_success"));
+            IOProvider ioProvider = Mockito.mock(IOProviderImpl.class);
+            when(ioProvider.getInput()).thenReturn(new FileInputStream("input_for_success"));
+            when(ioProvider.getOutput()).thenReturn(new PrintStream("output_success"));
+            return ioProvider;
         }
     }
 }
