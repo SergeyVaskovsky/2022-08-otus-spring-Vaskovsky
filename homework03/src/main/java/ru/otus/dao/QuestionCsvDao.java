@@ -17,28 +17,28 @@ import java.util.List;
 
 @Component
 public class QuestionCsvDao implements QuestionDao {
-    private final String testFileName;
 
+    private final FileNameProvider fileNameProvider;
     private final QuestionsConverter questionsConverter;
 
     @Autowired
     public QuestionCsvDao(
             QuestionsConverter questionsConverter,
             FileNameProvider fileNameProvider) {
-        this.testFileName = fileNameProvider.getFileName();
+        this.fileNameProvider = fileNameProvider;
         this.questionsConverter = questionsConverter;
     }
 
     @Override
     public List<Question> findAll() {
-        if (testFileName == null) {
+        if (fileNameProvider.getFileName() == null) {
             throw new ResourceIsNullException("The filename of the file with data for the test is null");
         }
         List<TestDto> beans;
 
-        try (InputStream resource = this.getClass().getClassLoader().getResourceAsStream(testFileName)) {
+        try (InputStream resource = this.getClass().getClassLoader().getResourceAsStream(fileNameProvider.getFileName())) {
             if (resource == null) {
-                throw new ResourceIsNullException("Cannot get resource from the file with the filename " + testFileName);
+                throw new ResourceIsNullException("Cannot get resource from the file with the filename " + fileNameProvider.getFileName());
             }
             beans =
                     new CsvToBeanBuilder<TestDto>(new InputStreamReader(resource))
