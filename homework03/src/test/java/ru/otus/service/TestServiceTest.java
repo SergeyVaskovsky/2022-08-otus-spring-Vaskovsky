@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.config.FileNameProvider;
-import ru.otus.config.ScoreProvider;
-import ru.otus.dao.QuestionCsvDao;
-import ru.otus.dao.QuestionsConverter;
+import ru.otus.dao.QuestionDao;
 import ru.otus.model.Question;
 
 import java.util.ArrayList;
@@ -18,24 +15,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = {TestServiceImpl.class, QuestionCsvDao.class, QuestionsConverter.class})
+@DisplayName("Class TestService")
+@SpringBootTest
 public class TestServiceTest {
     @Autowired
     private TestServiceImpl testService;
     @Autowired
-    private QuestionCsvDao questionDao;
-    @Autowired
-    private QuestionsConverter questionsConverter;
+    private QuestionDao questionDao;
     @MockBean
     private QuestionService questionService;
     @MockBean
     private IOService ioService;
     @MockBean
     private MessageSourceWrapper messageSourceWrapper;
-    @MockBean
-    private ScoreProvider scoreProvider;
-    @MockBean
-    private FileNameProvider fileNameProvider;
 
     @DisplayName("Test TestService success")
     @Test
@@ -50,8 +42,6 @@ public class TestServiceTest {
     }
 
     private void doTest(boolean isSuccess) {
-        when(fileNameProvider.getFileName()).thenReturn("data.csv");
-        when(scoreProvider.getScore()).thenReturn(2);
         List<Question> questions = questionDao.findAll();
         when(questionService.findAll()).thenReturn(questions);
 

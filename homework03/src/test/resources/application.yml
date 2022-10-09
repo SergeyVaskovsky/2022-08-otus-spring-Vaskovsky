@@ -1,4 +1,4 @@
 prop:
-  fileNamePattern: data.csv
+  fileNamePattern: data_%s.csv
   score: 2
   locale: en
