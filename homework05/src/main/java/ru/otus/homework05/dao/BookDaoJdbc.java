@@ -3,14 +3,12 @@ package ru.otus.homework05.dao;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.jdbc.core.JdbcOperations;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import ru.otus.homework05.exception.AuthorNotFoundException;
+import ru.otus.homework05.exception.BookNotFoundException;
 import ru.otus.homework05.exception.GenreNotFoundException;
 import ru.otus.homework05.model.Book;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +18,12 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class BookDaoJdbc implements BookDao {
 
+    private final static String BOOK_QUERY = "select b.id, b.name, a.author_id, a.author_name, g.genre_id, g.genre_name from book b " +
+            "join author a on a.id = b.author_id " +
+            "join genre g on g.id = b.genre_id ";
+
     private final JdbcOperations jdbc;
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
-
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
 
     @Override
     public long count() {
@@ -66,14 +65,17 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public Book getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        return namedParameterJdbcOperations.queryForObject(
-                "select id, name, author_id, genre_id from book where id = :id", params, new BookMapper(authorDao, genreDao)
-        );
+        List<Book> books = namedParameterJdbcOperations.query(
+                BOOK_QUERY + " where b.id = :id", params, new BookResultSetExtractor());
+        if (books == null || books.size() <= 0) {
+            throw new BookNotFoundException(String.format("Book with id = %d not found", id));
+        }
+        return books.get(0);
     }
 
     @Override
     public List<Book> getAll() {
-        return jdbc.query("select id, name, author_id, genre_id from book", new BookMapper(authorDao, genreDao));
+        return jdbc.query(BOOK_QUERY, new BookResultSetExtractor());
     }
 
     @Override
@@ -82,26 +84,5 @@ public class BookDaoJdbc implements BookDao {
         namedParameterJdbcOperations.update(
                 "delete from book where id = :id", params
         );
-    }
-
-    private static class BookMapper implements RowMapper<Book> {
-        private final AuthorDao authorDao;
-        private final GenreDao genreDao;
-
-        private BookMapper(AuthorDao authorDao, GenreDao genreDao) {
-            this.authorDao = authorDao;
-            this.genreDao = genreDao;
-        }
-
-        @Override
-        public Book mapRow(ResultSet resultSet, int i) throws SQLException {
-            long id = resultSet.getLong("id");
-            String name = resultSet.getString("name");
-            return new Book(
-                    id,
-                    name,
-                    authorDao.getById(resultSet.getLong("author_id")),
-                    genreDao.getById(resultSet.getLong("genre_id")));
-        }
     }
 }
