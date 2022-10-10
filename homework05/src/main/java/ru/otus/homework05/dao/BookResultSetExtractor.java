@@ -8,6 +8,7 @@ import ru.otus.homework05.model.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,6 @@ public class BookResultSetExtractor implements ResultSetExtractor<List<Book>> {
                 books.put(book.getId(), book);
             }
         }
-        return (List<Book>) books.values();
+        return new ArrayList<>(books.values());
     }
 }

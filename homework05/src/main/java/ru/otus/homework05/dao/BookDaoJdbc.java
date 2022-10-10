@@ -18,7 +18,10 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class BookDaoJdbc implements BookDao {
 
-    private final static String BOOK_QUERY = "select b.id, b.name, a.author_id, a.author_name, g.genre_id, g.genre_name from book b " +
+    private final static String BOOK_QUERY = "select b.id, b.name, " +
+            "a.id as author_id, a.name as author_name, " +
+            "g.id as genre_id, g.name as genre_name " +
+            "from book b " +
             "join author a on a.id = b.author_id " +
             "join genre g on g.id = b.genre_id ";
 
@@ -38,9 +41,9 @@ public class BookDaoJdbc implements BookDao {
         val genreId = book.getGenre();
         if (isNull(genreId)) throw new GenreNotFoundException("Genre not found");
         namedParameterJdbcOperations.update(
-                "insert into book (name, author_id, genre_id) " +
-                        "values (:name, :author_id, :genre_id)",
-                Map.of(
+                "insert into book (id, name, author_id, genre_id) " +
+                        "values (:id, :name, :author_id, :genre_id)",
+                Map.of("id", book.getId(),
                         "name", book.getName(),
                         "author_id", authorId.getId(),
                         "genre_id", genreId.getId()));
