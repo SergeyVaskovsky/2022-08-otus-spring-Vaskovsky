@@ -3,6 +3,7 @@ package ru.otus.homework05.dao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.stereotype.Component;
 import ru.otus.homework05.model.Author;
 
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Map;
 
+@Component
 @RequiredArgsConstructor
 public class AuthorDaoJdbc implements AuthorDao {
 

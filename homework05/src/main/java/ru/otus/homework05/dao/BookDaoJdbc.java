@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.stereotype.Component;
 import ru.otus.homework05.exception.AuthorNotFoundException;
 import ru.otus.homework05.exception.BookNotFoundException;
 import ru.otus.homework05.exception.GenreNotFoundException;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 import static java.util.Objects.isNull;
 
+@Component
 @RequiredArgsConstructor
 public class BookDaoJdbc implements BookDao {
 
