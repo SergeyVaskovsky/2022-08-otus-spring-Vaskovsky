@@ -1,16 +1,16 @@
 package ru.otus.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
     private final int id;
     private final String questionText;
-    private List<Answer> answers = new ArrayList<>();
+    private List<Answer> answers;
 
-    public Question(int id, String text) {
+    public Question(int id, String text, List<Answer> answers) {
         this.id = id;
         this.questionText = text;
+        this.answers = answers;
     }
 
     public int getId() {

@@ -1,12 +1,12 @@
 package ru.otus.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.Locale;
 
 @ConfigurationProperties(prefix = "prop")
-@Component
+@Configuration
 public class AppConfig implements
         FileNameProvider,
         LocaleProvider,
@@ -34,12 +34,12 @@ public class AppConfig implements
         this.fileNamePattern = fileNamePattern;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     @Override
     public int getScore() {
         return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 }

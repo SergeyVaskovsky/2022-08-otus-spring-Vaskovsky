@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class QuestionsConverter {
     public Question convert(TestDto dto) {
-        Question question = new Question(Integer.parseInt(dto.getNumber()), dto.getText());
+        Question question = new Question(Integer.parseInt(dto.getNumber()), dto.getText(), new ArrayList<>());
         for (String answerIdDto : dto.getAnswer().keySet()) {
             List<String> answerDto = new ArrayList<>(dto
                     .getAnswer()
