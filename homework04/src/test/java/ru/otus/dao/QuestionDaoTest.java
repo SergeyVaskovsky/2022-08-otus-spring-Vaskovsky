@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Class QuestionCsvDao")
-@SpringBootTest
+@SpringBootTest(properties = "spring.shell.interactive.enabled=false")
 public class QuestionDaoTest {
 
     @Autowired
