@@ -28,17 +28,13 @@ public class Commands {
     }
 
     @ShellMethod(value = "Test", key = {"t", "test"})
-    @ShellMethodAvailability(value = "isPublishEventCommandAvailable")
+    @ShellMethodAvailability(value = "isCommandAvailable")
     public void test() {
         testService.test();
     }
 
-    private Availability isPublishEventCommandAvailable() {
+    private Availability isCommandAvailable() {
         return userName == null ? Availability.unavailable("Please login before") : Availability.available();
     }
 
-    @ShellMethod(value = "Quit", key = {"q", "quit"})
-    public void quit() {
-        System.exit(QUIT_CODE);
-    }
 }
