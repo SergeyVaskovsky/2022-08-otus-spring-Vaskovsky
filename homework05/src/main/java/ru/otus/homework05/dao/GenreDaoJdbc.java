@@ -9,6 +9,7 @@ import ru.otus.homework05.model.Genre;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -16,6 +17,14 @@ import java.util.Map;
 public class GenreDaoJdbc implements GenreDao {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+
+    @Override
+    public List<Genre> getAll() {
+
+        return namedParameterJdbcOperations.query(
+                "select id, name from genre", new GenreMapper()
+        );
+    }
 
     @Override
     public Genre getById(long id) {

@@ -9,6 +9,7 @@ import ru.otus.homework05.model.Author;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -16,6 +17,14 @@ import java.util.Map;
 public class AuthorDaoJdbc implements AuthorDao {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+
+    @Override
+    public List<Author> getAll() {
+
+        return namedParameterJdbcOperations.query(
+                "select id, name from author", new AuthorMapper()
+        );
+    }
 
     @Override
     public Author getById(long id) {
