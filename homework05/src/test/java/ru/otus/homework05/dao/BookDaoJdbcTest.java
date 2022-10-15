@@ -21,12 +21,6 @@ public class BookDaoJdbcTest {
     @Autowired
     private BookDaoJdbc bookDaoJdbc;
 
-    @Autowired
-    private AuthorDaoJdbc authorDaoJdbc;
-
-    @Autowired
-    private GenreDaoJdbc genreDaoJdbc;
-
     @DisplayName("Найти книгу в БД")
     @Test
     void shouldFindBookById() {
@@ -52,8 +46,8 @@ public class BookDaoJdbcTest {
     @DisplayName("Добавить книгу в БД")
     @Test
     void shouldInsertBook() {
-        Author author = authorDaoJdbc.getById(2L);
-        Genre genre = genreDaoJdbc.getById(2L);
+        Author author = new Author(2L, "Коллектив авторов");
+        Genre genre = new Genre(2L, "Научпоп");
         Book expectedBook = new Book(4L, "Дельфины и люди", author, genre);
         bookDaoJdbc.insert(expectedBook);
         Book actualBook = bookDaoJdbc.getById(expectedBook.getId());
@@ -64,12 +58,13 @@ public class BookDaoJdbcTest {
     @DisplayName("Изменить книгу в БД")
     @Test
     void shouldUpdateBook() {
-        Author authorOld = authorDaoJdbc.getById(1L);
-        Genre genreOld = genreDaoJdbc.getById(1L);
+        Author authorOld = new Author(1L, "Достаевский Ф. М.");
+        Genre genreOld = new Genre(1L, "Триллер");
+
         Book expectedBook = new Book(1L, "Преступление и наказание", authorOld, genreOld);
 
-        Author authorNew = authorDaoJdbc.getById(2L);
-        Genre genreNew = genreDaoJdbc.getById(2L);
+        Author authorNew = new Author(2L, "Коллектив авторов");
+        Genre genreNew = new Genre(2L, "Научпоп");
 
         expectedBook.setName("Преступление и наказание 2");
         expectedBook.setAuthor(authorNew);
@@ -84,8 +79,8 @@ public class BookDaoJdbcTest {
     @DisplayName("Удалить книгу из БД")
     @Test
     void shouldDeleteBook() {
-        Author author = authorDaoJdbc.getById(2L);
-        Genre genre = genreDaoJdbc.getById(2L);
+        Author author = new Author(2L, "Коллектив авторов");
+        Genre genre = new Genre(2L, "Научпоп");
         Book expectedBook = new Book(5L, "Дельфины и акулы", author, genre);
         bookDaoJdbc.insert(expectedBook);
         bookDaoJdbc.deleteById(5L);

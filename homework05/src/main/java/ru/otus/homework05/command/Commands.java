@@ -60,10 +60,5 @@ public class Commands {
     ) {
         bookService.update(bookId, bookName, authorId, genreId);
     }
-
-    @ShellMethod(value = "Quit", key = {"q", "quit"})
-    public void quit() {
-        System.exit(QUIT_CODE);
-    }
 }
 
