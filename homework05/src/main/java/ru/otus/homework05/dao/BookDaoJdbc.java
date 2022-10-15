@@ -38,33 +38,33 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public void insert(Book book) {
-        val authorId = book.getAuthor();
-        if (isNull(authorId)) throw new AuthorNotFoundException("Author not found");
-        val genreId = book.getGenre();
-        if (isNull(genreId)) throw new GenreNotFoundException("Genre not found");
+        val author = book.getAuthor();
+        if (isNull(author)) throw new AuthorNotFoundException("Author not found");
+        val genre = book.getGenre();
+        if (isNull(genre)) throw new GenreNotFoundException("Genre not found");
         namedParameterJdbcOperations.update(
                 "insert into book (id, name, author_id, genre_id) " +
                         "values (:id, :name, :author_id, :genre_id)",
                 Map.of("id", book.getId(),
                         "name", book.getName(),
-                        "author_id", authorId.getId(),
-                        "genre_id", genreId.getId()));
+                        "author_id", author.getId(),
+                        "genre_id", genre.getId()));
     }
 
     @Override
     public void update(Book book) {
-        val authorId = book.getAuthor();
-        if (isNull(authorId)) throw new AuthorNotFoundException("Author not found");
-        val genreId = book.getGenre();
-        if (isNull(genreId)) throw new GenreNotFoundException("Genre not found");
+        val author = book.getAuthor();
+        if (isNull(author)) throw new AuthorNotFoundException("Author not found");
+        val genre = book.getGenre();
+        if (isNull(genre)) throw new GenreNotFoundException("Genre not found");
         namedParameterJdbcOperations.update(
                 "update book set name = :name, author_id = :author_id, genre_id = :genre_id " +
                         "where id = :id",
                 Map.of(
                         "id", book.getId(),
                         "name", book.getName(),
-                        "author_id", authorId.getId(),
-                        "genre_id", genreId.getId()));
+                        "author_id", author.getId(),
+                        "genre_id", genre.getId()));
     }
 
     @Override

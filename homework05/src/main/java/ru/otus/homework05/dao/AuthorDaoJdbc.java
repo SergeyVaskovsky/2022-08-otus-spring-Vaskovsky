@@ -1,6 +1,7 @@
 package ru.otus.homework05.dao;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Component;
@@ -29,9 +30,13 @@ public class AuthorDaoJdbc implements AuthorDao {
     @Override
     public Author getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        return namedParameterJdbcOperations.queryForObject(
-                "select id, name from author where id = :id", params, new AuthorMapper()
-        );
+        try {
+            return namedParameterJdbcOperations.queryForObject(
+                    "select id, name from author where id = :id", params, new AuthorMapper()
+            );
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 
     private static class AuthorMapper implements RowMapper<Author> {

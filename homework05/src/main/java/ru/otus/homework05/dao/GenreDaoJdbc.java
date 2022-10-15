@@ -1,6 +1,7 @@
 package ru.otus.homework05.dao;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Component;
@@ -29,9 +30,13 @@ public class GenreDaoJdbc implements GenreDao {
     @Override
     public Genre getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        return namedParameterJdbcOperations.queryForObject(
-                "select id, name from genre where id = :id", params, new GenreMapper()
-        );
+        try {
+            return namedParameterJdbcOperations.queryForObject(
+                    "select id, name from genre where id = :id", params, new GenreMapper()
+            );
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
     }
 
     private static class GenreMapper implements RowMapper<Genre> {
