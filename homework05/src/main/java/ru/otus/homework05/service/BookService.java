@@ -7,9 +7,9 @@ import java.util.List;
 public interface BookService {
     List<Book> getAll();
 
-    void insert(int bookId, String bookName, int authorId, int genreIdId);
+    void insert(long bookId, String bookName, long authorId, long genreIdId);
 
-    void delete(int bookId);
+    void delete(long bookId);
 
-    void update(int bookId, String bookName, int authorId, int genreId);
+    void update(long bookId, String bookName, long authorId, long genreId);
 }
