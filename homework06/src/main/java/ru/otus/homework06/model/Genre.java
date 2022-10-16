@@ -21,4 +21,5 @@ public class Genre {
     @EqualsAndHashCode.Exclude
     @Column(name = "name")
     private String name;
+
 }

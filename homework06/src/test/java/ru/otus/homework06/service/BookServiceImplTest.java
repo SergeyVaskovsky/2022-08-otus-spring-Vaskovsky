@@ -23,15 +23,15 @@ public class BookServiceImplTest {
 
     @Test
     void shouldInsertBook() {
-        bookServiceImpl.upsert(4L, "Котики", 1L, 1L);
+        Book insertedBook = bookServiceImpl.upsert(0L, "Котики", 1L, 1L);
         Book book = bookServiceImpl
                 .getAll()
                 .stream()
-                .filter(b -> b.getId() == 4L)
+                .filter(b -> b.getId() == insertedBook.getId())
                 .findFirst()
                 .orElse(null);
         assertThat(book).isNotNull();
-        assertThat(book.getId()).isEqualTo(4L);
+        assertThat(book.getId()).isEqualTo(insertedBook.getId());
     }
 
     @Test
@@ -46,16 +46,16 @@ public class BookServiceImplTest {
 
     @Test
     void shouldUpdateBook() {
-        bookServiceImpl.upsert(6L, "Часы", 2L, 2L);
-        bookServiceImpl.upsert(6L, "Хроники", 1L, 1L);
+        Book book = bookServiceImpl.upsert(0L, "Часы", 2L, 2L);
+        bookServiceImpl.upsert(book.getId(), "Хроники", 1L, 1L);
         assertThat(bookServiceImpl
                 .getAll()
                 .stream()
-                .anyMatch(b -> b.getId() == 6L &&
+                .anyMatch(b -> b.getId() == book.getId() &&
                         "Хроники".equals(b.getName()) &&
                         "Достаевский Ф. М.".equals(b.getAuthor().getName()) &&
                         "Триллер".equals(b.getGenre().getName())
                 )).isEqualTo(true);
-        bookServiceImpl.delete(6L);
+        bookServiceImpl.delete(book.getId());
     }
 }

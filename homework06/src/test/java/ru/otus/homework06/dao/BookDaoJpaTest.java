@@ -3,10 +3,8 @@ package ru.otus.homework06.dao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import ru.otus.homework06.exception.BookNotFoundException;
 import ru.otus.homework06.model.Author;
 import ru.otus.homework06.model.Book;
 import ru.otus.homework06.model.Genre;
@@ -14,10 +12,9 @@ import ru.otus.homework06.model.Genre;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import({BookDaoJpa.class, AuthorDaoJpa.class, GenreDaoJpa.class})
+@Import({BookDaoJpa.class})
 public class BookDaoJpaTest {
     @Autowired
     private BookDaoJpa bookDaoJpa;
@@ -82,10 +79,7 @@ public class BookDaoJpaTest {
         Book expectedBook = new Book(5L, "Дельфины и акулы", author, genre);
         bookDaoJpa.save(expectedBook);
         bookDaoJpa.delete(expectedBook);
-
-        assertThatThrownBy(() -> bookDaoJpa.findById(5L))
-                .isInstanceOf(BookNotFoundException.class)
-                .hasMessageContaining(String.format("Book with id = %d not found", 5L));
+        assertThat(bookDaoJpa.findById(5L).orElse(null)).isNull();
     }
 
 }

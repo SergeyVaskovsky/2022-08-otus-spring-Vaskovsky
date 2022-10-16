@@ -21,4 +21,5 @@ public class Author {
     @EqualsAndHashCode.Exclude
     @Column(name = "name")
     private String name;
+
 }

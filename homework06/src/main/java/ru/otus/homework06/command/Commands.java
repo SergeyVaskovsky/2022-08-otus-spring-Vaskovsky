@@ -35,14 +35,13 @@ public class Commands {
         );
     }
 
-    @ShellMethod(value = "Insert, params delimited by space: book id, book name, author id, genre id", key = {"i", "insert"})
+    @ShellMethod(value = "Insert, params delimited by space: book name, author id, genre id", key = {"i", "insert"})
     public void insertBook(
-            @ShellOption() int bookId,
             @ShellOption() String bookName,
             @ShellOption() int authorId,
             @ShellOption() int genreId
     ) {
-        bookService.upsert(bookId, bookName, authorId, genreId);
+        bookService.upsert(0, bookName, authorId, genreId);
     }
 
     @ShellMethod(value = "Delete, params: book id", key = {"d", "delete"})
