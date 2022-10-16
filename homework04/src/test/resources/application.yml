@@ -1,0 +1,9 @@
+prop:
+  fileNamePattern: data.csv
+  score: 2
+  locale: en
+
+spring:
+  messages:
+    basename: "i18n/appmessages"
+    encoding: "UTF-8"

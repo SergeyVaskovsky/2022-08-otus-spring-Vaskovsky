@@ -1,0 +1,4 @@
+prop:
+  fileNamePattern: data_%s.csv
+  score: 2
+  locale: en
