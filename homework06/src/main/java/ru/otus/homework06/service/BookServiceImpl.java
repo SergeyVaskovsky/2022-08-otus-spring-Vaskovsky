@@ -3,6 +3,7 @@ package ru.otus.homework06.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.homework06.dao.BookDaoJpa;
+import ru.otus.homework06.exception.BookNotFoundException;
 import ru.otus.homework06.model.Author;
 import ru.otus.homework06.model.Book;
 import ru.otus.homework06.model.Genre;
@@ -22,6 +23,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getAll() {
         return bookDaoJpa.findAll();
+    }
+
+    @Override
+    public Book getById(long bookId) {
+        return bookDaoJpa.findById(bookId).orElseThrow(() -> new BookNotFoundException(
+                String.format("Book with id = %d not found", bookId)
+        ));
     }
 
     @Transactional

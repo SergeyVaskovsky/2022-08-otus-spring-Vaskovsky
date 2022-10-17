@@ -2,10 +2,15 @@ spring:
   datasource:
     url: jdbc:h2:mem:library
 
+  sql:
+    init:
+      mode: always
+      data-locations: data.sql
+
   jpa:
-    generate-ddl: true
+    generate-ddl: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
 
     properties:
       hibernate:

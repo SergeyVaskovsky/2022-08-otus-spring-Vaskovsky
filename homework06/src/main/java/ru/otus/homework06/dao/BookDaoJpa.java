@@ -1,6 +1,5 @@
 package ru.otus.homework06.dao;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework06.model.Book;
 
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class BookDaoJpa implements BookDao {
 
     @PersistenceContext
