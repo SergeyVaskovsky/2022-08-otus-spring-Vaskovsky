@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-@Import({BookDaoJdbc.class, AuthorDaoJdbc.class, GenreDaoJdbc.class})
+@Import({BookDaoJdbc.class})
 public class BookDaoJdbcTest {
     @Autowired
     private BookDaoJdbc bookDaoJdbc;

@@ -1,11 +1,18 @@
-INSERT INTO AUTHOR(ID, NAME)
-VALUES (1, 'Пушкин А. С.');
-INSERT INTO AUTHOR(ID, NAME)
-VALUES (2, 'Кайт Том');
-INSERT INTO AUTHOR(ID, NAME)
-VALUES (3, 'Макконел Стивен');
+INSERT INTO AUTHOR(NAME)
+VALUES ('Пушкин А. С.');
+INSERT INTO AUTHOR(NAME)
+VALUES ('Кайт Том');
+INSERT INTO AUTHOR(NAME)
+VALUES ('Макконел Стивен');
 
-INSERT INTO GENRE(ID, NAME)
-VALUES (1, 'Стихи');
-INSERT INTO GENRE(ID, NAME)
-VALUES (2, 'Программирование для профессионалов');
+INSERT INTO GENRE(NAME)
+VALUES ('Стихи');
+INSERT INTO GENRE(NAME)
+VALUES ('Программирование для профессионалов');
+
+INSERT INTO BOOK(NAME, AUTHOR_ID, GENRE_ID)
+VALUES ('Евгений Онегин', 1, 1);
+INSERT INTO BOOK(NAME, AUTHOR_ID, GENRE_ID)
+VALUES ('Совершенный код', 3, 2);
+INSERT INTO BOOK(NAME, AUTHOR_ID, GENRE_ID)
+VALUES ('Oracle для профессионалов', 2, 1);

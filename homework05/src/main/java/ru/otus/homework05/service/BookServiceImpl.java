@@ -22,10 +22,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void insert(long bookId, String bookName, long authorId, long genreId) {
+    public void insert(String bookName, long authorId, long genreId) {
         Author author = authorService.getById(authorId);
         Genre genre = genreService.getById(genreId);
-        Book book = new Book(bookId, bookName, author, genre);
+        Book book = new Book(0L, bookName, author, genre);
         bookDaoJdbc.insert(book);
     }
 

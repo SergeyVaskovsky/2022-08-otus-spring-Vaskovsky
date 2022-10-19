@@ -37,27 +37,26 @@ public class Commands {
 
     @ShellMethod(value = "Insert, params delimited by space: book id, book name, author id, genre id", key = {"i", "insert"})
     public void insertBook(
-            @ShellOption() int bookId,
             @ShellOption() String bookName,
-            @ShellOption() int authorId,
-            @ShellOption() int genreId
+            @ShellOption() long authorId,
+            @ShellOption() long genreId
     ) {
-        bookService.insert(bookId, bookName, authorId, genreId);
+        bookService.insert(bookName, authorId, genreId);
     }
 
     @ShellMethod(value = "Delete, params: book id", key = {"d", "delete"})
     public void deleteBook(
-            @ShellOption() int bookId
+            @ShellOption() long bookId
     ) {
         bookService.delete(bookId);
     }
 
     @ShellMethod(value = "Update, params delimited by space: book id, book name, author id, genre id", key = {"u", "update"})
     public void updateBook(
-            @ShellOption() int bookId,
+            @ShellOption() long bookId,
             @ShellOption() String bookName,
-            @ShellOption() int authorId,
-            @ShellOption() int genreId
+            @ShellOption() long authorId,
+            @ShellOption() long genreId
     ) {
         bookService.update(bookId, bookName, authorId, genreId);
     }
