@@ -56,9 +56,13 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public void update(Book book) {
         val author = book.getAuthor();
-        if (isNull(author)) throw new AuthorNotFoundException("Author not found");
+        if (isNull(author)) {
+            throw new AuthorNotFoundException("Author not found");
+        }
         val genre = book.getGenre();
-        if (isNull(genre)) throw new GenreNotFoundException("Genre not found");
+        if (isNull(genre)) {
+            throw new GenreNotFoundException("Genre not found");
+        }
         namedParameterJdbcOperations.update(
                 "update book set name = :name, author_id = :author_id, genre_id = :genre_id " +
                         "where id = :id",
