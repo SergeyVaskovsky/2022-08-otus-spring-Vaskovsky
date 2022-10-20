@@ -1,19 +1,19 @@
 package ru.otus.homework06.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework06.model.Book;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class BookDaoJpa implements BookDao {
 
-    @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     @Override
     public Book save(Book book) {
@@ -41,6 +41,6 @@ public class BookDaoJpa implements BookDao {
 
     @Override
     public void delete(Book book) {
-        em.remove(em.contains(book) ? book : em.merge(book));
+        em.remove(em.contains(book) ? book : em.find(Book.class, book.getId()));
     }
 }

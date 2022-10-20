@@ -23,10 +23,10 @@ public class Book {
     private String name;
 
     @EqualsAndHashCode.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
 
     @EqualsAndHashCode.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Genre genre;
 }

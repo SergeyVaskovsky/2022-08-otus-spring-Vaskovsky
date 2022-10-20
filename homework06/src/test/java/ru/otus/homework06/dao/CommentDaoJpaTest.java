@@ -3,6 +3,7 @@ package ru.otus.homework06.dao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.homework06.model.Author;
 import ru.otus.homework06.model.Book;
@@ -17,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import({CommentDaoJpa.class})
 public class CommentDaoJpaTest {
 
+    @Autowired
+    private TestEntityManager em;
     @Autowired
     private CommentDaoJpa commentDaoJpa;
 
@@ -44,10 +47,10 @@ public class CommentDaoJpaTest {
         Comment expectedComment = new Comment(0L, "Круто", book);
         expectedComment = commentDaoJpa.save(expectedComment);
 
-        Comment actualComment = commentDaoJpa.findById(expectedComment.getId()).orElse(null);
+        Comment actualComment = em.find(Comment.class, expectedComment.getId());
         assertThat(actualComment).isNotNull();
         assertThat(actualComment).usingRecursiveComparison().isEqualTo(expectedComment);
-        commentDaoJpa.delete(expectedComment);
+        em.remove(expectedComment);
     }
 
     @Test
@@ -56,9 +59,9 @@ public class CommentDaoJpaTest {
         Genre genre = new Genre(1L, "Триллер");
         Book book = new Book(1L, "Преступление и наказание", author, genre);
         Comment expectedComment = new Comment(0L, "Круто, но скучно", book);
-        expectedComment = commentDaoJpa.save(expectedComment);
+        expectedComment = em.persist(expectedComment);
         commentDaoJpa.delete(expectedComment);
-        assertThat(commentDaoJpa.findById(5L).orElse(null)).isNull();
+        assertThat(em.find(Comment.class, expectedComment.getId())).isNull();
     }
 
 }

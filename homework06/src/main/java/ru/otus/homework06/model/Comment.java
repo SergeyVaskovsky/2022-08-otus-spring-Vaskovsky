@@ -23,6 +23,6 @@ public class Comment {
     private String description;
 
     @EqualsAndHashCode.Exclude
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Book book;
 }

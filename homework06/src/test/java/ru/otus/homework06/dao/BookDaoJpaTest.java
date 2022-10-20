@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.homework06.model.Author;
 import ru.otus.homework06.model.Book;
@@ -16,6 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import({BookDaoJpa.class})
 public class BookDaoJpaTest {
+
+    @Autowired
+    private TestEntityManager em;
     @Autowired
     private BookDaoJpa bookDaoJpa;
 
@@ -41,12 +45,12 @@ public class BookDaoJpaTest {
     void shouldInsertBook() {
         Author author = new Author(2L, "Коллектив авторов");
         Genre genre = new Genre(2L, "Научпоп");
-        Book expectedBook = new Book(4L, "Дельфины и люди", author, genre);
+        Book expectedBook = new Book(0L, "Дельфины и люди", author, genre);
         bookDaoJpa.save(expectedBook);
-        Book actualBook = bookDaoJpa.findById(expectedBook.getId()).orElse(null);
+        Book actualBook = em.find(Book.class, expectedBook.getId());
         assertThat(actualBook).isNotNull();
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
-        bookDaoJpa.delete(expectedBook);
+        em.remove(expectedBook);
     }
 
     @DisplayName("Изменить книгу в БД")
@@ -55,8 +59,8 @@ public class BookDaoJpaTest {
         Author authorOld = new Author(1L, "Достаевский Ф. М.");
         Genre genreOld = new Genre(1L, "Триллер");
 
-        Book expectedBook = new Book(1L, "Преступление и наказание", authorOld, genreOld);
-
+        Book expectedBook = new Book(0L, "Преступление и наказание", authorOld, genreOld);
+        em.persist(expectedBook);
         Author authorNew = new Author(2L, "Коллектив авторов");
         Genre genreNew = new Genre(2L, "Научпоп");
 
@@ -66,7 +70,7 @@ public class BookDaoJpaTest {
 
         bookDaoJpa.save(expectedBook);
 
-        Book actualBook = bookDaoJpa.findById(expectedBook.getId()).orElse(null);
+        Book actualBook = em.find(Book.class, expectedBook.getId());
         assertThat(actualBook).isNotNull();
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
@@ -76,10 +80,9 @@ public class BookDaoJpaTest {
     void shouldDeleteBook() {
         Author author = new Author(2L, "Коллектив авторов");
         Genre genre = new Genre(2L, "Научпоп");
-        Book expectedBook = new Book(5L, "Дельфины и акулы", author, genre);
-        bookDaoJpa.save(expectedBook);
+        Book expectedBook = new Book(0L, "Дельфины и акулы", author, genre);
+        em.persist(expectedBook);
         bookDaoJpa.delete(expectedBook);
-        assertThat(bookDaoJpa.findById(5L).orElse(null)).isNull();
+        assertThat(em.find(Book.class, expectedBook.getId())).isNull();
     }
-
 }

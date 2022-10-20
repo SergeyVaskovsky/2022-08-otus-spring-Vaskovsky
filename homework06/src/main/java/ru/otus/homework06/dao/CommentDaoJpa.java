@@ -1,19 +1,20 @@
 package ru.otus.homework06.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.homework06.model.Book;
 import ru.otus.homework06.model.Comment;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class CommentDaoJpa implements CommentDao {
-    @PersistenceContext
-    private EntityManager em;
+
+    private final EntityManager em;
 
     @Override
     public Comment save(Comment comment) {
@@ -33,17 +34,16 @@ public class CommentDaoJpa implements CommentDao {
     @Override
     public List<Comment> findAll(Book book) {
         TypedQuery<Comment> query = em.createQuery("select c from Comment c " +
-                        "join fetch c.book b " +
-                        "join fetch b.author " +
-                        "join fetch b.genre " +
                         "where c.book.id = :bookId",
                 Comment.class);
         query.setParameter("bookId", book.getId());
-        return query.getResultList();
+        List<Comment> result = query.getResultList();
+        result.forEach(comment -> comment.setBook(book));
+        return result;
     }
 
     @Override
     public void delete(Comment comment) {
-        em.remove(em.contains(comment) ? comment : em.merge(comment));
+        em.remove(em.contains(comment) ? comment : em.find(Comment.class, comment.getId()));
     }
 }
