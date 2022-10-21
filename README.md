@@ -15,7 +15,4 @@ homework03 - "Чёрная магия" Spring Boot
 
 homework04 - домашняя работа по теме "Продвинутая конфигурация (часть 2) - Conditionals, Events, тестирование"
 
-
-
-
-
+homework05 - DAO на Spring JDBC 
