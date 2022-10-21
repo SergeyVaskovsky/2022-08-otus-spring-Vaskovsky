@@ -1,6 +1,5 @@
 package ru.otus.homework06.dao;
 
-import ru.otus.homework06.model.Book;
 import ru.otus.homework06.model.Comment;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public interface CommentDao {
 
     Optional<Comment> findById(long id);
 
-    List<Comment> findAll(Book book);
+    List<Comment> findAll(long bookId);
 
     void delete(Comment comment);
 

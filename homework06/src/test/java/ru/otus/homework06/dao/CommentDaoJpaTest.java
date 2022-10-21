@@ -35,7 +35,7 @@ public class CommentDaoJpaTest {
         Author author = new Author(1L, "Достаевский Ф. М.");
         Genre genre = new Genre(1L, "Триллер");
         Book book = new Book(1L, "Преступление и наказание", author, genre);
-        List<Comment> comments = commentDaoJpa.findAll(book);
+        List<Comment> comments = commentDaoJpa.findAll(book.getId());
         assertThat(comments.size()).isEqualTo(3);
     }
 

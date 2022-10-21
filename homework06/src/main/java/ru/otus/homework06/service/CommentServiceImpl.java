@@ -19,9 +19,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getAll(long bookId) {
-        return commentDaoJpa.findAll(
-                bookService.getById(bookId)
-        );
+        return commentDaoJpa.findAll(bookId);
     }
 
     @Transactional
