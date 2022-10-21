@@ -98,7 +98,7 @@ public class BookDaoJdbc implements BookDao {
                         "from book b " +
                         "join author a on a.id = b.author_id " +
                         "join genre g on g.id = b.genre_id ",
-                new BookResultSetExtractor());
+                new BookMapper());
     }
 
     @Override
