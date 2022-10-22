@@ -18,3 +18,5 @@ homework04 - домашняя работа по теме "Продвинутая
 homework05 - DAO на Spring JDBC 
 
 homework06 - JPQL, Spring ORM, DAO на основе Spring ORM + JPA 
+
+homework07 - "Белая магия" Spring Data: Spring Data JPA
