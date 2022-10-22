@@ -2,7 +2,7 @@ package ru.otus.homework07.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.homework07.dao.BookDaoJpa;
+import ru.otus.homework07.dao.BookDao;
 import ru.otus.homework07.exception.BookNotFoundException;
 import ru.otus.homework07.model.Author;
 import ru.otus.homework07.model.Book;
@@ -18,16 +18,16 @@ import static java.util.Objects.isNull;
 public class BookServiceImpl implements BookService {
     private final AuthorService authorService;
     private final GenreService genreService;
-    private final BookDaoJpa bookDaoJpa;
+    private final BookDao bookDao;
 
     @Override
     public List<Book> getAll() {
-        return bookDaoJpa.findAll();
+        return bookDao.findAll();
     }
 
     @Override
     public Book getById(long bookId) {
-        return bookDaoJpa.findById(bookId).orElseThrow(() -> new BookNotFoundException(
+        return bookDao.findById(bookId).orElseThrow(() -> new BookNotFoundException(
                 String.format("Book with id = %d not found", bookId)
         ));
     }
@@ -38,18 +38,18 @@ public class BookServiceImpl implements BookService {
         Author author = authorService.getById(authorId);
         Genre genre = genreService.getById(genreId);
         Book book = new Book(bookId, bookName, author, genre);
-        bookDaoJpa.save(book);
+        bookDao.save(book);
         return book;
     }
 
     @Transactional
     @Override
     public void delete(long bookId) {
-        Book book = bookDaoJpa.findById(bookId).orElse(null);
+        Book book = bookDao.findById(bookId).orElse(null);
         if (isNull(book)) {
             return;
         }
-        bookDaoJpa.delete(book);
+        bookDao.delete(book);
     }
 
 }

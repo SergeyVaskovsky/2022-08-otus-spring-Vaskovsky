@@ -2,7 +2,7 @@ package ru.otus.homework07.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.homework07.dao.CommentDaoJpa;
+import ru.otus.homework07.dao.CommentDao;
 import ru.otus.homework07.model.Comment;
 
 import javax.transaction.Transactional;
@@ -14,29 +14,29 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentDaoJpa commentDaoJpa;
+    private final CommentDao commentDao;
     private final BookService bookService;
 
     @Override
     public List<Comment> getAll(long bookId) {
-        return commentDaoJpa.findAll(bookId);
+        return commentDao.findAllByBookId(bookId);
     }
 
     @Transactional
     @Override
     public Comment upsert(long commentId, String description, long bookId) {
         Comment comment = new Comment(commentId, description, bookService.getById(bookId));
-        commentDaoJpa.save(comment);
+        commentDao.save(comment);
         return comment;
     }
 
     @Transactional
     @Override
     public void delete(long commentId) {
-        Comment comment = commentDaoJpa.findById(commentId).orElse(null);
+        Comment comment = commentDao.findById(commentId).orElse(null);
         if (isNull(comment)) {
             return;
         }
-        commentDaoJpa.delete(comment);
+        commentDao.delete(comment);
     }
 }

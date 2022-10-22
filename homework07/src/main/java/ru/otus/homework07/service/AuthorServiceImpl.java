@@ -2,7 +2,7 @@ package ru.otus.homework07.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.homework07.dao.AuthorDaoJpa;
+import ru.otus.homework07.dao.AuthorDao;
 import ru.otus.homework07.exception.AuthorNotFoundException;
 import ru.otus.homework07.model.Author;
 
@@ -12,15 +12,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
-    private final AuthorDaoJpa authorDaoJpa;
+    private final AuthorDao authorDao;
 
     public List<Author> getAll() {
-        return authorDaoJpa.findAll();
+        return authorDao.findAll();
     }
 
     public Author getById(long id) {
-        return authorDaoJpa
+        return authorDao
                 .findById(id)
-                .orElseThrow( ()-> new AuthorNotFoundException(String.format("Author not found by id = %s", id)));
+                .orElseThrow(() -> new AuthorNotFoundException(String.format("Author not found by id = %s", id)));
     }
 }

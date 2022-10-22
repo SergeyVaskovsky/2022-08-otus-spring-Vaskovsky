@@ -1,17 +1,21 @@
 package ru.otus.homework07.dao;
 
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.otus.homework07.model.Comment;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentDao {
+public interface CommentDao extends JpaRepository<Comment, Long> {
 
     Comment save(Comment comment);
 
+    @EntityGraph(attributePaths = {"book"})
     Optional<Comment> findById(long id);
 
-    List<Comment> findAll(long bookId);
+    @EntityGraph(attributePaths = {"book"})
+    List<Comment> findAllByBookId(long bookId);
 
     void delete(Comment comment);
 
