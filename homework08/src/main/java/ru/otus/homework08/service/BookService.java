@@ -7,10 +7,10 @@ import java.util.List;
 public interface BookService {
     List<Book> getAll();
 
-    Book getById(long bookId);
+    Book getById(String bookId);
 
-    Book upsert(long bookId, String bookName, long authorId, long genreIdId);
+    Book upsert(String bookId, String bookName, String authorId, String genreIdId);
 
-    void delete(long bookId);
+    void delete(String bookId);
 
 }

@@ -2,7 +2,7 @@ package ru.otus.homework08.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.homework08.dao.CommentDao;
+import ru.otus.homework08.repository.CommentRepository;
 import ru.otus.homework08.model.Comment;
 
 import java.util.List;
@@ -13,27 +13,23 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentDao commentDao;
+    private final CommentRepository commentRepository;
     private final BookService bookService;
 
     @Override
-    public List<Comment> getAll(long bookId) {
-        return commentDao.findAllByBookId(bookId);
+    public List<Comment> getAll(String bookId) {
+        return commentRepository.findAllByBookId(bookId);
     }
 
     @Override
-    public Comment upsert(long commentId, String description, long bookId) {
-        Comment comment = new Comment(commentId, description, bookService.getById(bookId));
-        commentDao.save(comment);
-        return comment;
-    }
-
-    @Override
-    public void delete(long commentId) {
-        Comment comment = commentDao.findById(commentId).orElse(null);
-        if (isNull(comment)) {
-            return;
+    public Comment upsert(String commentId, String description, String bookId) {
+        Comment comment;
+        if ("".equals(commentId)) {
+            comment = new Comment(description, bookService.getById(bookId));
+        } else {
+            comment = new Comment(commentId, description, bookService.getById(bookId));
         }
-        commentDao.delete(comment);
+        commentRepository.save(comment);
+        return comment;
     }
 }

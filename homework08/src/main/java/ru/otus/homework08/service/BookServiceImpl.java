@@ -2,7 +2,8 @@ package ru.otus.homework08.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.homework08.dao.BookDao;
+import org.springframework.transaction.annotation.Transactional;
+import ru.otus.homework08.repository.BookRepository;
 import ru.otus.homework08.exception.BookNotFoundException;
 import ru.otus.homework08.model.Author;
 import ru.otus.homework08.model.Book;
@@ -17,36 +18,44 @@ import static java.util.Objects.isNull;
 public class BookServiceImpl implements BookService {
     private final AuthorService authorService;
     private final GenreService genreService;
-    private final BookDao bookDao;
+    private final BookRepository bookRepository;
+    private final DeleteCommentService commentService;
 
     @Override
     public List<Book> getAll() {
-        return bookDao.findAll();
+        return bookRepository.findAll();
     }
 
     @Override
-    public Book getById(long bookId) {
-        return bookDao.findById(bookId).orElseThrow(() -> new BookNotFoundException(
-                String.format("Book with id = %d not found", bookId)
+    public Book getById(String bookId) {
+        return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(
+                String.format("Book with id = %s not found", bookId)
         ));
     }
 
     @Override
-    public Book upsert(long bookId, String bookName, long authorId, long genreId) {
+    public Book upsert(String bookId, String bookName, String authorId, String genreId) {
         Author author = authorService.getById(authorId);
         Genre genre = genreService.getById(genreId);
-        Book book = new Book(bookId, bookName, author, genre);
-        bookDao.save(book);
+        Book book;
+        if ("".equals(bookId)) {
+            book = new Book(bookName, author, genre);
+        } else {
+            book = new Book(bookId, bookName, author, genre);
+        }
+        bookRepository.save(book);
         return book;
     }
 
     @Override
-    public void delete(long bookId) {
-        Book book = bookDao.findById(bookId).orElse(null);
+    @Transactional
+    public void delete(String bookId) {
+        Book book = bookRepository.findById(bookId).orElse(null);
         if (isNull(book)) {
             return;
         }
-        bookDao.delete(book);
+        commentService.deleteAllByBookId(bookId);
+        bookRepository.delete(book);
     }
 
 }

@@ -13,11 +13,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "comment")
 public class Comment {
     @Id
-    private long id;
+    private String id;
 
     @EqualsAndHashCode.Exclude
     private String description;
 
     @EqualsAndHashCode.Exclude
     private Book book;
+
+    public Comment(String description, Book book) {
+        this.description = description;
+        this.book = book;
+    }
 }

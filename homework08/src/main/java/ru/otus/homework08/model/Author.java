@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "author")
 public class Author {
     @Id
-    private long id;
+    private String id;
 
     @EqualsAndHashCode.Exclude
     private String name;

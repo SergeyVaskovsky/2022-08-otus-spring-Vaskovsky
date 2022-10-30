@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "book")
 public class Book {
     @Id
-    private long id;
+    private String id;
 
     @EqualsAndHashCode.Exclude
     private String name;
@@ -23,4 +23,10 @@ public class Book {
 
     @EqualsAndHashCode.Exclude
     private Genre genre;
+
+    public Book(String name, Author author, Genre genre) {
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+    }
 }

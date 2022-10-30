@@ -21,12 +21,13 @@ public class Commands {
     private final AuthorService authorService;
     private final GenreService genreService;
     private final CommentService commentService;
+    private final DeleteCommentService deleteCommentService;
 
     @ShellMethod(value = "Books", key = {"b", "books"})
     public void getBooks() {
         List<Book> books = bookService.getAll();
         books.forEach(book ->
-                outputService.outputString(String.format("id: %d, name: %s, author: %s, genre: %s",
+                outputService.outputString(String.format("id: %s, name: %s, author: %s, genre: %s",
                         book.getId(),
                         book.getName(),
                         book.getAuthor().getName(),
@@ -36,27 +37,26 @@ public class Commands {
 
     @ShellMethod(value = "Insert, params delimited by space: book id, book name, author id, genre id", key = {"i", "insert"})
     public void insertBook(
-            @ShellOption() long bookId,
             @ShellOption() String bookName,
-            @ShellOption() long authorId,
-            @ShellOption() long genreId
+            @ShellOption() String authorId,
+            @ShellOption() String genreId
     ) {
-        bookService.upsert(bookId, bookName, authorId, genreId);
+        bookService.upsert("", bookName, authorId, genreId);
     }
 
     @ShellMethod(value = "Delete, params: book id", key = {"d", "delete"})
     public void deleteBook(
-            @ShellOption() long bookId
+            @ShellOption() String bookId
     ) {
         bookService.delete(bookId);
     }
 
     @ShellMethod(value = "Update, params delimited by space: book id, book name, author id, genre id", key = {"u", "update"})
     public void updateBook(
-            @ShellOption() long bookId,
+            @ShellOption() String bookId,
             @ShellOption() String bookName,
-            @ShellOption() long authorId,
-            @ShellOption() long genreId
+            @ShellOption() String authorId,
+            @ShellOption() String genreId
     ) {
         bookService.upsert(bookId, bookName, authorId, genreId);
     }
@@ -65,7 +65,7 @@ public class Commands {
     public void getAuthors() {
         List<Author> authors = authorService.getAll();
         authors.forEach(book ->
-                outputService.outputString(String.format("id: %d, name: %s",
+                outputService.outputString(String.format("id: %s, name: %s",
                         book.getId(),
                         book.getName()))
         );
@@ -75,7 +75,7 @@ public class Commands {
     public void getGenres() {
         List<Genre> genres = genreService.getAll();
         genres.forEach(book ->
-                outputService.outputString(String.format("id: %d, name: %s",
+                outputService.outputString(String.format("id: %s, name: %s",
                         book.getId(),
                         book.getName()))
         );
@@ -83,11 +83,11 @@ public class Commands {
 
     @ShellMethod(value = "Comments, param: book id", key = {"c", "comments"})
     public void getComments(
-            @ShellOption() long bookId
+            @ShellOption() String bookId
     ) {
         List<Comment> comments = commentService.getAll(bookId);
         comments.forEach(comment ->
-                outputService.outputString(String.format("id: %d, comment: %s, book: %s",
+                outputService.outputString(String.format("id: %s, comment: %s, book: %s",
                         comment.getId(),
                         comment.getDescription(),
                         comment.getBook().getName()))
@@ -96,18 +96,17 @@ public class Commands {
 
     @ShellMethod(value = "Insert comments, params delimited by space: comment id, description, book id", key = {"ic"})
     public void getInsertComment(
-            @ShellOption() long commentId,
             @ShellOption() String description,
-            @ShellOption() long bookId
+            @ShellOption() String bookId
     ) {
-        commentService.upsert(commentId, description, bookId);
+        commentService.upsert("", description, bookId);
     }
 
     @ShellMethod(value = "Delete comment, params: comment id", key = {"dc"})
     public void deleteComment(
-            @ShellOption() int commentId
+            @ShellOption() String commentId
     ) {
-        commentService.delete(commentId);
+        deleteCommentService.delete(commentId);
     }
 
 }
