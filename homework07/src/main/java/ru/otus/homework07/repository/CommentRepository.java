@@ -1,4 +1,4 @@
-package ru.otus.homework07.dao;
+package ru.otus.homework07.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +7,7 @@ import ru.otus.homework07.model.Comment;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentDao extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Comment save(Comment comment);
 

@@ -1,4 +1,4 @@
-package ru.otus.homework07.dao;
+package ru.otus.homework07.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +7,7 @@ import ru.otus.homework07.model.Book;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookDao extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book save(Book book);
 

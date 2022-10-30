@@ -1,4 +1,4 @@
-package ru.otus.homework07.dao;
+package ru.otus.homework07.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +11,16 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class CommentDaoJpaTest {
+public class CommentRepositoryJpaTest {
 
     @Autowired
     private TestEntityManager em;
     @Autowired
-    private CommentDao commentDao;
+    private CommentRepository commentRepository;
 
     @Test
     void shouldFindCommentById() {
-        Comment comment = commentDao.findById(1L).orElse(null);
+        Comment comment = commentRepository.findById(1L).orElse(null);
         assertThat(comment).isNotNull();
         assertThat(comment.getDescription()).isEqualTo("Хорошо");
     }
@@ -32,7 +32,7 @@ public class CommentDaoJpaTest {
                 em.find(Comment.class, 2L),
                 em.find(Comment.class, 3L)
         );
-        List<Comment> comments = commentDao.findAllByBookId(1L);
+        List<Comment> comments = commentRepository.findAllByBookId(1L);
         assertThat(comments.size()).isEqualTo(3);
         assertThat(comments).containsExactlyInAnyOrderElementsOf(expectedComments);
     }

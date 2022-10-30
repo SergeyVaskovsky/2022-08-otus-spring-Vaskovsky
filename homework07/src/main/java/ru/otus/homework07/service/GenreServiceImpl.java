@@ -2,9 +2,9 @@ package ru.otus.homework07.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.homework07.dao.GenreDao;
 import ru.otus.homework07.exception.GenreNotFoundException;
 import ru.otus.homework07.model.Genre;
+import ru.otus.homework07.repository.GenreRepository;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenreServiceImpl implements GenreService {
 
-    private final GenreDao genreDao;
+    private final GenreRepository genreRepository;
 
     public List<Genre> getAll() {
-        return genreDao.findAll();
+        return genreRepository.findAll();
     }
 
     public Genre getById(long id) {
-        return genreDao
+        return genreRepository
                 .findById(id)
                 .orElseThrow(() -> new GenreNotFoundException(String.format("Genre not found by id = %s", id)));
     }

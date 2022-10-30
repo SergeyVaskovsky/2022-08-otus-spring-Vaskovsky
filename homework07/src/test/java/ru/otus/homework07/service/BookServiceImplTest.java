@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.homework07.dao.BookDao;
 import ru.otus.homework07.model.Author;
 import ru.otus.homework07.model.Book;
 import ru.otus.homework07.model.Genre;
+import ru.otus.homework07.repository.BookRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +28,11 @@ public class BookServiceImplTest {
     @MockBean
     private GenreService genreService;
     @MockBean
-    private BookDao bookDao;
+    private BookRepository bookRepository;
 
     @Test
     void shouldReturnAllBooks() {
-        when(bookDao.findAll()).thenReturn(
+        when(bookRepository.findAll()).thenReturn(
                 List.of(
                         new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин")),
                         new Book(2L, "Повесть", new Author(2L, "Писатель 2"), new Genre(2L, "Беллитристика")),
@@ -51,8 +51,8 @@ public class BookServiceImplTest {
         books.add(new Book(2L, "Повесть", new Author(2L, "Писатель 2"), new Genre(2L, "Беллитристика")));
         books.add(new Book(3L, "Статья", new Author(3L, "Ученый"), new Genre(3L, "Наука")));
 
-        when(bookDao.findAll()).thenReturn(books);
-        when(bookDao.save(book)).thenAnswer(a -> {
+        when(bookRepository.findAll()).thenReturn(books);
+        when(bookRepository.save(book)).thenAnswer(a -> {
             books.add(book);
             return a.getArgument(0);
         });
@@ -76,13 +76,13 @@ public class BookServiceImplTest {
         books.add(new Book(2L, "Повесть", new Author(2L, "Писатель 2"), new Genre(2L, "Беллитристика")));
         books.add(new Book(3L, "Статья", new Author(3L, "Ученый"), new Genre(3L, "Наука")));
 
-        when(bookDao.findAll()).thenReturn(books);
-        when(bookDao.findById(bookToDelete.getId())).thenReturn(Optional.of(bookToDelete));
+        when(bookRepository.findAll()).thenReturn(books);
+        when(bookRepository.findById(bookToDelete.getId())).thenReturn(Optional.of(bookToDelete));
 
         doAnswer(invocation -> {
             books.remove(bookToDelete);
             return null;
-        }).when(bookDao).delete(bookToDelete);
+        }).when(bookRepository).delete(bookToDelete);
 
         bookServiceImpl.delete(bookToDelete.getId());
         assertThat(bookServiceImpl
@@ -99,13 +99,13 @@ public class BookServiceImplTest {
         books.add(new Book(2L, "Повесть", new Author(2L, "Писатель 2"), new Genre(2L, "Беллитристика")));
         books.add(new Book(3L, "Статья", new Author(3L, "Ученый"), new Genre(3L, "Наука")));
 
-        when(bookDao.findAll()).thenReturn(books);
+        when(bookRepository.findAll()).thenReturn(books);
         doAnswer(invocation -> {
             bookToUpdate.setName("Хроники");
             bookToUpdate.setAuthor(new Author(3L, "Ученый"));
             bookToUpdate.setGenre(new Genre(3L, "Наука"));
             return null;
-        }).when(bookDao).save(bookToUpdate);
+        }).when(bookRepository).save(bookToUpdate);
 
         bookServiceImpl.upsert(1L, "Хроники", 3L, 3L);
         assertThat(bookServiceImpl
