@@ -15,4 +15,6 @@ public interface BookRepository extends MongoRepository<Book, Long> {
     List<Book> findAll();
 
     void delete(Book book);
+
+    void deleteById(String id);
 }

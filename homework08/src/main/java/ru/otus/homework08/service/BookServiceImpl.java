@@ -50,12 +50,8 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void delete(String bookId) {
-        Book book = bookRepository.findById(bookId).orElse(null);
-        if (isNull(book)) {
-            return;
-        }
         commentService.deleteAllByBookId(bookId);
-        bookRepository.delete(book);
+        bookRepository.deleteById(bookId);
     }
 
 }

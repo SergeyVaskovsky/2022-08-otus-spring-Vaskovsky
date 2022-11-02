@@ -93,7 +93,7 @@ public class BookServiceImplTest {
         doAnswer(invocation -> {
             books.remove(bookToDelete);
             return null;
-        }).when(bookRepository).delete(bookToDelete);
+        }).when(bookRepository).deleteById(bookToDelete.getId());
 
         doAnswer(invocation -> {
             comments.clear();
