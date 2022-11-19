@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import AppNavbar from './AppNavbar';
-import withRouter from "./WithRouter";
 
 class BookEdit extends Component {
 
     emptyItem = {
         name: '',
-        email: ''
+        author: {id: 1},
+        genre: {id: 1}
     };
 
     constructor(props) {
@@ -21,9 +21,11 @@ class BookEdit extends Component {
     }
 
     async componentDidMount() {
-        if (this.props.match.params.id !== 'new') {
-            const book = await (await fetch(`/api/book/${this.props.match.params.id}`)).json();
+        console.log(this.props);
+        if (this.props.id !== 'new') {
+            const book = await (await fetch(`/books/${this.props.id}`)).json();
             this.setState({item: book});
+            console.log(book);
         }
     }
 
@@ -39,8 +41,8 @@ class BookEdit extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         const {item} = this.state;
-
-        await fetch('/api/book' + (item.id ? '/' + item.id : ''), {
+        console.log(item);
+        await fetch('/books' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -48,7 +50,7 @@ class BookEdit extends Component {
             },
             body: JSON.stringify(item),
         });
-        this.props.history.push('/book');
+        this.props.navigate('/books');
     }
 
     render() {
@@ -61,29 +63,34 @@ class BookEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Label for="Название">Name</Label>
+                        <Label for="name">Название</Label>
                         <Input type="text" name="name" id="name" value={item.name || ''}
                                onChange={this.handleChange} autoComplete="name"/>
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="Автор">Email</Label>
-                        <Input type="text" name="email" id="email" value={item.author.name || ''}
-                               onChange={this.handleChange} autoComplete="email"/>
+                    {/*<FormGroup>
+                        <Label for="author">Автор</Label>
+                        <Input type="text" name="author" id="author" value={item.author.name || ''}
+                               onChange={this.handleChange} autoComplete="author"/>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="Жанр">Email</Label>
-                        <Input type="text" name="email" id="email" value={item.genre.name || ''}
-                               onChange={this.handleChange} autoComplete="email"/>
-                    </FormGroup>
+                        <Label for="genre">Жанр</Label>
+                        <Input type="text" name="genre" id="genre" value={item.genre.name || ''}
+                               onChange={this.handleChange} autoComplete="genre"/>
+                    </FormGroup>*/}
                     <FormGroup>
                         <Button color="primary" type="submit">Сохранить</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/book">Отмена</Button>
+                        <Button color="secondary" tag={Link} to="/books">Отмена</Button>
                     </FormGroup>
                 </Form>
             </Container>
         </div>
     }
-
 }
 
-export default withRouter(BookEdit);
+function BookEditWithNavigate(props) {
+    let navigate = useNavigate();
+    const {id} = useParams();
+    return <BookEdit {...props} navigate={navigate} id={id}/>
+}
+
+export default BookEditWithNavigate

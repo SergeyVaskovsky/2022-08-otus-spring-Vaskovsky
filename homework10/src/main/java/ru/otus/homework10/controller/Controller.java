@@ -1,15 +1,13 @@
 package ru.otus.homework10.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import ru.otus.homework10.model.Author;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.otus.homework10.model.Book;
 import ru.otus.homework10.service.AuthorService;
 import ru.otus.homework10.service.BookService;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -19,23 +17,39 @@ public class Controller {
     private final BookService bookService;
     private final AuthorService authorService;
 
-    @GetMapping("/api/book")
+    @GetMapping("/books")
     public List<Book> getBooks() {
         return bookService.getAll();
     }
 
-    @DeleteMapping("/api/book/{id}")
+    @DeleteMapping("/books/{id}")
     public void deleteBook(@PathVariable long id) {
         bookService.delete(id);
     }
 
-    @GetMapping("/api/book/{id}")
-    public void getBook(@PathVariable long id) {
-        bookService.getById(id);
+    @GetMapping("/books/{id}")
+    public Book getBook(@PathVariable long id) {
+        return bookService.getById(id);
     }
 
-    @GetMapping("/api/author")
-    public List<Author> getAuthors() {
-        return authorService.getAll();
+    @PostMapping("/books")
+    public ResponseEntity createBook(@RequestBody Book book) throws URISyntaxException {
+        Book savedBook = bookService.upsert(
+                -1L,
+                book.getName(),
+                book.getAuthor().getId(),
+                book.getGenre().getId());
+        return ResponseEntity.ok(savedBook);
+    }
+
+    @PutMapping("/books/{id}")
+    public ResponseEntity updateClient(@PathVariable Long id, @RequestBody Book book) {
+        Book savedBook = bookService.upsert(
+                id,
+                book.getName(),
+                book.getAuthor().getId(),
+                book.getGenre().getId());
+
+        return ResponseEntity.ok(savedBook);
     }
 }

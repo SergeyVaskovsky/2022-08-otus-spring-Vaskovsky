@@ -19,6 +19,7 @@ public class BookServiceImpl implements BookService {
     private final AuthorService authorService;
     private final GenreService genreService;
     private final BookRepository bookRepository;
+    //private final CommentService commentService;
 
     @Override
     public List<Book> getAll() {
@@ -49,6 +50,7 @@ public class BookServiceImpl implements BookService {
         if (isNull(book)) {
             return;
         }
+        //commentService.delete(bookId);
         bookRepository.delete(book);
     }
 
