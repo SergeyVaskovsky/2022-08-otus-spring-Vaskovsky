@@ -1,3 +1,4 @@
+/*
 package ru.otus.homework10.command;
 
 import lombok.RequiredArgsConstructor;
@@ -110,3 +111,4 @@ public class Commands {
 
 }
 
+*/

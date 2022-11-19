@@ -14,7 +14,7 @@ module.exports = {
     devServer: {
         static: path.resolve(__dirname) + '/src/ui',
         compress: true,
-        port: 9000,
+        port: 9001,
         host: 'localhost',
         open: true,
         /*

@@ -1,58 +1,21 @@
-import React from 'react'
+import React, {Component} from 'react';
+import Home from './Home';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import BookList from './BookList';
+import BookEdit from "./BookEdit";
 
-const styles = {
-    personsTable: {
-        border: "1px solid steelblue",
-        width: "300px",
-        borderCollapse: "collapse",
-    },
-
-    personsTableItem: {
-        padding: "5px",
-        border: "1px solid steelblue"
+class App extends Component {
+    render() {
+        return (
+            <Router>
+                <Routes>
+                    <Route path='/' element={<Home/>}/>
+                    <Route path='/book' element={<BookList/>}/>
+                    <Route path='/book/new' element={<BookEdit/>}/>
+                </Routes>
+            </Router>
+        )
     }
 }
 
-const Header = (props) => (
-    <h1>{props.title}</h1>
-);
-
-export default class App extends React.Component {
-
-    constructor() {
-        super();
-        this.state = {persons: []};
-    }
-
-    componentDidMount() {
-        fetch('/api/persons')
-            .then(response => response.json())
-            .then(persons => this.setState({persons}));
-    }
-
-    render() {
-        return (
-            <React.Fragment>
-                <Header title={'Persons'}/>
-                <table style={styles.personsTable}>
-                    <thead>
-                    <tr style={styles.personsTableItem}>
-                        <th style={styles.personsTableItem}>ID</th>
-                        <th style={styles.personsTableItem}>Name</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        this.state.persons.map((person, i) => (
-                            <tr style={styles.personsTableItem} key={i}>
-                                <td style={styles.personsTableItem}>{person.id}</td>
-                                <td style={styles.personsTableItem}>{person.name}</td>
-                            </tr>
-                        ))
-                    }
-                    </tbody>
-                </table>
-            </React.Fragment>
-        )
-    }
-};
+export default App;
