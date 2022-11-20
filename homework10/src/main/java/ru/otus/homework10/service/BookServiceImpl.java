@@ -11,7 +11,6 @@ import ru.otus.homework10.repository.BookRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +18,8 @@ public class BookServiceImpl implements BookService {
     private final AuthorService authorService;
     private final GenreService genreService;
     private final BookRepository bookRepository;
-    //private final CommentService commentService;
+
+    private final CommentService commentService;
 
     @Override
     public List<Book> getAll() {
@@ -46,12 +46,8 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public void delete(long bookId) {
-        Book book = bookRepository.findById(bookId).orElse(null);
-        if (isNull(book)) {
-            return;
-        }
-        //commentService.delete(bookId);
-        bookRepository.delete(book);
+        commentService.deleteAll(commentService.getAll(bookId));
+        bookRepository.deleteById(bookId);
     }
 
 }

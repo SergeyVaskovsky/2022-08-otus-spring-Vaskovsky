@@ -8,14 +8,12 @@ import ru.otus.homework10.repository.CommentRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final BookService bookService;
+    private final BookCommentService bookService;
 
     @Override
     public List<Comment> getAll(long bookId) {
@@ -33,10 +31,11 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public void delete(long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElse(null);
-        if (isNull(comment)) {
-            return;
-        }
-        commentRepository.delete(comment);
+        commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public void deleteAll(Iterable<Comment> comments) {
+        commentRepository.deleteAll(comments);
     }
 }

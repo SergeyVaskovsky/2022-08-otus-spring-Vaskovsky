@@ -29,4 +29,17 @@ public class Book {
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     private Genre genre;
+
+    /*@EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    public Book(long bookId, String bookName, Author author, Genre genre) {
+        this.id = bookId;
+        this.name = bookName;
+        this.author = author;
+        this.genre = genre;
+    }*/
+
+
 }

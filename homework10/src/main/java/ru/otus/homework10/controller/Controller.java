@@ -3,9 +3,12 @@ package ru.otus.homework10.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.otus.homework10.model.Author;
 import ru.otus.homework10.model.Book;
+import ru.otus.homework10.model.Genre;
 import ru.otus.homework10.service.AuthorService;
 import ru.otus.homework10.service.BookService;
+import ru.otus.homework10.service.GenreService;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -16,6 +19,7 @@ public class Controller {
 
     private final BookService bookService;
     private final AuthorService authorService;
+    private final GenreService genreService;
 
     @GetMapping("/books")
     public List<Book> getBooks() {
@@ -51,5 +55,15 @@ public class Controller {
                 book.getGenre().getId());
 
         return ResponseEntity.ok(savedBook);
+    }
+
+    @GetMapping("/books/authors")
+    public List<Author> getAuthors() {
+        return authorService.getAll();
+    }
+
+    @GetMapping("/books/genres")
+    public List<Genre> getGenres() {
+        return genreService.getAll();
     }
 }

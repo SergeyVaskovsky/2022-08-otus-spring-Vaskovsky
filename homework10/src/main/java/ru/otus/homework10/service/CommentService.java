@@ -10,4 +10,6 @@ public interface CommentService {
     Comment upsert(long commentId, String description, long bookId);
 
     void delete(long commentId);
+
+    void deleteAll(Iterable<Comment> comments);
 }
