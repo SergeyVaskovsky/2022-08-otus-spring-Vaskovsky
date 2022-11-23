@@ -2,13 +2,16 @@ import React, {Component} from 'react';
 import {Button, ButtonGroup, Container, Table} from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import {Link} from 'react-router-dom';
+import Comments from "./Comments";
+
 
 class BookList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {books: []};
+        this.state = {books: [], show: false, currentBook: {}};
         this.remove = this.remove.bind(this);
+        this.showComments = this.showComments.bind(this);
     }
 
     componentDidMount() {
@@ -27,7 +30,15 @@ class BookList extends Component {
         }).then(() => {
             let updatedBooks = [...this.state.books].filter(i => i.id !== id);
             this.setState({books: updatedBooks});
+            if (this.state.currentBook.id === id) {
+                this.setState({show: false, currentBook: {}})
+            }
         });
+    }
+
+    showComments(book) {
+        this.setState({show: true, currentBook: book})
+        this.forceUpdate();
     }
 
     render() {
@@ -40,27 +51,36 @@ class BookList extends Component {
                 <td>{book.genre.name}</td>
                 <td>
                     <ButtonGroup>
+                        <Button size="sm" color="primary" onClick={() => this.showComments(book)}>Отзывы</Button>
+                    </ButtonGroup>
+                </td>
+                <td>
+                    <ButtonGroup>
                         <Button size="sm" color="primary" tag={Link} to={"/books/" + book.id}>Изменить</Button>
                         <Button size="sm" color="danger" onClick={() => this.remove(book.id)}>Удалить</Button>
                     </ButtonGroup>
                 </td>
             </tr>
+
         });
+
 
         return (
             <div>
                 <AppNavbar/>
                 <Container fluid>
+                    <h2>Книги</h2>
                     <div className="float-right">
                         <Button color="success" tag={Link} to="/books/new">Добавить книгу</Button>
                     </div>
-                    <h3>Книги</h3>
+
                     <Table className="mt-4">
                         <thead>
                         <tr>
                             <th width="50%">Название</th>
-                            <th width="25%">Автор</th>
+                            <th width="15%">Автор</th>
                             <th width="15%">Жанр</th>
+                            <th width="10%">Отзывы</th>
                             <th width="10%">Действие</th>
                         </tr>
                         </thead>
@@ -69,6 +89,13 @@ class BookList extends Component {
                         </tbody>
                     </Table>
                 </Container>
+                {this.state.show &&
+                    <table className="mt-4">
+                        <tbody>
+                        <Comments book={this.state.currentBook}/>
+                        </tbody>
+                    </table>
+                }
             </div>
         );
     }

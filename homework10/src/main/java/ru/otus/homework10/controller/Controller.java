@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.homework10.model.Author;
 import ru.otus.homework10.model.Book;
+import ru.otus.homework10.model.Comment;
 import ru.otus.homework10.model.Genre;
 import ru.otus.homework10.service.AuthorService;
 import ru.otus.homework10.service.BookService;
+import ru.otus.homework10.service.CommentService;
 import ru.otus.homework10.service.GenreService;
 
 import java.net.URISyntaxException;
@@ -20,6 +22,7 @@ public class Controller {
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
+    private final CommentService commentService;
 
     @GetMapping("/books")
     public List<Book> getBooks() {
@@ -65,5 +68,15 @@ public class Controller {
     @GetMapping("/books/genres")
     public List<Genre> getGenres() {
         return genreService.getAll();
+    }
+
+    @GetMapping("/books/comments/{id}")
+    public List<Comment> getComments(@PathVariable Long id) {
+        return commentService.getAll(id);
+    }
+
+    @DeleteMapping("/books/comments/{id}")
+    public void deleteComment(@PathVariable Long id) {
+        commentService.delete(id);
     }
 }

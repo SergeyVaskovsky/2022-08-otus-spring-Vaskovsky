@@ -1,6 +1,5 @@
 package ru.otus.homework10.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.otus.homework10.model.Comment;
 
@@ -11,10 +10,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Comment save(Comment comment);
 
-    @EntityGraph(attributePaths = {"book"})
+    //@EntityGraph(attributePaths = {"book"})
     Optional<Comment> findById(long id);
 
-    @EntityGraph(attributePaths = {"book"})
+    //@EntityGraph(attributePaths = {"book"})
     List<Comment> findAllByBookId(long bookId);
 
     void delete(Comment comment);
