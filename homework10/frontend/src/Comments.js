@@ -1,27 +1,20 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, ButtonGroup} from 'reactstrap';
 
-class Comments extends Component {
+export default function Comments(book) {
+    const [comments, setComments] = useState([]);
 
-    constructor(props) {
-        super(props);
-        this.state = {comments: []};
-        this.remove = this.remove.bind(this);
-
-    }
-
-    componentDidMount() {
-        this.getComments()
-    }
-
-    getComments() {
-        fetch('/books/comments/' + this.props.book.id)
+    useEffect(() => {
+        fetch(`/books/comments/${book.book.id}`)
             .then(response => response.json())
-            .then(data => this.setState({comments: data}));
-        console.log(this.props.book);
-    }
+            .then(data => {
+                console.log(data);
+                setComments(data);
+            });
 
-    async remove(id) {
+    }, [book]);
+
+    const remove = async id => {
         await fetch(`/books/comments/${id}`, {
             method: 'DELETE',
             headers: {
@@ -29,29 +22,23 @@ class Comments extends Component {
                 'Content-Type': 'application/json'
             }
         }).then(() => {
-            let updatedComments = [...this.state.comments].filter(i => i.id !== id);
-            this.setState({comments: updatedComments});
+            let updatedComments = [...comments].filter(i => i.id !== id);
+            setComments(updatedComments);
         });
     }
 
-    render() {
-        const {comments} = this.state;
-
-        const commentList = comments.map(comment => {
-            return (
-                <tr key={comment.id}>
-                    <td style={{whiteSpace: 'nowrap'}}>{comment.description}</td>
-                    <td>
-                        <ButtonGroup>
-                            <Button size="sm" color="danger" onClick={() => this.remove(comment.id)}>Удалить</Button>
-                        </ButtonGroup>
-                    </td>
-                </tr>
-            )
-        });
-
-        return commentList;
-    }
+    return (
+        comments.map(comment => {
+                return (
+                    <tr key={comment.id}>
+                        <td style={{whiteSpace: 'nowrap'}}>{comment.description}</td>
+                        <td>
+                            <ButtonGroup>
+                                <Button size="sm" color="danger" onClick={() => remove(comment.id)}>Удалить</Button>
+                            </ButtonGroup>
+                        </td>
+                    </tr>
+                )
+            }
+        ));
 }
-
-export default Comments;
