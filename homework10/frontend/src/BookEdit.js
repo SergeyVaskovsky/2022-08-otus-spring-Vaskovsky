@@ -51,7 +51,7 @@ class BookEdit extends Component {
             return author.id == event.target.value;
         });
         let item = {...this.state.item};
-        item.author = value[0];
+        item.authorId = value[0].id;
         this.setState({item});
     }
 
@@ -60,7 +60,7 @@ class BookEdit extends Component {
             return genre.id == event.target.value;
         });
         let item = {...this.state.item};
-        item.genre = value[0];
+        item.genreId = value[0].id;
         this.setState({item});
     }
 
@@ -81,8 +81,8 @@ class BookEdit extends Component {
     render() {
         const {item} = this.state;
         const title = <h2>{item.id ? 'Изменить книгу' : 'Добавить книгу'}</h2>;
-        const currentAuthor = item.author
-        const currentGenre = item.genre
+        const currentAuthorId = item.authorId
+        const currentGenreId = item.genreId
         return <div>
             <AppNavbar/>
             <Container>
@@ -101,7 +101,7 @@ class BookEdit extends Component {
                             <option key={-1} value={-1} selected disabled>Выберите автора</option>
                             {this.state.authors.map(author => <option key={author.id}
                                                                       value={author.id}
-                                                                      selected={author.id == currentAuthor.id}>{author.name}</option>)}
+                                                                      selected={author.id == currentAuthorId}>{author.name}</option>)}
                         </select>
                     </FormGroup>
                     <Label for="author">Жанр</Label>
@@ -111,7 +111,7 @@ class BookEdit extends Component {
                         <option key={-1} value={-1} selected disabled>Выберите жанр</option>
                         {this.state.genres.map(genre => <option key={genre.id}
                                                                 value={genre.id}
-                                                                selected={genre.id == currentGenre.id}>{genre.name}</option>)}
+                                                                selected={genre.id == currentGenreId}>{genre.name}</option>)}
                     </select>
                     <FormGroup>
                         <Button color="primary" type="submit">Сохранить</Button>{' '}

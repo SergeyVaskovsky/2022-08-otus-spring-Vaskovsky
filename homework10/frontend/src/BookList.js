@@ -47,8 +47,8 @@ class BookList extends Component {
         const bookList = books.map(book => {
             return <tr key={book.id}>
                 <td style={{whiteSpace: 'nowrap'}}>{book.name}</td>
-                <td>{book.author.name}</td>
-                <td>{book.genre.name}</td>
+                <td>{book.authorName}</td>
+                <td>{book.genreName}</td>
                 <td>
                     <ButtonGroup>
                         <Button size="sm" color="primary" onClick={() => this.showComments(book)}>Отзывы</Button>

@@ -1,18 +1,20 @@
 package ru.otus.homework10.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.homework10.model.Author;
+import ru.otus.homework10.mapping.AuthorDto;
+import ru.otus.homework10.mapping.BookDto;
+import ru.otus.homework10.mapping.CommentDto;
+import ru.otus.homework10.mapping.GenreDto;
 import ru.otus.homework10.model.Book;
 import ru.otus.homework10.model.Comment;
-import ru.otus.homework10.model.Genre;
 import ru.otus.homework10.service.AuthorService;
 import ru.otus.homework10.service.BookService;
 import ru.otus.homework10.service.CommentService;
 import ru.otus.homework10.service.GenreService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,8 +26,19 @@ public class Controller {
     private final CommentService commentService;
 
     @GetMapping("/books")
-    public List<Book> getBooks() {
-        return bookService.getAll();
+    public List<BookDto> getBooks() {
+        return bookService
+                .getAll()
+                .stream()
+                .map(b -> new BookDto(
+                        b.getId(),
+                        b.getName(),
+                        b.getAuthor().getId(),
+                        b.getAuthor().getName(),
+                        b.getGenre().getId(),
+                        b.getGenre().getName()
+                ))
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/books/{id}")
@@ -34,49 +47,84 @@ public class Controller {
     }
 
     @GetMapping("/books/{id}")
-    public Book getBook(@PathVariable long id) {
-        return bookService.getById(id);
+    public BookDto getBook(@PathVariable long id) {
+        Book b = bookService.getById(id);
+        return new BookDto(
+                b.getId(),
+                b.getName(),
+                b.getAuthor().getId(),
+                b.getAuthor().getName(),
+                b.getGenre().getId(),
+                b.getGenre().getName()
+        );
     }
 
     @PostMapping("/books")
-    public ResponseEntity createBook(@RequestBody Book book) {
-        Book savedBook = bookService.upsert(
+    public BookDto createBook(@RequestBody BookDto book) {
+        Book b = bookService.upsert(
                 -1L,
                 book.getName(),
-                book.getAuthor().getId(),
-                book.getGenre().getId());
-        return ResponseEntity.ok(savedBook);
+                book.getAuthorId(),
+                book.getGenreId());
+        return new BookDto(
+                b.getId(),
+                b.getName(),
+                b.getAuthor().getId(),
+                b.getAuthor().getName(),
+                b.getGenre().getId(),
+                b.getGenre().getName()
+        );
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity updateClient(@PathVariable Long id, @RequestBody Book book) {
-        Book savedBook = bookService.upsert(
+    public BookDto updateBook(@PathVariable Long id, @RequestBody BookDto book) {
+        Book b = bookService.upsert(
                 id,
                 book.getName(),
-                book.getAuthor().getId(),
-                book.getGenre().getId());
+                book.getAuthorId(),
+                book.getGenreId());
 
-        return ResponseEntity.ok(savedBook);
+        return new BookDto(
+                b.getId(),
+                b.getName(),
+                b.getAuthor().getId(),
+                b.getAuthor().getName(),
+                b.getGenre().getId(),
+                b.getGenre().getName()
+        );
     }
 
     @GetMapping("/books/authors")
-    public List<Author> getAuthors() {
-        return authorService.getAll();
+    public List<AuthorDto> getAuthors() {
+        return authorService
+                .getAll()
+                .stream()
+                .map(a -> new AuthorDto(a.getId(), a.getName()))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/books/genres")
-    public List<Genre> getGenres() {
-        return genreService.getAll();
+    public List<GenreDto> getGenres() {
+        return genreService
+                .getAll()
+                .stream()
+                .map(g -> new GenreDto(g.getId(), g.getName()))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/books/comments/{id}")
-    public List<Comment> getComments(@PathVariable Long id) {
-        return commentService.getAll(id);
+    public List<CommentDto> getComments(@PathVariable Long id) {
+        return commentService
+                .getAll(id)
+                .stream()
+                .map(c -> new CommentDto(c.getId(), c.getDescription(), c.getBook().getId()))
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/books/{bookId}/comments")
-    public Comment addComment(@PathVariable Long bookId, @RequestBody String description) {
-        return commentService.upsert(0, description, bookId);
+    public CommentDto addComment(@PathVariable Long bookId, @RequestBody String description) {
+        Comment comment = commentService.upsert(0, description, bookId);
+        return new CommentDto(comment.getId(), comment.getDescription(), comment.getBook().getId());
     }
 
     @DeleteMapping("/books/comments/{id}")
