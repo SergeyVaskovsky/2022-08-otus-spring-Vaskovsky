@@ -12,7 +12,6 @@ import ru.otus.homework10.service.BookService;
 import ru.otus.homework10.service.CommentService;
 import ru.otus.homework10.service.GenreService;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -40,7 +39,7 @@ public class Controller {
     }
 
     @PostMapping("/books")
-    public ResponseEntity createBook(@RequestBody Book book) throws URISyntaxException {
+    public ResponseEntity createBook(@RequestBody Book book) {
         Book savedBook = bookService.upsert(
                 -1L,
                 book.getName(),
@@ -73,6 +72,11 @@ public class Controller {
     @GetMapping("/books/comments/{id}")
     public List<Comment> getComments(@PathVariable Long id) {
         return commentService.getAll(id);
+    }
+
+    @PostMapping("/books/{bookId}/comments")
+    public Comment addComment(@PathVariable Long bookId, @RequestBody String description) {
+        return commentService.upsert(0, description, bookId);
     }
 
     @DeleteMapping("/books/comments/{id}")

@@ -90,11 +90,7 @@ class BookList extends Component {
                     </Table>
                 </Container>
                 {this.state.show &&
-                    <table className="mt-4">
-                        <tbody>
-                        <Comments book={this.state.currentBook}/>
-                        </tbody>
-                    </table>
+                    <Comments book={this.state.currentBook}/>
                 }
             </div>
         );
