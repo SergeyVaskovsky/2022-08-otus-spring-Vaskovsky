@@ -30,14 +30,7 @@ public class Controller {
         return bookService
                 .getAll()
                 .stream()
-                .map(b -> new BookDto(
-                        b.getId(),
-                        b.getName(),
-                        b.getAuthor().getId(),
-                        b.getAuthor().getName(),
-                        b.getGenre().getId(),
-                        b.getGenre().getName()
-                ))
+                .map(BookDto::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -49,19 +42,12 @@ public class Controller {
     @GetMapping("/books/{id}")
     public BookDto getBook(@PathVariable long id) {
         Book b = bookService.getById(id);
-        return new BookDto(
-                b.getId(),
-                b.getName(),
-                b.getAuthor().getId(),
-                b.getAuthor().getName(),
-                b.getGenre().getId(),
-                b.getGenre().getName()
-        );
+        return BookDto.toDto(b);
     }
 
     @PostMapping("/books")
     public void createBook(@RequestBody BookDto book) {
-        Book b = bookService.upsert(
+        bookService.upsert(
                 -1L,
                 book.getName(),
                 book.getAuthorId(),
@@ -70,7 +56,7 @@ public class Controller {
 
     @PutMapping("/books/{id}")
     public void updateBook(@PathVariable Long id, @RequestBody BookDto book) {
-        Book b = bookService.upsert(
+        bookService.upsert(
                 id,
                 book.getName(),
                 book.getAuthorId(),
@@ -95,19 +81,19 @@ public class Controller {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/books/comments/{id}")
+    @GetMapping("/books/{id}/comments")
     public List<CommentDto> getComments(@PathVariable Long id) {
         return commentService
                 .getAll(id)
                 .stream()
-                .map(c -> new CommentDto(c.getId(), c.getDescription(), c.getBook().getId()))
+                .map(CommentDto::toDto)
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/books/{bookId}/comments")
     public CommentDto addComment(@PathVariable Long bookId, @RequestBody String description) {
         Comment comment = commentService.upsert(0, description, bookId);
-        return new CommentDto(comment.getId(), comment.getDescription(), comment.getBook().getId());
+        return CommentDto.toDto(comment);
     }
 
     @DeleteMapping("/books/comments/{id}")

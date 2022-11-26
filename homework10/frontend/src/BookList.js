@@ -14,7 +14,6 @@ export default function BookList() {
         fetch('/books')
             .then(response => response.json())
             .then(data => setBooks(data));
-
     }, []);
 
     const remove = async id => {

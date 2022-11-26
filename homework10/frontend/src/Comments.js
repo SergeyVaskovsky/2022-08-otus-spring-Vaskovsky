@@ -6,7 +6,7 @@ export default function Comments(data) {
     const [description, setNewDescription] = useState("");
 
     useEffect(() => {
-        fetch(`/books/comments/${data.book.id}`)
+        fetch(`/books/${data.book.id}/comments`)
             .then(response => response.json())
             .then(d => {
                 setComments(d);

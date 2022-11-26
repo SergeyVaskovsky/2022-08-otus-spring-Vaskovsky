@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.homework10.model.Author;
 import ru.otus.homework10.model.Book;
+import ru.otus.homework10.model.Comment;
 import ru.otus.homework10.model.Genre;
 import ru.otus.homework10.repository.BookRepository;
 
@@ -29,6 +30,8 @@ public class BookServiceImplTest {
     private GenreService genreService;
     @MockBean
     private BookRepository bookRepository;
+    @MockBean
+    private CommentService commentService;
 
     @Test
     void shouldReturnAllBooks() {
@@ -76,13 +79,20 @@ public class BookServiceImplTest {
         books.add(new Book(2L, "Повесть", new Author(2L, "Писатель 2"), new Genre(2L, "Беллитристика")));
         books.add(new Book(3L, "Статья", new Author(3L, "Ученый"), new Genre(3L, "Наука")));
 
+        List<Comment> comments = new ArrayList<>();
+        comments.add(new Comment(1L, "123", bookToDelete));
+        comments.add(new Comment(2L, "456", bookToDelete));
+
+        when(commentService.getAll((bookToDelete.getId()))).thenReturn(comments);
+        //when(commentService.deleteAll(comments)).thenReturn()
+
         when(bookRepository.findAll()).thenReturn(books);
         when(bookRepository.findById(bookToDelete.getId())).thenReturn(Optional.of(bookToDelete));
 
         doAnswer(invocation -> {
             books.remove(bookToDelete);
             return null;
-        }).when(bookRepository).delete(bookToDelete);
+        }).when(bookRepository).deleteById(bookToDelete.getId());
 
         bookServiceImpl.delete(bookToDelete.getId());
         assertThat(bookServiceImpl

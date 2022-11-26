@@ -18,7 +18,6 @@ public class BookServiceImpl implements BookService {
     private final AuthorService authorService;
     private final GenreService genreService;
     private final BookRepository bookRepository;
-
     private final CommentService commentService;
 
     @Override
