@@ -60,38 +60,21 @@ public class Controller {
     }
 
     @PostMapping("/books")
-    public BookDto createBook(@RequestBody BookDto book) {
+    public void createBook(@RequestBody BookDto book) {
         Book b = bookService.upsert(
                 -1L,
                 book.getName(),
                 book.getAuthorId(),
                 book.getGenreId());
-        return new BookDto(
-                b.getId(),
-                b.getName(),
-                b.getAuthor().getId(),
-                b.getAuthor().getName(),
-                b.getGenre().getId(),
-                b.getGenre().getName()
-        );
     }
 
     @PutMapping("/books/{id}")
-    public BookDto updateBook(@PathVariable Long id, @RequestBody BookDto book) {
+    public void updateBook(@PathVariable Long id, @RequestBody BookDto book) {
         Book b = bookService.upsert(
                 id,
                 book.getName(),
                 book.getAuthorId(),
                 book.getGenreId());
-
-        return new BookDto(
-                b.getId(),
-                b.getName(),
-                b.getAuthor().getId(),
-                b.getAuthor().getName(),
-                b.getGenre().getId(),
-                b.getGenre().getName()
-        );
     }
 
     @GetMapping("/books/authors")

@@ -1,72 +1,63 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import AppNavbar from './AppNavbar';
 
-class BookEdit extends Component {
+export default function BookEdit() {
 
-    emptyItem = {
+    const emptyItem = {
         name: '',
-        author: {id: -1},
-        genre: {id: -1}
+        authorId: -1,
+        genreId: -1
     };
+    const [item, setItem] = useState(emptyItem);
+    const [authors, setAuthors] = useState([]);
+    const [genres, setGenres] = useState([]);
+    let navigate = useNavigate();
+    const {id} = useParams();
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            item: this.emptyItem,
-            authors: [],
-            genres: []
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleChangeAuthor = this.handleChangeAuthor.bind(this);
-        this.handleChangeGenre = this.handleChangeGenre.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+    useEffect(() => {
+        fetch(`/books/authors`)
+            .then(response => response.json())
+            .then(data => setAuthors(data));
 
-    async componentDidMount() {
-        const authors = await (await fetch(`/books/authors`)).json();
-        this.setState({authors: authors});
+        fetch(`/books/genres`)
+            .then(response => response.json())
+            .then(data => setGenres(data));
 
-        const genres = await (await fetch(`/books/genres`)).json();
-        this.setState({genres: genres});
-
-        if (this.props.id !== 'new') {
-            const book = await (await fetch(`/books/${this.props.id}`)).json();
-            this.setState({item: book});
+        if (id !== 'new') {
+            fetch(`/books/${id}`)
+                .then(response => response.json())
+                .then(data => setItem(data));
         }
+    }, [id, setItem, setAuthors, setGenres]);
+
+    const handleChange = value => {
+        let book = {...item};
+        book.name = value;
+        setItem(book);
     }
 
-    handleChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-        let item = {...this.state.item};
-        item[name] = value;
-        this.setState({item});
-    }
-
-    handleChangeAuthor(event) {
-        const value = this.state.authors.filter(function (author) {
-            return author.id == event.target.value;
+    const handleChangeAuthor = value => {
+        const tmpAuthors = authors.filter(function (author) {
+            return author.id == value;
         });
-        let item = {...this.state.item};
-        item.authorId = value[0].id;
-        this.setState({item});
+        let book = {...item};
+        book.authorId = tmpAuthors[0].id;
+        setItem(book);
     }
 
-    handleChangeGenre(event) {
-        const value = this.state.genres.filter(function (genre) {
-            return genre.id == event.target.value;
+    const handleChangeGenre = value => {
+        const tmpGenres = genres.filter(function (genre) {
+            return genre.id == value;
         });
-        let item = {...this.state.item};
-        item.genreId = value[0].id;
-        this.setState({item});
+        let book = {...item};
+        book.genreId = tmpGenres[0].id;
+        setItem(book);
     }
 
-    async handleSubmit(event) {
+    const handleSubmit = async event => {
         event.preventDefault();
-        const {item} = this.state;
         await fetch('/books' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
@@ -75,44 +66,43 @@ class BookEdit extends Component {
             },
             body: JSON.stringify(item),
         });
-        this.props.navigate('/books');
+        navigate('/books');
     }
 
-    render() {
-        const {item} = this.state;
-        const title = <h2>{item.id ? 'Изменить книгу' : 'Добавить книгу'}</h2>;
-        const currentAuthorId = item.authorId
-        const currentGenreId = item.genreId
-        return <div>
+    return (
+        <div>
             <AppNavbar/>
             <Container>
-                {title}
-                <Form onSubmit={this.handleSubmit}>
+                <h2>{item.id ? 'Изменить книгу' : 'Добавить книгу'}</h2>
+                <Form onSubmit={(event) => {
+                    handleSubmit(event)
+                }}>
                     <FormGroup>
                         <Label for="name">Название</Label>
                         <Input type="text" name="name" id="name" value={item.name || ''}
-                               onChange={this.handleChange} autoComplete="name"/>
+                               onChange={(event) => handleChange(event.target.value)} autoComplete="name"/>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="author">Автор</Label>
+                        <Label for="author">Автор</Label><br/>
                         <select
                             id="authorDropDown"
-                            onChange={this.handleChangeAuthor}>
+                            onChange={(event) => handleChangeAuthor(event.target.value)}>
                             <option key={-1} value={-1} selected disabled>Выберите автора</option>
-                            {this.state.authors.map(author => <option key={author.id}
-                                                                      value={author.id}
-                                                                      selected={author.id == currentAuthorId}>{author.name}</option>)}
+                            {authors.map(author => <option key={author.id}
+                                                           value={author.id}
+                                                           selected={author.id == item.authorId}>{author.name}</option>)}
                         </select>
                     </FormGroup>
-                    <Label for="author">Жанр</Label>
+                    <Label for="author">Жанр</Label><br/>
                     <select
                         id="genreDropDown"
-                        onChange={this.handleChangeGenre}>
+                        onChange={(event) => handleChangeGenre(event.target.value)}>
                         <option key={-1} value={-1} selected disabled>Выберите жанр</option>
-                        {this.state.genres.map(genre => <option key={genre.id}
-                                                                value={genre.id}
-                                                                selected={genre.id == currentGenreId}>{genre.name}</option>)}
+                        {genres.map(genre => <option key={genre.id}
+                                                     value={genre.id}
+                                                     selected={genre.id == item.genreId}>{genre.name}</option>)}
                     </select>
+                    <br/>
                     <FormGroup>
                         <Button color="primary" type="submit">Сохранить</Button>{' '}
                         <Button color="secondary" tag={Link} to="/books">Отмена</Button>
@@ -120,13 +110,6 @@ class BookEdit extends Component {
                 </Form>
             </Container>
         </div>
-    }
+    );
 }
 
-function BookEditWithNavigate(props) {
-    let navigate = useNavigate();
-    const {id} = useParams();
-    return <BookEdit {...props} navigate={navigate} id={id}/>
-}
-
-export default BookEditWithNavigate
