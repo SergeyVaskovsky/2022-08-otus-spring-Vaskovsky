@@ -10,10 +10,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Comment save(Comment comment);
 
-    //@EntityGraph(attributePaths = {"book"})
     Optional<Comment> findById(long id);
 
-    //@EntityGraph(attributePaths = {"book"})
     List<Comment> findAllByBookId(long bookId);
 
     void delete(Comment comment);
