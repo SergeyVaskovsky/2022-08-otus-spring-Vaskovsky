@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import AppNavbar from './AppNavbar';
+import AuthorSelect from "./AuthorSelect";
 
 export default function BookEdit() {
 
@@ -11,7 +12,7 @@ export default function BookEdit() {
         genreId: -1
     };
     const [item, setItem] = useState(emptyItem);
-    const [authors, setAuthors] = useState([]);
+
     const [genres, setGenres] = useState([]);
     let navigate = useNavigate();
     const {id} = useParams();
@@ -38,14 +39,6 @@ export default function BookEdit() {
         setItem(book);
     }
 
-    const handleChangeAuthor = value => {
-        const tmpAuthors = authors.filter(function (author) {
-            return author.id == value;
-        });
-        let book = {...item};
-        book.authorId = tmpAuthors[0].id;
-        setItem(book);
-    }
 
     const handleChangeGenre = value => {
         const tmpGenres = genres.filter(function (genre) {
@@ -82,17 +75,14 @@ export default function BookEdit() {
                         <Input type="text" name="name" id="name" value={item.name || ''}
                                onChange={(event) => handleChange(event.target.value)} autoComplete="name"/>
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="author">Автор</Label><br/>
-                        <select
-                            id="authorDropDown"
-                            onChange={(event) => handleChangeAuthor(event.target.value)}>
-                            <option key={-1} value={-1} selected disabled>Выберите автора</option>
-                            {authors.map(author => <option key={author.id}
-                                                           value={author.id}
-                                                           selected={author.id == item.authorId}>{author.name}</option>)}
-                        </select>
-                    </FormGroup>
+
+                    <AuthorSelect onSelectAuthor{(authorId) => {
+                        let book = {...item};
+                        book.authorId = authorId;
+                        setItem(book);
+                    }}
+                    />
+
                     <Label for="author">Жанр</Label><br/>
                     <select
                         id="genreDropDown"
