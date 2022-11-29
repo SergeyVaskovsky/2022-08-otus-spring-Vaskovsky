@@ -5,27 +5,22 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.otus.homework11.mapping.AuthorDto;
 import ru.otus.homework11.mapping.BookDto;
-import ru.otus.homework11.mapping.CommentDto;
-import ru.otus.homework11.mapping.GenreDto;
 import ru.otus.homework11.model.Author;
 import ru.otus.homework11.model.Book;
-import ru.otus.homework11.model.Comment;
 import ru.otus.homework11.model.Genre;
 import ru.otus.homework11.repository.AuthorRepository;
 import ru.otus.homework11.repository.BookRepository;
-import ru.otus.homework11.repository.CommentRepository;
 import ru.otus.homework11.repository.GenreRepository;
 
 @RestController
 @RequiredArgsConstructor
-public class Controller {
+public class BookController {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
-    private final CommentRepository commentRepository;
+
 
     @GetMapping(path = "/books", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<BookDto> getBooks() {
@@ -62,40 +57,5 @@ public class Controller {
                 .zip(author, genre)
                 .map(t -> new Book(id, bookDto.getName(), t.getT1(), t.getT2()))
                 .subscribe(book -> bookRepository.save(book).subscribe());
-    }
-
-    @GetMapping(path = "/books/authors", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<AuthorDto> getAuthors() {
-        return authorRepository.findAll()
-                .map(a ->
-                        new AuthorDto(a.getId(), a.getName())
-                );
-    }
-
-    @GetMapping(path = "/books/genres", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<GenreDto> getGenres() {
-        return genreRepository
-                .findAll()
-                .map(g -> new GenreDto(g.getId(), g.getName()));
-    }
-
-    @GetMapping(path = "/books/{id}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<CommentDto> getComments(@PathVariable String id) {
-        return commentRepository
-                .findAllByBookId(id)
-                .map(CommentDto::toDto);
-    }
-
-    @PostMapping(path = "/books/{bookId}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<CommentDto> addComment(@PathVariable String bookId, @RequestBody String description) {
-        Mono<Comment> comment = Mono.from(bookRepository.findById(bookId))
-                .map(book -> {
-                    return commentRepository.save(new Comment(description, book));
-                });
-    }
-
-    @DeleteMapping("/books/comments/{id}")
-    public void deleteComment(@PathVariable String id) {
-        commentRepository.deleteById(id).subscribe();
     }
 }
