@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class AuthorDto {
-    Long id;
+    String id;
     String name;
 }

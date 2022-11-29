@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class GenreDto {
-    Long id;
+    String id;
     String name;
 }

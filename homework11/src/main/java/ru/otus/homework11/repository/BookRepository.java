@@ -1,20 +1,15 @@
 package ru.otus.homework11.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.homework11.model.Book;
 
-import java.util.List;
-import java.util.Optional;
+public interface BookRepository extends ReactiveMongoRepository<Book, String> {
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+    Mono<Book> save(Book book);
 
-    Book save(Book book);
+    Mono<Book> findById(String id);
 
-    @EntityGraph(attributePaths = {"author", "genre"})
-    Optional<Book> findById(long id);
-
-    @EntityGraph(attributePaths = {"author", "genre"})
-    List<Book> findAll();
-
+    Flux<Book> findAll();
 }

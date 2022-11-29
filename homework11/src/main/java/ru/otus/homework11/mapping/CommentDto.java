@@ -5,9 +5,9 @@ import ru.otus.homework11.model.Comment;
 
 @Value
 public class CommentDto {
-    Long id;
+    String id;
     String description;
-    Long bookId;
+    String bookId;
 
     public static CommentDto toDto(Comment c) {
         return new CommentDto(c.getId(), c.getDescription(), c.getBook().getId());

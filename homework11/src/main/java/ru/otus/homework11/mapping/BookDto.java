@@ -6,11 +6,11 @@ import ru.otus.homework11.model.Book;
 @Value
 public class BookDto {
 
-    long id;
+    String id;
     String name;
-    long authorId;
+    String authorId;
     String authorName;
-    long genreId;
+    String genreId;
     String genreName;
 
     public static BookDto toDto(Book b) {
