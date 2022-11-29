@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {FormGroup, Label} from 'reactstrap';
 
-export default function AuthorSelect({onSelectAuthor = f => f}) {
+export default function AuthorSelect({itemAuthorId, onSelectAuthor = f => f}) {
 
     const [authors, setAuthors] = useState([]);
-    const [authorId, setAuthorId] = useState({});
 
     useEffect(() => {
         fetch(`/books/authors`)
@@ -12,12 +11,11 @@ export default function AuthorSelect({onSelectAuthor = f => f}) {
             .then(data => setAuthors(data));
     }, [setAuthors]);
 
-    const handleChangeAuthor = value => {
+    const handleChange = value => {
         const tmpAuthors = authors.filter(function (author) {
             return author.id == value;
         });
-        setAuthorId(tmpAuthors[0].authorId);
-        onSelectAuthor(authorId);
+        onSelectAuthor(tmpAuthors[0]);
     }
 
     return (
@@ -25,11 +23,11 @@ export default function AuthorSelect({onSelectAuthor = f => f}) {
             <Label for="author">Автор</Label><br/>
             <select
                 id="authorDropDown"
-                onChange={(event) => handleChangeAuthor(event.target.value)}>
+                onChange={(event) => handleChange(event.target.value)}>
                 <option key={-1} value={-1} selected disabled>Выберите автора</option>
                 {authors.map(author => <option key={author.id}
                                                value={author.id}
-                                               selected={author.id == item.authorId}>{author.name}</option>)}
+                                               selected={author.id == itemAuthorId}>{author.name}</option>)}
             </select>
         </FormGroup>
     );

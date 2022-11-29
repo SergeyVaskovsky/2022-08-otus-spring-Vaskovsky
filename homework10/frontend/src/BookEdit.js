@@ -3,6 +3,7 @@ import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import AppNavbar from './AppNavbar';
 import AuthorSelect from "./AuthorSelect";
+import GenreSelect from "./GenreSelect";
 
 export default function BookEdit() {
 
@@ -12,26 +13,16 @@ export default function BookEdit() {
         genreId: -1
     };
     const [item, setItem] = useState(emptyItem);
-
-    const [genres, setGenres] = useState([]);
     let navigate = useNavigate();
     const {id} = useParams();
 
     useEffect(() => {
-        fetch(`/books/authors`)
-            .then(response => response.json())
-            .then(data => setAuthors(data));
-
-        fetch(`/books/genres`)
-            .then(response => response.json())
-            .then(data => setGenres(data));
-
         if (id !== 'new') {
             fetch(`/books/${id}`)
                 .then(response => response.json())
                 .then(data => setItem(data));
         }
-    }, [id, setItem, setAuthors, setGenres]);
+    }, [id, setItem]);
 
     const handleChange = value => {
         let book = {...item};
@@ -39,18 +30,9 @@ export default function BookEdit() {
         setItem(book);
     }
 
-
-    const handleChangeGenre = value => {
-        const tmpGenres = genres.filter(function (genre) {
-            return genre.id == value;
-        });
-        let book = {...item};
-        book.genreId = tmpGenres[0].id;
-        setItem(book);
-    }
-
     const handleSubmit = async event => {
         event.preventDefault();
+        console.log(item);
         await fetch('/books' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
@@ -76,22 +58,24 @@ export default function BookEdit() {
                                onChange={(event) => handleChange(event.target.value)} autoComplete="name"/>
                     </FormGroup>
 
-                    <AuthorSelect onSelectAuthor{(authorId) => {
-                        let book = {...item};
-                        book.authorId = authorId;
-                        setItem(book);
-                    }}
+                    <AuthorSelect
+                        itemAuthorId={item.authorId}
+                        onSelectAuthor={(author) => {
+                            item.authorId = author.id;
+                            item.authorName = author.name;
+                            setItem(item);
+                        }}
                     />
 
-                    <Label for="author">Жанр</Label><br/>
-                    <select
-                        id="genreDropDown"
-                        onChange={(event) => handleChangeGenre(event.target.value)}>
-                        <option key={-1} value={-1} selected disabled>Выберите жанр</option>
-                        {genres.map(genre => <option key={genre.id}
-                                                     value={genre.id}
-                                                     selected={genre.id == item.genreId}>{genre.name}</option>)}
-                    </select>
+                    <GenreSelect
+                        itemGenreId={item.genreId}
+                        onSelectGenre={(genre) => {
+                            item.genreId = genre.id;
+                            item.genreName = genre.name;
+                            setItem(item);
+                        }}
+                    />
+
                     <br/>
                     <FormGroup>
                         <Button color="primary" type="submit">Сохранить</Button>{' '}
