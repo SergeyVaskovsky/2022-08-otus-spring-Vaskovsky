@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {FormGroup, Label} from 'reactstrap';
+import AuthorService from "../service/AuthorService";
 
 export default function AuthorSelect({itemAuthorId, onSelectAuthor = f => f}) {
 
     const [authors, setAuthors] = useState([]);
+    const authorService = new AuthorService();
 
     useEffect(() => {
-        fetch(`/books/authors`)
-            .then(response => response.json())
+        authorService.getAuthors()
             .then(data => setAuthors(data));
     }, [setAuthors]);
 

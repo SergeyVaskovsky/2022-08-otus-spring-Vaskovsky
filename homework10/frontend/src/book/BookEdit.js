@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
-import AppNavbar from './AppNavbar';
-import AuthorSelect from "./AuthorSelect";
-import GenreSelect from "./GenreSelect";
+import AppNavbar from '../main/AppNavbar';
+import AuthorSelect from "../author/AuthorSelect";
+import GenreSelect from "../genre/GenreSelect";
+import BookService from "../service/BookService";
 
 export default function BookEdit() {
 
@@ -15,11 +16,11 @@ export default function BookEdit() {
     const [item, setItem] = useState(emptyItem);
     let navigate = useNavigate();
     const {id} = useParams();
+    const bookService = new BookService();
 
     useEffect(() => {
         if (id !== 'new') {
-            fetch(`/books/${id}`)
-                .then(response => response.json())
+            bookService.getBook(id)
                 .then(data => setItem(data));
         }
     }, [id, setItem]);
@@ -32,15 +33,7 @@ export default function BookEdit() {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        console.log(item);
-        await fetch('/books' + (item.id ? '/' + item.id : ''), {
-            method: (item.id) ? 'PUT' : 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item),
-        });
+        await bookService.save(item);
         navigate('/books');
     }
 

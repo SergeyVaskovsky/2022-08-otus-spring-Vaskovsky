@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {FormGroup, Label} from 'reactstrap';
+import GenreService from "../service/GenreService";
 
 export default function GenreSelect({itemGenreId, onSelectGenre = f => f}) {
 
     const [genres, setGenres] = useState([]);
+    const genreService = new GenreService();
 
     useEffect(() => {
-        fetch(`/books/genres`)
-            .then(response => response.json())
+        genreService.getGenres()
             .then(data => setGenres(data));
     }, [setGenres]);
 

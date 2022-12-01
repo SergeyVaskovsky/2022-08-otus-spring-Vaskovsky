@@ -1,29 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import {Button, ButtonGroup, Container, Table} from 'reactstrap';
-import AppNavbar from './AppNavbar';
+import AppNavbar from '../main/AppNavbar';
 import {Link} from 'react-router-dom';
-import Comments from "./Comments";
+import Comments from "../comment/Comments";
+import BookService from "../service/BookService";
 
 export default function BookList() {
 
     const [books, setBooks] = useState([]);
     const [isShow, setIsShow] = useState(false);
     const [currentBook, setCurrentBook] = useState({});
+    const bookService = new BookService();
 
     useEffect(() => {
-        fetch('/books')
-            .then(response => response.json())
+        bookService.getBooks()
             .then(data => setBooks(data));
     }, []);
 
     const remove = async id => {
-        await fetch(`/books/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+        bookService.remove(id).then(() => {
             let updatedBooks = [...books].filter(i => i.id !== id);
             setBooks(updatedBooks);
             if (currentBook.id === id) {
