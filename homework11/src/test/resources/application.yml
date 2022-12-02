@@ -1,17 +1,4 @@
 spring:
   mongodb:
     embedded:
-      version: 3.5.5
-  data:
-    mongodb:
-      port: 0
-      database: test
-
-mongock:
-  runner-type: "ApplicationRunner"
-  change-logs-scan-package:
-    - ru.otus.homework08.changelogs
-  mongo-db:
-    write-concern:
-      journal: false
-    read-concern: local
+      version: "3.5.5"

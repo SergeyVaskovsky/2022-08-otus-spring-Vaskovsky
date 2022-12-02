@@ -5,7 +5,6 @@ import ru.otus.homework11.model.Book;
 
 @Value
 public class BookDto {
-
     String id;
     String name;
     String authorId;

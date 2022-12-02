@@ -3,21 +3,18 @@ package ru.otus.homework11.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.homework11.mapping.AuthorDto;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.homework11.mapping.BookDto;
-import ru.otus.homework11.mapping.CommentDto;
-import ru.otus.homework11.mapping.GenreDto;
 import ru.otus.homework11.model.Author;
 import ru.otus.homework11.model.Book;
-import ru.otus.homework11.model.Comment;
 import ru.otus.homework11.model.Genre;
-import ru.otus.homework11.service.AuthorService;
-import ru.otus.homework11.service.BookService;
-import ru.otus.homework11.service.CommentService;
-import ru.otus.homework11.service.GenreService;
+import ru.otus.homework11.repository.AuthorRepository;
+import ru.otus.homework11.repository.BookRepository;
+import ru.otus.homework11.repository.GenreRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,85 +23,124 @@ import java.util.stream.Collectors;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BookController.class)
+@SpringBootTest(classes = {BookController.class, ObjectMapper.class})
 public class BookControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private BookController bookController;
+
     @Autowired
     private ObjectMapper mapper;
+
     @MockBean
-    private BookService bookService;
+    private BookRepository bookRepository;
     @MockBean
-    private AuthorService authorService;
+    private AuthorRepository authorRepository;
     @MockBean
-    private GenreService genreService;
-    @MockBean
-    private CommentService commentService;
+    private GenreRepository genreRepository;
 
     @Test
     public void shouldReturnCorrectBookList() throws Exception {
+        WebTestClient client = WebTestClient
+                .bindToController(bookController)
+                .build();
+
         List<Book> books = new ArrayList<>();
-        books.add(new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин")));
-        books.add(new Book(2L, "Повесть", new Author(2L, "Писатель 2"), new Genre(2L, "Беллитристика")));
-        books.add(new Book(3L, "Статья", new Author(3L, "Ученый"), new Genre(3L, "Наука")));
-        given(bookService.getAll()).willReturn(books);
+        books.add(new Book("1", "Роман", new Author("1", "Писатель"), new Genre("1", "Для женщин")));
+        books.add(new Book("2", "Повесть", new Author("2", "Писатель 2"), new Genre("2", "Беллитристика")));
+        books.add(new Book("3", "Статья", new Author("3", "Ученый"), new Genre("3", "Наука")));
+        given(bookRepository.findAll()).willReturn(Flux.just(books.get(0), books.get(1), books.get(2)));
 
         List<BookDto> expectedResult = books.stream()
                 .map(BookDto::toDto).collect(Collectors.toList());
 
-        mockMvc
-                .perform(get("/books"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
+        client.get()
+                .uri("/books")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody().json(mapper.writeValueAsString(expectedResult));
     }
 
     @Test
-    void shouldReturnCorrectBookById() throws Exception {
-        Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
-        given(bookService.getById(book.getId())).willReturn(book);
-        BookDto expectedResult = BookDto.toDto(book);
+    void shouldReturnBookById() {
+        WebTestClient client = WebTestClient
+                .bindToController(bookController)
+                .build();
 
-        mockMvc
-                .perform(get("/books/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
+        Book book = new Book("1", "Роман", new Author("1", "Писатель"), new Genre("1", "Для женщин"));
+        given(bookRepository.findById(book.getId())).willReturn(Mono.just(book));
+
+        client.get()
+                .uri("/books/1")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody().jsonPath("name").isEqualTo("Роман")
+                .jsonPath("authorName").isEqualTo("Писатель")
+                .jsonPath("genreName").isEqualTo("Для женщин");
     }
 
     @Test
-    void shouldCorrectDeleteBook() throws Exception {
-        mockMvc.perform(delete("/books/1"))
-                .andExpect(status().isOk());
-        verify(bookService, times(1)).delete(1L);
+    void shouldCorrectDeleteBook() {
+        WebTestClient client = WebTestClient
+                .bindToController(bookController)
+                .build();
+
+        Book book = new Book("1", "Роман", new Author("1", "Писатель"), new Genre("1", "Для женщин"));
+
+        given(bookRepository.deleteById(book.getId())).willReturn(Mono.empty());
+
+        client.delete().uri("/books/1")
+                .exchange()
+                .expectStatus()
+                .isOk();
+        verify(bookRepository, times(1)).deleteById("1");
+    }
+
+
+    @Test
+    void shouldCorrectSaveNewBook() {
+        WebTestClient client = WebTestClient
+                .bindToController(bookController)
+                .build();
+        Author author = new Author("1", "Писатель");
+        Genre genre = new Genre("1", "Для женщин");
+        Book book = new Book("0", "Роман", author, genre);
+        given(authorRepository.findById("1")).willReturn(Mono.just(author));
+        given(genreRepository.findById("1")).willReturn(Mono.just(genre));
+        given(bookRepository.save(book)).willReturn(Mono.empty());
+
+        client.post()
+                .uri("/books")
+                .body(Mono.just(BookDto.toDto(book)), BookDto.class)
+                .exchange()
+                .expectStatus()
+                .isOk();
     }
 
     @Test
-    void shouldCorrectSaveNewBook() throws Exception {
-        Book book = new Book(0, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
-        given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
-        String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
+    void shouldCorrectUpdateBook() {
+        WebTestClient client = WebTestClient
+                .bindToController(bookController)
+                .build();
+        Author author = new Author("1", "Писатель");
+        Genre genre = new Genre("1", "Для женщин");
+        Book book = new Book("1", "Роман", author, genre);
+        given(authorRepository.findById("1")).willReturn(Mono.just(author));
+        given(genreRepository.findById("1")).willReturn(Mono.just(genre));
+        given(bookRepository.save(book)).willReturn(Mono.empty());
 
-        mockMvc.perform(post("/books").contentType(APPLICATION_JSON)
-                        .content(expectedResult))
-                .andExpect(status().isOk());
+        client.put()
+                .uri("/books/1")
+                .body(Mono.just(BookDto.toDto(book)), BookDto.class)
+                .exchange()
+                .expectStatus()
+                .isOk();
     }
-
-    @Test
-    void shouldCorrectUpdateBook() throws Exception {
-        Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
-        given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
-        String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
-
-        mockMvc.perform(put("/books/1").contentType(APPLICATION_JSON)
-                        .content(expectedResult))
-                .andExpect(status().isOk());
-    }
-
+}
+/*
     @Test
     public void shouldReturnCorrectAuthorList() throws Exception {
         List<Author> authors = new ArrayList<>();
@@ -171,5 +207,5 @@ public class BookControllerTest {
                 .andExpect(status().isOk());
         verify(commentService, times(1)).delete(1L);
     }
+*/
 
-}
