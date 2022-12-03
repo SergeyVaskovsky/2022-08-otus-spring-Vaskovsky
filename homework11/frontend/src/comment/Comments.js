@@ -1,44 +1,28 @@
 import React, {useEffect, useState} from 'react';
 import {Button, ButtonGroup} from 'reactstrap';
+import CommentsService from "../service/CommentsService";
 
 export default function Comments(data) {
     const [comments, setComments] = useState([]);
     const [description, setNewDescription] = useState("");
+    const commentsService = new CommentsService();
 
     useEffect(() => {
-        fetch(`/books/${data.book.id}/comments`)
-            .then(response => response.json())
-            .then(d => {
-                setComments(d);
-            });
-
+        commentsService.getComments(data.book.id).then(d => setComments(d));
     }, [data]);
 
-    const remove = async id => {
-        await fetch(`/books/comments/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
+    const remove = id => {
+        commentsService.remove(id).then(() => {
             let updatedComments = [...comments].filter(i => i.id !== id);
             setComments(updatedComments);
         });
     }
 
-    const add = async () => {
+    const add = () => {
         if (!description) {
             return;
         }
-        await fetch(`/books/${data.book.id}/comments`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: description,
-        }).then(response => response.json())
+        commentsService.add(description, data.book.id)
             .then(d => {
                 comments.push(d);
                 setComments([...comments]);

@@ -22,24 +22,24 @@ public class BookController {
     private final GenreRepository genreRepository;
 
 
-    @GetMapping(path = "/books", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/books", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<BookDto> getBooks() {
         return bookRepository
                 .findAll()
                 .map(BookDto::toDto);
     }
 
-    @DeleteMapping("/books/{id}")
+    @DeleteMapping("/api/books/{id}")
     public void deleteBook(@PathVariable String id) {
         bookRepository.deleteById(id).subscribe();
     }
 
-    @GetMapping(path = "/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<BookDto> getBook(@PathVariable String id) {
         return bookRepository.findById(id).map(BookDto::toDto);
     }
 
-    @PostMapping("/books")
+    @PostMapping("/api/books")
     public void createBook(@RequestBody BookDto bookDto) {
         Mono<Author> author = authorRepository.findById(bookDto.getAuthorId());
         Mono<Genre> genre = genreRepository.findById(bookDto.getGenreId());
@@ -49,7 +49,7 @@ public class BookController {
                 .subscribe(book -> bookRepository.save(book).subscribe());
     }
 
-    @PutMapping("/books/{id}")
+    @PutMapping("/api/books/{id}")
     public void updateBook(@PathVariable String id, @RequestBody BookDto bookDto) {
         Mono<Author> author = authorRepository.findById(bookDto.getAuthorId());
         Mono<Genre> genre = genreRepository.findById(bookDto.getGenreId());

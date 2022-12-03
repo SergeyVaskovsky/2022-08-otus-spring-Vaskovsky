@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
-import Home from './Home';
+import Home from './main/Home';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import BookList from './BookList';
-import BookEdit from "./BookEdit";
+import BookList from './book/BookList';
+import BookEdit from "./book/BookEdit";
 
 export default function App() {
     return (

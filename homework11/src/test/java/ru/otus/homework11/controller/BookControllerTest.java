@@ -56,7 +56,7 @@ public class BookControllerTest {
                 .map(BookDto::toDto).collect(Collectors.toList());
 
         client.get()
-                .uri("/books")
+                .uri("/api/books")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -73,7 +73,7 @@ public class BookControllerTest {
         given(bookRepository.findById(book.getId())).willReturn(Mono.just(book));
 
         client.get()
-                .uri("/books/1")
+                .uri("/api/books/1")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -92,7 +92,7 @@ public class BookControllerTest {
 
         given(bookRepository.deleteById(book.getId())).willReturn(Mono.empty());
 
-        client.delete().uri("/books/1")
+        client.delete().uri("/api/books/1")
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -113,7 +113,7 @@ public class BookControllerTest {
         given(bookRepository.save(book)).willReturn(Mono.empty());
 
         client.post()
-                .uri("/books")
+                .uri("/api/books")
                 .body(Mono.just(BookDto.toDto(book)), BookDto.class)
                 .exchange()
                 .expectStatus()
@@ -133,7 +133,7 @@ public class BookControllerTest {
         given(bookRepository.save(book)).willReturn(Mono.empty());
 
         client.put()
-                .uri("/books/1")
+                .uri("/api/books/1")
                 .body(Mono.just(BookDto.toDto(book)), BookDto.class)
                 .exchange()
                 .expectStatus()

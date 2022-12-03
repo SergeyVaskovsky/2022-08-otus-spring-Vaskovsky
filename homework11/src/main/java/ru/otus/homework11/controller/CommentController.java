@@ -17,21 +17,21 @@ public class CommentController {
     private final CommentRepository commentRepository;
     private final BookRepository bookRepository;
 
-    @GetMapping(path = "/books/{id}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/books/{id}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<CommentDto> getComments(@PathVariable String id) {
         return commentRepository
                 .findAllByBookId(id)
                 .map(CommentDto::toDto);
     }
 
-    @PostMapping(path = "/books/{bookId}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/books/{bookId}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<CommentDto> addComment(@PathVariable String bookId, @RequestBody String description) {
         return Mono.from(bookRepository.findById(bookId))
                 .flatMap(book -> commentRepository.save(new Comment(description, book)).map(CommentDto::toDto));
 
     }
 
-    @DeleteMapping("/books/comments/{id}")
+    @DeleteMapping("/api/books/comments/{id}")
     public void deleteComment(@PathVariable String id) {
         commentRepository.deleteById(id).subscribe();
     }

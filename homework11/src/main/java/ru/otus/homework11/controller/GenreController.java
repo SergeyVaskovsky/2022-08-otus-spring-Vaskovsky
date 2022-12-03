@@ -14,7 +14,7 @@ public class GenreController {
 
     private final GenreRepository genreRepository;
 
-    @GetMapping(path = "/books/genres", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/genres", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<GenreDto> getGenres() {
         return genreRepository
                 .findAll()

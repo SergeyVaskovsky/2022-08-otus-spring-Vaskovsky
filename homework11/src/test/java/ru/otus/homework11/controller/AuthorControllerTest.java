@@ -42,7 +42,7 @@ public class AuthorControllerTest {
                 .map(a -> new AuthorDto(a.getId(), a.getName())).collect(Collectors.toList());
 
         client.get()
-                .uri("/books/authors")
+                .uri("/api/authors")
                 .exchange()
                 .expectStatus()
                 .isOk()

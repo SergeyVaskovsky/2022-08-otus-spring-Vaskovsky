@@ -14,7 +14,7 @@ public class AuthorController {
 
     private final AuthorRepository authorRepository;
 
-    @GetMapping(path = "/books/authors", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/api/authors", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<AuthorDto> getAuthors() {
         return authorRepository.findAll()
                 .map(a ->

@@ -42,7 +42,7 @@ public class GenreControllerTest {
                 .map(g -> new GenreDto(g.getId(), g.getName())).collect(Collectors.toList());
 
         client.get()
-                .uri("/books/genres")
+                .uri("/api/genres")
                 .exchange()
                 .expectStatus()
                 .isOk()

@@ -50,7 +50,7 @@ public class CommentControllerTest {
         List<CommentDto> expectedResult = comments.stream().map(CommentDto::toDto).collect(Collectors.toList());
 
         client.get()
-                .uri("/books/1/comments")
+                .uri("/api/books/1/comments")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -67,7 +67,7 @@ public class CommentControllerTest {
 
         given(commentRepository.deleteById(book.getId())).willReturn(Mono.empty());
 
-        client.delete().uri("/books/comments/1")
+        client.delete().uri("/api/books/comments/1")
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -88,7 +88,7 @@ public class CommentControllerTest {
         String expectedResult = mapper.writeValueAsString(CommentDto.toDto(comment));
 
         client.post()
-                .uri("/books/1/comments")
+                .uri("/api/books/1/comments")
                 .body(Mono.just(comment.getDescription()), String.class)
                 .exchange()
                 .expectStatus()
