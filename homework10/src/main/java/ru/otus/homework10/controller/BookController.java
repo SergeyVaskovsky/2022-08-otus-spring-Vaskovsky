@@ -15,7 +15,7 @@ public class BookController {
 
     private final BookService bookService;
 
-    @GetMapping("/books")
+    @GetMapping("/api/books")
     public List<BookDto> getBooks() {
         return bookService
                 .getAll()
@@ -24,18 +24,18 @@ public class BookController {
                 .collect(Collectors.toList());
     }
 
-    @DeleteMapping("/books/{id}")
+    @DeleteMapping("/api/books/{id}")
     public void deleteBook(@PathVariable long id) {
         bookService.delete(id);
     }
 
-    @GetMapping("/books/{id}")
+    @GetMapping("/api/books/{id}")
     public BookDto getBook(@PathVariable long id) {
         Book b = bookService.getById(id);
         return BookDto.toDto(b);
     }
 
-    @PostMapping("/books")
+    @PostMapping("/api/books")
     public void createBook(@RequestBody BookDto book) {
         bookService.upsert(
                 -1L,
@@ -44,7 +44,7 @@ public class BookController {
                 book.getGenreId());
     }
 
-    @PutMapping("/books/{id}")
+    @PutMapping("/api/books/{id}")
     public void updateBook(@PathVariable Long id, @RequestBody BookDto book) {
         bookService.upsert(
                 id,

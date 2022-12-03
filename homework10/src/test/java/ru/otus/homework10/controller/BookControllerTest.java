@@ -45,7 +45,7 @@ public class BookControllerTest {
                 .map(BookDto::toDto).collect(Collectors.toList());
 
         mockMvc
-                .perform(get("/books"))
+                .perform(get("/api/books"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
@@ -57,14 +57,14 @@ public class BookControllerTest {
         BookDto expectedResult = BookDto.toDto(book);
 
         mockMvc
-                .perform(get("/books/1"))
+                .perform(get("/api/books/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
 
     @Test
     void shouldCorrectDeleteBook() throws Exception {
-        mockMvc.perform(delete("/books/1"))
+        mockMvc.perform(delete("/api/books/1"))
                 .andExpect(status().isOk());
         verify(bookService, times(1)).delete(1L);
     }
@@ -75,7 +75,7 @@ public class BookControllerTest {
         given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 
-        mockMvc.perform(post("/books").contentType(APPLICATION_JSON)
+        mockMvc.perform(post("/api/books").contentType(APPLICATION_JSON)
                         .content(expectedResult))
                 .andExpect(status().isOk());
     }
@@ -86,7 +86,7 @@ public class BookControllerTest {
         given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 
-        mockMvc.perform(put("/books/1").contentType(APPLICATION_JSON)
+        mockMvc.perform(put("/api/books/1").contentType(APPLICATION_JSON)
                         .content(expectedResult))
                 .andExpect(status().isOk());
     }

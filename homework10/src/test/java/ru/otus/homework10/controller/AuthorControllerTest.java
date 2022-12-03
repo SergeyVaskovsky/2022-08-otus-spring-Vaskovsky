@@ -40,7 +40,7 @@ public class AuthorControllerTest {
                 .map(a -> new AuthorDto(a.getId(), a.getName())).collect(Collectors.toList());
 
         mockMvc
-                .perform(get("/books/authors"))
+                .perform(get("/api/authors"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }

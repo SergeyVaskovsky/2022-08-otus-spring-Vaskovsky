@@ -15,7 +15,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping("/books/{id}/comments")
+    @GetMapping("/api/books/{id}/comments")
     public List<CommentDto> getComments(@PathVariable Long id) {
         return commentService
                 .getAll(id)
@@ -24,13 +24,13 @@ public class CommentController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping("/books/{bookId}/comments")
+    @PostMapping("/api/books/{bookId}/comments")
     public CommentDto addComment(@PathVariable Long bookId, @RequestBody String description) {
         Comment comment = commentService.upsert(0, description, bookId);
         return CommentDto.toDto(comment);
     }
 
-    @DeleteMapping("/books/comments/{id}")
+    @DeleteMapping("/api/books/comments/{id}")
     public void deleteComment(@PathVariable Long id) {
         commentService.delete(id);
     }

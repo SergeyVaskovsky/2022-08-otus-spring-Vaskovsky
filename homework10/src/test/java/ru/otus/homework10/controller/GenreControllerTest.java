@@ -40,7 +40,7 @@ public class GenreControllerTest {
                 .map(g -> new GenreDto(g.getId(), g.getName())).collect(Collectors.toList());
 
         mockMvc
-                .perform(get("/books/genres"))
+                .perform(get("/api/genres"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }

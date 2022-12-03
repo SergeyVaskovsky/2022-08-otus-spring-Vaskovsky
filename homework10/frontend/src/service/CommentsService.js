@@ -1,12 +1,12 @@
 export default class CommentsService {
 
     getComments = async id => {
-        return await fetch(`/books/${id}/comments`)
+        return await fetch(`/api/books/${id}/comments`)
             .then(response => response.json());
     }
 
     remove = async id => {
-        return await fetch(`/books/comments/${id}`, {
+        return await fetch(`/api/books/comments/${id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -16,7 +16,7 @@ export default class CommentsService {
     }
 
     add = async (description, id) => {
-        return await fetch(`/books/${id}/comments`, {
+        return await fetch(`/api/books/${id}/comments`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

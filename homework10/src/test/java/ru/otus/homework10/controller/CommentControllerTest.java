@@ -45,7 +45,7 @@ public class CommentControllerTest {
         List<CommentDto> expectedResult = comments.stream().map(CommentDto::toDto).collect(Collectors.toList());
 
         mockMvc
-                .perform(get("/books/1/comments"))
+                .perform(get("/api/books/1/comments"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
@@ -57,7 +57,7 @@ public class CommentControllerTest {
         given(commentService.upsert(0, comment.getDescription(), book.getId())).willReturn(comment);
         String expectedResult = mapper.writeValueAsString(CommentDto.toDto(comment));
 
-        mockMvc.perform(post("/books/1/comments").contentType(APPLICATION_JSON)
+        mockMvc.perform(post("/api/books/1/comments").contentType(APPLICATION_JSON)
                         .content(comment.getDescription()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResult));
@@ -65,7 +65,7 @@ public class CommentControllerTest {
 
     @Test
     void shouldCorrectDeleteComment() throws Exception {
-        mockMvc.perform(delete("/books/comments/1"))
+        mockMvc.perform(delete("/api/books/comments/1"))
                 .andExpect(status().isOk());
         verify(commentService, times(1)).delete(1L);
     }
