@@ -17,20 +17,20 @@ public class ApplicationStartup {
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final CommentRepository commentRepository;
-    private Author pushkin = new Author("1", "Пушкин Александр Сергеевич");
-    private Author kyte = new Author("2", "Кайт Том");
-    private Author mcConnell = new Author("3", "Макконел Стивен");
-    private Genre fiction = new Genre("1", "Фантастика");
-    private Genre novell = new Genre("2", "Роман");
-    private Genre science = new Genre("3", "Научпоп");
-    private Book fictionAndOrdinaryPeople = new Book("1", "Фантастика и обычные люди", kyte, fiction);
-    private Comment good = new Comment("1", "Хорошо", fictionAndOrdinaryPeople);
-    private Comment bad = new Comment("2", "Плохо", fictionAndOrdinaryPeople);
-    private Comment soso = new Comment("3", "Ни рыба не мясо", fictionAndOrdinaryPeople);
-    private Book novellAndSomething = new Book("2", "Онегин и прочий бред", pushkin, novell);
-    private Book code = new Book("3", "Совершенный код", mcConnell, science);
 
     public void start() {
+        Author pushkin = new Author("1", "Пушкин Александр Сергеевич");
+        Author kyte = new Author("2", "Кайт Том");
+        Author mcConnell = new Author("3", "Макконел Стивен");
+        Genre fiction = new Genre("1", "Фантастика");
+        Genre novell = new Genre("2", "Роман");
+        Genre science = new Genre("3", "Научпоп");
+        Book fictionAndOrdinaryPeople = new Book("1", "Фантастика и обычные люди", kyte, fiction);
+        Comment good = new Comment("1", "Хорошо", fictionAndOrdinaryPeople);
+        Comment bad = new Comment("2", "Плохо", fictionAndOrdinaryPeople);
+        Comment soso = new Comment("3", "Ни рыба не мясо", fictionAndOrdinaryPeople);
+        Book novellAndSomething = new Book("2", "Онегин и прочий бред", pushkin, novell);
+        Book code = new Book("3", "Совершенный код", mcConnell, science);
         authorRepository.save(pushkin).block();
         authorRepository.save(kyte).block();
         authorRepository.save(mcConnell).block();

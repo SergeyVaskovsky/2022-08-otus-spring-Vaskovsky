@@ -26,13 +26,10 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest(classes = {BookController.class, ObjectMapper.class})
 public class BookControllerTest {
-
     @Autowired
     private BookController bookController;
-
     @Autowired
     private ObjectMapper mapper;
-
     @MockBean
     private BookRepository bookRepository;
     @MockBean
@@ -107,7 +104,7 @@ public class BookControllerTest {
                 .build();
         Author author = new Author("1", "Писатель");
         Genre genre = new Genre("1", "Для женщин");
-        Book book = new Book("0", "Роман", author, genre);
+        Book book = new Book( "Роман", author, genre);
         given(authorRepository.findById("1")).willReturn(Mono.just(author));
         given(genreRepository.findById("1")).willReturn(Mono.just(genre));
         given(bookRepository.save(book)).willReturn(Mono.empty());
