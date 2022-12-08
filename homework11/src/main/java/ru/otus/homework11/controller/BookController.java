@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.homework11.mapping.BookDto;
+import ru.otus.homework11.mapping.CommentDto;
 import ru.otus.homework11.model.Author;
 import ru.otus.homework11.model.Book;
 import ru.otus.homework11.model.Genre;
@@ -31,7 +32,7 @@ public class BookController {
 
     @DeleteMapping("/api/books/{id}")
     public Mono<Void> deleteBook(@PathVariable String id) {
-        return bookRepository.deleteById(id).then(Mono.empty());
+        return bookRepository.deleteById(id);
     }
 
     @GetMapping(path = "/api/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,22 +41,20 @@ public class BookController {
     }
 
     @PostMapping("/api/books")
-    public Mono<Void> createBook(@RequestBody BookDto bookDto) {
+    public Mono<BookDto> createBook(@RequestBody BookDto bookDto) {
         Mono<Author> author = authorRepository.findById(bookDto.getAuthorId());
         Mono<Genre> genre = genreRepository.findById(bookDto.getGenreId());
-        return Flux
+        return Mono
                 .zip(author, genre)
-                .flatMap(t -> bookRepository.save(new Book(bookDto.getName(), t.getT1(), t.getT2())))
-                .then(Mono.empty());
+                .flatMap(t -> bookRepository.save(new Book(bookDto.getName(), t.getT1(), t.getT2())).map(BookDto::toDto));
     }
 
     @PutMapping("/api/books/{id}")
-    public Mono<Void> updateBook(@PathVariable String id, @RequestBody BookDto bookDto) {
+    public Mono<BookDto> updateBook(@PathVariable String id, @RequestBody BookDto bookDto) {
         Mono<Author> author = authorRepository.findById(bookDto.getAuthorId());
         Mono<Genre> genre = genreRepository.findById(bookDto.getGenreId());
-        return Flux
+        return Mono
                 .zip(author, genre)
-                .flatMap(t -> bookRepository.save(new Book(id, bookDto.getName(), t.getT1(), t.getT2())))
-                .then(Mono.empty());
+                .flatMap(t -> bookRepository.save(new Book(id, bookDto.getName(), t.getT1(), t.getT2())).map(BookDto::toDto));
     }
 }

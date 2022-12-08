@@ -107,14 +107,17 @@ public class BookControllerTest {
         Book book = new Book( "Роман", author, genre);
         given(authorRepository.findById("1")).willReturn(Mono.just(author));
         given(genreRepository.findById("1")).willReturn(Mono.just(genre));
-        given(bookRepository.save(book)).willReturn(Mono.empty());
+        given(bookRepository.save(book)).willReturn(Mono.just(book));
 
         client.post()
                 .uri("/api/books")
                 .body(Mono.just(BookDto.toDto(book)), BookDto.class)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isOk()
+                .expectBody().jsonPath("name").isEqualTo("Роман")
+                .jsonPath("authorName").isEqualTo("Писатель")
+                .jsonPath("genreName").isEqualTo("Для женщин");
     }
 
     @Test
@@ -127,13 +130,16 @@ public class BookControllerTest {
         Book book = new Book("1", "Роман", author, genre);
         given(authorRepository.findById("1")).willReturn(Mono.just(author));
         given(genreRepository.findById("1")).willReturn(Mono.just(genre));
-        given(bookRepository.save(book)).willReturn(Mono.empty());
+        given(bookRepository.save(book)).willReturn(Mono.just(book));
 
         client.put()
                 .uri("/api/books/1")
                 .body(Mono.just(BookDto.toDto(book)), BookDto.class)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isOk()
+                .expectBody().jsonPath("name").isEqualTo("Роман")
+                .jsonPath("authorName").isEqualTo("Писатель")
+                .jsonPath("genreName").isEqualTo("Для женщин");
     }
 }

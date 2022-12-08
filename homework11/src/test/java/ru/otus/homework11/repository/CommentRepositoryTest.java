@@ -3,32 +3,36 @@ package ru.otus.homework11.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.OverrideAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataMongo;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 import ru.otus.homework11.changelogs.ApplicationStartup;
+import ru.otus.homework11.changelogs.DbInitializer;
 import ru.otus.homework11.model.Comment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DataMongoTest
+@AutoConfigureDataMongo
+@SpringBootTest
 public class CommentRepositoryTest {
     @Autowired
-    private BookRepository bookRepository;
-    @Autowired
-    private AuthorRepository authorRepository;
-    @Autowired
-    private GenreRepository genreRepository;
+    private DbInitializer dbInitializer;
+
     @Autowired
     private CommentRepository commentRepository;
 
     @BeforeEach
     void createData() {
-        ApplicationStartup applicationStartup = new ApplicationStartup(
-                bookRepository, authorRepository, genreRepository, commentRepository
-        );
-        applicationStartup.start();
+        dbInitializer.initDb();
     }
 
     @Test

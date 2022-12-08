@@ -1,6 +1,8 @@
 package ru.otus.homework11.changelogs;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.test.context.support.AbstractTestExecutionListener;
 import ru.otus.homework11.model.Author;
 import ru.otus.homework11.model.Book;
 import ru.otus.homework11.model.Comment;
@@ -10,8 +12,9 @@ import ru.otus.homework11.repository.BookRepository;
 import ru.otus.homework11.repository.CommentRepository;
 import ru.otus.homework11.repository.GenreRepository;
 
+@Component
 @RequiredArgsConstructor
-public class ApplicationStartup {
+public class ApplicationStartup extends AbstractTestExecutionListener {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
