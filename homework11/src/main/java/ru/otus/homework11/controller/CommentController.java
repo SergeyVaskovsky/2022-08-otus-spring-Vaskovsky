@@ -33,6 +33,6 @@ public class CommentController {
 
     @DeleteMapping("/api/books/comments/{id}")
     public Mono<Void> deleteComment(@PathVariable String id) {
-        return commentRepository.deleteById(id).then(Mono.empty());
+        return commentRepository.deleteById(id);
     }
 }
