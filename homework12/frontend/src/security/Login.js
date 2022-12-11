@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import {Form, Input} from 'reactstrap';
+import {Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import PropTypes from 'prop-types';
 import AuthService from "../service/AuthService";
 
@@ -49,25 +49,30 @@ const Login = ({setUser}) => {
   return (
     <div>
       <div>
+        <Container>
         <Form onSubmit={handleLogin} ref={form}>
           <div>
-            <label htmlFor="username">Имя пользователя</label>
+            <FormGroup>
+            <Label htmlFor="username">Имя пользователя</Label>
             <Input
               type="text"
               name="username"
               value={username}
               onChange={onChangeUsername}
             />
+            </FormGroup>
           </div>
 
           <div>
-            <label htmlFor="password">Пароль</label>
+            <FormGroup>
+            <Label htmlFor="password">Пароль</Label>
             <Input
               type="password"
               name="password"
               value={password}
               onChange={onChangePassword}
             />
+            </FormGroup>
           </div>
 
           <div>
@@ -87,6 +92,7 @@ const Login = ({setUser}) => {
             </div>
           )}
         </Form>
+        </Container>
       </div>
     </div>
   );
