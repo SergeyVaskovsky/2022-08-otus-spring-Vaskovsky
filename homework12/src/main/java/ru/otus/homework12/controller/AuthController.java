@@ -24,9 +24,7 @@ public class AuthController {
 
     @PostMapping("/api/auth")
     public ResponseEntity<?> authenticate(
-        @RequestBody AuthenticationRequestDto requestDto,
-        HttpServletRequest request,
-        HttpServletResponse response) {
+        @RequestBody AuthenticationRequestDto requestDto) {
 
         String login = requestDto.getUsername();
         String password = requestDto.getPassword();
