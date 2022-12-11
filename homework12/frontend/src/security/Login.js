@@ -1,11 +1,9 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from 'react-router-dom';
 import {Form, Input} from 'reactstrap';
+import PropTypes from 'prop-types';
+import AuthService from "../service/AuthService";
 
-import AuthService from "./service/AuthService";
-
-const Login = () => {
-  let navigate = useNavigate();
+const Login = ({setUser}) => {
 
   const form = useRef();
 
@@ -32,7 +30,7 @@ const Login = () => {
 
       AuthService.login(username, password).then(
         () => {
-          navigate("/books");
+          setUser(AuthService.getCurrentUser())
         },
         (error) => {
           const resMessage =
@@ -95,3 +93,8 @@ const Login = () => {
 };
 
 export default Login;
+
+Login.propTypes = {
+  setUser: PropTypes.func.isRequired
+}
+

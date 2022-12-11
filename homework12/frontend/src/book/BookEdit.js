@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
-import AppNavbar from '../main/AppNavbar';
 import AuthorSelect from "../author/AuthorSelect";
 import GenreSelect from "../genre/GenreSelect";
 import BookService from "../service/BookService";
@@ -39,7 +38,6 @@ export default function BookEdit() {
 
     return (
         <div>
-            <AppNavbar/>
             <Container>
                 <h2>{item.id ? 'Изменить книгу' : 'Добавить книгу'}</h2>
                 <Form onSubmit={(event) => {

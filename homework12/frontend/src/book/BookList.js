@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Button, ButtonGroup, Container, Table} from 'reactstrap';
-import AppNavbar from '../main/AppNavbar';
 import {Link} from 'react-router-dom';
 import Comments from "../comment/Comments";
 import BookService from "../service/BookService";
@@ -55,7 +54,6 @@ export default function BookList() {
 
     return (
         <div>
-            <AppNavbar/>
             <Container fluid>
                 <h2>Книги</h2>
                 <div className="float-right">

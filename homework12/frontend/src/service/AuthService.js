@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie'
+
 const login = async (username, password) => {
   return await fetch(`/api/auth`, {
     method: 'POST',
@@ -5,23 +7,27 @@ const login = async (username, password) => {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: {'username': username,
-           'password': password},
-
+    body: JSON.stringify(
+        { 'username': username,
+                'password': password })
     })
     .then((response) => {
-      if (response.ok) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+      if (response.status === 200) {
+        localStorage.setItem("user", username);
+        return;
       }
+      throw new Error("Неправильные логин или пароль");
     });
 };
 
 const logout = () => {
   localStorage.removeItem("user");
+  Cookies.remove('JSESSIONID')
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  const user = localStorage.getItem("user");
+  return user === "undefined" ? undefined : user;
 };
 
 const AuthService = {

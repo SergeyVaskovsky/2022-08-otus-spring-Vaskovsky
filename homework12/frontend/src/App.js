@@ -4,20 +4,29 @@ import Home from './main/Home';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import BookList from './book/BookList';
 import BookEdit from "./book/BookEdit";
-import Login from "./Login";
-import AuthService from "./service/AuthService";
+import Login from "./security/Login";
+import useUser from "./security/UseUser";
+import AppNavbar from "./main/AppNavbar";
 
 export default function App() {
-    const user = AuthService.getCurrentUser();
+
+    const { user, setUser } = useUser();
+
+    if(!user) {
+        return <Login setUser={setUser} />
+    }
+
     return (
+
         <Router>
+            <AppNavbar setUser={setUser} />
             <Routes>
-                <Route path='/' exact={true} element={<Home/>}/>
-                <Route path="/login" element={<Login/>} />
-                    <Route path='/books' exact={true} element={user ? <BookList/> : <Login/>}/>
-                    <Route path='/books/:id' element={user ? <BookEdit/> : <Login/>}/>
+                <Route path="/" element={<Home />} />
+                <Route path="/books" element={<BookList />} />
+                <Route path='/books/:id' element={<BookEdit />} />
             </Routes>
         </Router>
+
     )
 }
 
