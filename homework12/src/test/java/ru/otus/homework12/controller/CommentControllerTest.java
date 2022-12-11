@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.homework12.mapping.CommentDto;
 import ru.otus.homework12.model.Author;
@@ -21,6 +22,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,6 +37,9 @@ public class CommentControllerTest {
     @MockBean
     private CommentService commentService;
 
+    @WithMockUser(
+            username = "admin"
+    )
     @Test
     void shouldReturnCorrectCommentsByBookId() throws Exception {
         Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
@@ -50,6 +55,9 @@ public class CommentControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
 
+    @WithMockUser(
+            username = "admin"
+    )
     @Test
     void shouldCorrectSaveNewComment() throws Exception {
         Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
@@ -57,15 +65,18 @@ public class CommentControllerTest {
         given(commentService.upsert(0, comment.getDescription(), book.getId())).willReturn(comment);
         String expectedResult = mapper.writeValueAsString(CommentDto.toDto(comment));
 
-        mockMvc.perform(post("/api/books/1/comments").contentType(APPLICATION_JSON)
+        mockMvc.perform(post("/api/books/1/comments").with(csrf()).contentType(APPLICATION_JSON)
                         .content(comment.getDescription()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResult));
     }
 
+    @WithMockUser(
+            username = "admin"
+    )
     @Test
     void shouldCorrectDeleteComment() throws Exception {
-        mockMvc.perform(delete("/api/books/comments/1"))
+        mockMvc.perform(delete("/api/books/comments/1").with(csrf()))
                 .andExpect(status().isOk());
         verify(commentService, times(1)).delete(1L);
     }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.homework12.mapping.BookDto;
 import ru.otus.homework12.model.Author;
@@ -20,6 +21,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +35,10 @@ public class BookControllerTest {
     private ObjectMapper mapper;
     @MockBean
     private BookService bookService;
+
+    @WithMockUser(
+            username = "admin"
+    )
     @Test
     public void shouldReturnCorrectBookList() throws Exception {
         List<Book> books = new ArrayList<>();
@@ -50,6 +56,9 @@ public class BookControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
 
+    @WithMockUser(
+            username = "admin"
+    )
     @Test
     void shouldReturnCorrectBookById() throws Exception {
         Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
@@ -62,31 +71,40 @@ public class BookControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
 
+    @WithMockUser(
+            username = "admin"
+    )
     @Test
     void shouldCorrectDeleteBook() throws Exception {
-        mockMvc.perform(delete("/api/books/1"))
+        mockMvc.perform(delete("/api/books/1").with(csrf()))
                 .andExpect(status().isOk());
         verify(bookService, times(1)).delete(1L);
     }
 
+    @WithMockUser(
+            username = "admin"
+    )
     @Test
     void shouldCorrectSaveNewBook() throws Exception {
         Book book = new Book(0, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
         given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 
-        mockMvc.perform(post("/api/books").contentType(APPLICATION_JSON)
+        mockMvc.perform(post("/api/books").with(csrf()).contentType(APPLICATION_JSON)
                         .content(expectedResult))
                 .andExpect(status().isOk());
     }
 
+    @WithMockUser(
+            username = "admin"
+    )
     @Test
     void shouldCorrectUpdateBook() throws Exception {
         Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
         given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 
-        mockMvc.perform(put("/api/books/1").contentType(APPLICATION_JSON)
+        mockMvc.perform(put("/api/books/1").with(csrf()).contentType(APPLICATION_JSON)
                         .content(expectedResult))
                 .andExpect(status().isOk());
     }
