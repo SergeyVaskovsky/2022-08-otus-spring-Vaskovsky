@@ -49,4 +49,11 @@ public class AuthorControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
 
+    @Test
+    public void shouldReturn401() throws Exception {
+        mockMvc
+                .perform(get("/api/authors"))
+                .andExpect(status().isUnauthorized());
+    }
+
 }

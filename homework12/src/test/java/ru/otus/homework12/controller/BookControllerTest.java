@@ -56,6 +56,14 @@ public class BookControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
 
+    @Test
+    public void shouldReturn401ForBooks() throws Exception {
+        mockMvc
+                .perform(get("/api/books"))
+                .andExpect(status().isUnauthorized());
+    }
+
+
     @WithMockUser(
             username = "admin"
     )
@@ -71,6 +79,13 @@ public class BookControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
 
+    @Test
+    public void shouldReturn401ForBook() throws Exception {
+        mockMvc
+                .perform(get("/api/books/1"))
+                .andExpect(status().isUnauthorized());
+    }
+
     @WithMockUser(
             username = "admin"
     )
@@ -79,6 +94,13 @@ public class BookControllerTest {
         mockMvc.perform(delete("/api/books/1").with(csrf()))
                 .andExpect(status().isOk());
         verify(bookService, times(1)).delete(1L);
+    }
+
+    @Test
+    public void shouldReturn403ForDeleteBook() throws Exception {
+        mockMvc
+                .perform(delete("/api/books/1"))
+                .andExpect(status().isForbidden());
     }
 
     @WithMockUser(
@@ -95,6 +117,17 @@ public class BookControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void shouldReturn403ForSaveNewBook() throws Exception {
+        Book book = new Book(0, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
+        given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
+        String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
+
+        mockMvc.perform(post("/api/books").contentType(APPLICATION_JSON)
+                        .content(expectedResult))
+                .andExpect(status().isForbidden());
+    }
+
     @WithMockUser(
             username = "admin"
     )
@@ -107,5 +140,16 @@ public class BookControllerTest {
         mockMvc.perform(put("/api/books/1").with(csrf()).contentType(APPLICATION_JSON)
                         .content(expectedResult))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturn403ForUpdateBook() throws Exception {
+        Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
+        given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
+        String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
+
+        mockMvc.perform(put("/api/books/1").with(csrf()).contentType(APPLICATION_JSON)
+                        .content(expectedResult))
+                .andExpect(status().isUnauthorized());
     }
 }

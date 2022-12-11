@@ -55,6 +55,13 @@ public class CommentControllerTest {
                 .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
     }
 
+    @Test
+    void shouldReturn401() throws Exception {
+        mockMvc
+                .perform(get("/api/books/1/comments"))
+                .andExpect(status().isUnauthorized());
+    }
+
     @WithMockUser(
             username = "admin"
     )
@@ -71,6 +78,19 @@ public class CommentControllerTest {
                 .andExpect(content().json(expectedResult));
     }
 
+    @Test
+    void shouldReturn403ForSaveNewComment() throws Exception {
+        Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
+        Comment comment = new Comment(1L, "Хорошая книга", book);
+        given(commentService.upsert(0, comment.getDescription(), book.getId())).willReturn(comment);
+        String expectedResult = mapper.writeValueAsString(CommentDto.toDto(comment));
+
+        mockMvc.perform(post("/api/books/1/comments").contentType(APPLICATION_JSON)
+                        .content(comment.getDescription()))
+                .andExpect(status().isForbidden());
+
+    }
+
     @WithMockUser(
             username = "admin"
     )
@@ -81,4 +101,9 @@ public class CommentControllerTest {
         verify(commentService, times(1)).delete(1L);
     }
 
+    @Test
+    void shouldReturn403ForDeleteComment() throws Exception {
+        mockMvc.perform(delete("/api/books/comments/1").with(csrf()))
+                .andExpect(status().isUnauthorized());
+    }
 }
