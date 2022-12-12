@@ -43,42 +43,38 @@ CREATE TABLE USR
 );
 
 CREATE TABLE IF NOT EXISTS acl_sid (
-                                       id bigint(20) NOT NULL AUTO_INCREMENT,
-                                       principal tinyint(1) NOT NULL,
+                                       id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                       principal tinyint NOT NULL,
                                        sid varchar(100) NOT NULL,
-                                       PRIMARY KEY (id),
-                                       UNIQUE KEY unique_uk_1 (sid,principal)
+                                       UNIQUE (sid,principal)
 );
 
 CREATE TABLE IF NOT EXISTS acl_class (
-                                         id bigint(20) NOT NULL AUTO_INCREMENT,
+                                         id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                          class varchar(255) NOT NULL,
-                                         PRIMARY KEY (id),
-                                         UNIQUE KEY unique_uk_2 (class)
+                                         UNIQUE (class)
 );
 
 CREATE TABLE IF NOT EXISTS acl_entry (
-                                         id bigint(20) NOT NULL AUTO_INCREMENT,
-                                         acl_object_identity bigint(20) NOT NULL,
-                                         ace_order int(11) NOT NULL,
-                                         sid bigint(20) NOT NULL,
-                                         mask int(11) NOT NULL,
-                                         granting tinyint(1) NOT NULL,
-                                         audit_success tinyint(1) NOT NULL,
-                                         audit_failure tinyint(1) NOT NULL,
-                                         PRIMARY KEY (id),
-                                         UNIQUE KEY unique_uk_4 (acl_object_identity,ace_order)
+                                         id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                         acl_object_identity bigint NOT NULL,
+                                         ace_order int NOT NULL,
+                                         sid bigint NOT NULL,
+                                         mask int NOT NULL,
+                                         granting tinyint NOT NULL,
+                                         audit_success tinyint NOT NULL,
+                                         audit_failure tinyint NOT NULL,
+                                         UNIQUE (acl_object_identity,ace_order)
 );
 
 CREATE TABLE IF NOT EXISTS acl_object_identity (
-                                                   id bigint(20) NOT NULL AUTO_INCREMENT,
-                                                   object_id_class bigint(20) NOT NULL,
-                                                   object_id_identity bigint(20) NOT NULL,
-                                                   parent_object bigint(20) DEFAULT NULL,
-                                                   owner_sid bigint(20) DEFAULT NULL,
-                                                   entries_inheriting tinyint(1) NOT NULL,
-                                                   PRIMARY KEY (id),
-                                                   UNIQUE KEY unique_uk_3 (object_id_class,object_id_identity)
+                                                   id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                                   object_id_class bigint NOT NULL,
+                                                   object_id_identity bigint NOT NULL,
+                                                   parent_object bigint DEFAULT NULL,
+                                                   owner_sid bigint DEFAULT NULL,
+                                                   entries_inheriting tinyint NOT NULL,
+                                                   UNIQUE (object_id_class,object_id_identity)
 );
 
 ALTER TABLE acl_entry
