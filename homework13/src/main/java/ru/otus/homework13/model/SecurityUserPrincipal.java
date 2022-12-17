@@ -1,9 +1,11 @@
 package ru.otus.homework13.model;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class SecurityUserPrincipal implements UserDetails {
 
@@ -15,7 +17,11 @@ public class SecurityUserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return user
+                .getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRolename()))
+                .collect(Collectors.toList());
     }
 
     @Override

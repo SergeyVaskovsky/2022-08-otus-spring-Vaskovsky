@@ -19,7 +19,7 @@ public class BookRepositoryJpaTest {
     @DisplayName("Найти книгу в БД")
     @Test
     void shouldFindBookById() {
-        Book book = bookRepository.findById(1L).orElse(null);
+        Book book = bookRepository.findById(1L);
         assertThat(book).isNotNull();
         assertThat(book.getName()).isEqualTo("Преступление и наказание");
         assertThat(book.getAuthor().getName()).isEqualTo("Достаевский Ф. М.");

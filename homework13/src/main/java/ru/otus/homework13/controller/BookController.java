@@ -1,6 +1,7 @@
 package ru.otus.homework13.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.homework13.mapping.BookDto;
 import ru.otus.homework13.model.Book;
@@ -17,6 +18,7 @@ public class BookController {
 
     @GetMapping("/api/books")
     public List<BookDto> getBooks() {
+        SecurityContextHolder.getContext().getAuthentication();
         return bookService
                 .getAll()
                 .stream()

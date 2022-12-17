@@ -14,8 +14,10 @@ public class BookCommentServiceImpl implements BookCommentService {
 
     @Override
     public Book getById(long bookId) {
-        return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(
-                String.format("Book with id = %d not found", bookId)
-        ));
+        Book book = bookRepository.findById(bookId);
+        if (book == null) {
+            throw new BookNotFoundException(String.format("Book with id = %d not found", bookId));
+        }
+        return book;
     }
 }

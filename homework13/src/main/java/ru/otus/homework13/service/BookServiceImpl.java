@@ -39,9 +39,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getById(long bookId) {
-        return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(
-                String.format("Book with id = %d not found", bookId)
-        ));
+        Book book = bookRepository.findById(bookId);
+        if (book == null) {
+            throw new BookNotFoundException(String.format("Book with id = %d not found", bookId));
+        }
+        return book;
     }
 
     @Transactional
@@ -52,19 +54,6 @@ public class BookServiceImpl implements BookService {
         Book book = new Book(bookId, bookName, author, genre);
         Book savedBook = bookRepository.save(book);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final Sid owner = new PrincipalSid( authentication );
-        ObjectIdentity oid = new ObjectIdentityImpl( savedBook.getClass(), savedBook.getId() );
-
-        final Sid admin = new GrantedAuthoritySid("ROLE_EDITOR");
-
-        MutableAcl acl = mutableAclService.createAcl( oid );
-        acl.setOwner( owner );
-        acl.insertAce( acl.getEntries().size(), BasePermission.ADMINISTRATION, admin, true );
-
-        mutableAclService.updateAcl( acl );
-
-
         return savedBook;
     }
 
@@ -72,7 +61,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void delete(long bookId) {
         commentService.deleteAll(commentService.getAll(bookId));
-        bookRepository.deleteById(bookId);
+        bookRepository.delete(bookRepository.findById(bookId));
     }
 
 }

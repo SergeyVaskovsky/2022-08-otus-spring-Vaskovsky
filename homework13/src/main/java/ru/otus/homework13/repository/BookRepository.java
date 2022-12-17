@@ -13,15 +13,18 @@ import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    @PreAuthorize("hasPermission(#book.genre, 'WRITE')")
+    @PreAuthorize("@securityFilterServiceImpl.filter(authentication, #book)")
     Book save(@Param("book") Book book);
 
-    @PostAuthorize("hasPermission(returnObject.get().genre, 'READ')")
+    @PostAuthorize("@securityFilterServiceImpl.filter(authentication, returnObject)")
     @EntityGraph(attributePaths = {"author", "genre"})
-    Optional<Book> findById(long id);
+    Book findById(long id);
 
-    @PostFilter("hasPermission(filterObject.genre, 'READ')")
+    @PostAuthorize("@securityFilterServiceImpl.filter(authentication, returnObject)")
     @EntityGraph(attributePaths = {"author", "genre"})
     List<Book> findAll();
+
+    @PreAuthorize("@securityFilterServiceImpl.filter(authentication, #book)")
+    void delete(Book book);
 
 }

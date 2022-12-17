@@ -87,7 +87,7 @@ public class BookServiceImplTest {
         //when(commentService.deleteAll(comments)).thenReturn()
 
         when(bookRepository.findAll()).thenReturn(books);
-        when(bookRepository.findById(bookToDelete.getId())).thenReturn(Optional.of(bookToDelete));
+        when(bookRepository.findById(bookToDelete.getId())).thenReturn(bookToDelete);
 
         doAnswer(invocation -> {
             books.remove(bookToDelete);

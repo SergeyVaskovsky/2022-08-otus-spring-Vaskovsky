@@ -15,5 +15,5 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
     List<Genre> findAll();
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    Optional<Genre> findById(long id);
+    Genre findById(long id);
 }

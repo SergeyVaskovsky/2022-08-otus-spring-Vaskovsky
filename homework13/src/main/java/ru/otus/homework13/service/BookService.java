@@ -12,5 +12,4 @@ public interface BookService {
     Book upsert(long bookId, String bookName, long authorId, long genreIdId);
 
     void delete(long bookId);
-
 }

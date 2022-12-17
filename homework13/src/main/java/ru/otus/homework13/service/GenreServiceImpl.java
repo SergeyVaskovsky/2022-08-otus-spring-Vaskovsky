@@ -19,9 +19,12 @@ public class GenreServiceImpl implements GenreService {
     }
 
     public Genre getById(long id) {
-        return genreRepository
-                .findById(id)
-                .orElseThrow(() -> new GenreNotFoundException(String.format("Genre not found by id = %s", id)));
+        Genre genre = genreRepository.findById(id);
+        if (genre == null) {
+            throw new GenreNotFoundException(String.format("Genre not found by id = %s", id));
+        }
+        return genre;
+
     }
 
 }
