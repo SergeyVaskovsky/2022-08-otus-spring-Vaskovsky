@@ -5,9 +5,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import ru.otus.homework13.mapping.GenreDto;
 import ru.otus.homework13.model.Genre;
@@ -24,7 +27,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(GenreController.class)
+//@WebMvcTest(GenreController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class GenreControllerTest {
 
     @Autowired
@@ -38,17 +43,17 @@ public class GenreControllerTest {
         return Stream.of(
                 Arguments.of("admin", "ADMIN", status().isOk()),
                 Arguments.of("user", "USER", status().isOk()),
-                Arguments.of("someone", "SOMEONE", status().isUnauthorized())
+                Arguments.of("someone", "SOMEONE", status().isForbidden())
         );
     }
 
 
     @ParameterizedTest
     @MethodSource("provideParamsForTest")
-    public void shouldReturnCorrectGenreList(String user, String roles, ResultMatcher statusMatcher) throws Exception {
+    public void shouldReturnCorrectGenreList(String user, String role, ResultMatcher statusMatcher) throws Exception {
         List<Genre> genres = new ArrayList<>();
         genres.add(new Genre(1L, "Жанр"));
-        if ("admin".equals(user)) {
+        if ("ADMIN".equals(role)) {
             genres.add(new Genre(2L, "Жанр 2"));
         }
 
@@ -57,9 +62,12 @@ public class GenreControllerTest {
         List<GenreDto> expectedResult = genres.stream()
                 .map(g -> new GenreDto(g.getId(), g.getName())).collect(Collectors.toList());
 
-        mockMvc
-                .perform(get("/api/genres").with(user(user).roles(roles)))
-                .andExpect(statusMatcher)
-                .andExpect(content().json(mapper.writeValueAsString(expectedResult)));
+        ResultActions resultActions = mockMvc
+                .perform(get("/api/genres").with(user(user).authorities(new SimpleGrantedAuthority(role))))
+                .andExpect(statusMatcher);
+
+        if (!"SOMEONE".equals(role)) {
+            resultActions.andExpect(content().json(mapper.writeValueAsString(expectedResult)));
+        }
     }
 }
