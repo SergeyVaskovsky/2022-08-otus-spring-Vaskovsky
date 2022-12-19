@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import ru.otus.homework13.model.Book;
-import ru.otus.homework13.model.Genre;
 
 import java.util.Iterator;
 import java.util.List;

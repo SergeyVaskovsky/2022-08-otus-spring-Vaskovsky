@@ -5,8 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
@@ -14,7 +13,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import ru.otus.homework13.mapping.GenreDto;
 import ru.otus.homework13.model.Genre;
+import ru.otus.homework13.repository.GenreRepository;
 import ru.otus.homework13.service.GenreService;
+import ru.otus.homework13.service.GenreServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +28,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@WebMvcTest(GenreController.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+//@SpringBootTest
+//@AutoConfigureMockMvc
+@WebMvcTest(value = {GenreController.class, GenreServiceImpl.class})
 public class GenreControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper mapper;
-    @MockBean
+    @Autowired
     private GenreService genreService;
+    @MockBean
+    private GenreRepository genreRepository;
+
 
     private static Stream<Arguments> provideParamsForTest() {
         return Stream.of(
@@ -47,17 +50,16 @@ public class GenreControllerTest {
         );
     }
 
-
     @ParameterizedTest
     @MethodSource("provideParamsForTest")
     public void shouldReturnCorrectGenreList(String user, String role, ResultMatcher statusMatcher) throws Exception {
         List<Genre> genres = new ArrayList<>();
-        genres.add(new Genre(1L, "Жанр"));
         if ("ADMIN".equals(role)) {
-            genres.add(new Genre(2L, "Жанр 2"));
+            genres.add(new Genre(1L, "Триллер"));
         }
+        genres.add(new Genre(2L, "Научпоп"));
 
-        given(genreService.getAll()).willReturn(genres);
+        given(genreRepository.findAll()).willReturn(genres);
 
         List<GenreDto> expectedResult = genres.stream()
                 .map(g -> new GenreDto(g.getId(), g.getName())).collect(Collectors.toList());
