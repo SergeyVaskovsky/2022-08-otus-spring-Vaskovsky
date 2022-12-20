@@ -1,4 +1,4 @@
-package ru.otus.homework14.springbatch;
+package ru.otus.homework14;
 
 import com.github.cloudyrock.spring.v5.EnableMongock;
 import org.springframework.boot.SpringApplication;

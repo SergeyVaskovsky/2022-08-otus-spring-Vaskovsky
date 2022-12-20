@@ -33,7 +33,7 @@ spring:
 mongock:
   runner-type: "InitializingBean"
   change-logs-scan-package:
-    - ru.otus.homework14.springbatch.chandgelogs
+    - ru.otus.homework14.changelogs
   mongo-db:
     write-concern:
       journal: false

@@ -27,7 +27,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-batch</artifactId>
@@ -41,6 +44,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
 
@@ -61,12 +69,6 @@
             <version>${mongock.version}</version>
         </dependency>
 
-<!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
--->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -95,7 +97,7 @@
     </dependencies>
 
     <build>
-        <finalName>spring-batch-demo</finalName>
+        <finalName>homework14</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
