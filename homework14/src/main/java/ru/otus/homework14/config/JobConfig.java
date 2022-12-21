@@ -19,8 +19,9 @@ import ru.otus.homework14.model.mongo.Genre;
 @Configuration
 @RequiredArgsConstructor
 public class JobConfig {
-    public static final String STEP_AUTHOR_NAME = "stepAuthor";
+
     public static final String IMPORT_USER_JOB_NAME = "importUserJob";
+    public static final String STEP_AUTHOR_NAME = "stepAuthor";
     public static final String STEP_GENRE_NAME = "stepGenre";
     public static final String STEP_BOOK_NAME = "stepBook";
     public static final String STEP_COMMENT_NAME = "stepComment";
