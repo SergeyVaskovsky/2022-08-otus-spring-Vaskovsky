@@ -24,8 +24,7 @@ homework07 - "Белая магия" Spring Data: Spring Data JPA
 homework08 - Spring Data для подключения к нереляционным БД
 
 homework09 - Spring MVC View 
-
-буду сдавать в рамкая homework10
+буду сдавать в рамках homework10
 
 homework10 - Современные приложения на Spring MVC 
 
