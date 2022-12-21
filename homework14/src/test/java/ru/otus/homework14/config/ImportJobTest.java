@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @SpringBatchTest
-class ImportUserJobTest {
+class ImportJobTest {
 
     @Autowired
     private JobLauncherTestUtils jobLauncherTestUtils;
@@ -73,7 +73,7 @@ class ImportUserJobTest {
         Job job = jobLauncherTestUtils.getJob();
         assertThat(job).isNotNull()
                 .extracting(Job::getName)
-                .isEqualTo(JobConfig.IMPORT_USER_JOB_NAME);
+                .isEqualTo(JobConfig.IMPORT_JOB_NAME);
         JobExecution jobExecution = jobLauncherTestUtils.launchJob();
         assertThat(jobExecution.getExitStatus().getExitCode()).isEqualTo("COMPLETED");
     }
