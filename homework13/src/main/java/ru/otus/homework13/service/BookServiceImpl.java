@@ -1,22 +1,12 @@
 package ru.otus.homework13.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.acls.domain.BasePermission;
-import org.springframework.security.acls.domain.GrantedAuthoritySid;
-import org.springframework.security.acls.domain.ObjectIdentityImpl;
-import org.springframework.security.acls.domain.PrincipalSid;
-import org.springframework.security.acls.model.MutableAcl;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.acls.model.MutableAclService;
-import org.springframework.security.acls.model.ObjectIdentity;
-import org.springframework.security.acls.model.Sid;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.otus.homework13.exception.BookNotFoundException;
-import ru.otus.homework13.model.Author;
 import ru.otus.homework13.model.Book;
-import ru.otus.homework13.model.Genre;
 import ru.otus.homework13.repository.BookRepository;
 
 import javax.transaction.Transactional;
@@ -33,11 +23,13 @@ public class BookServiceImpl implements BookService {
     private final MutableAclService mutableAclService;
 
     @Override
+    @PostAuthorize("@securityFilterServiceImpl.filter(authentication, returnObject)")
     public List<Book> getAll() {
         return bookRepository.findAll();
     }
 
     @Override
+    @PostAuthorize("@securityFilterServiceImpl.filter(authentication, returnObject)")
     public Book getById(long bookId) {
         Book book = bookRepository.findById(bookId);
         if (book == null) {
@@ -48,20 +40,18 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public Book upsert(long bookId, String bookName, long authorId, long genreId) {
-        Author author = authorService.getById(authorId);
-        Genre genre = genreService.getById(genreId);
-        Book book = new Book(bookId, bookName, author, genre);
+    @PreAuthorize("@securityFilterServiceImpl.filter(authentication, #book)")
+    public Book upsert(Book book) {
         Book savedBook = bookRepository.save(book);
-
         return savedBook;
     }
 
     @Transactional
     @Override
-    public void delete(long bookId) {
-        commentService.deleteAll(commentService.getAll(bookId));
-        bookRepository.delete(bookRepository.findById(bookId));
+    @PreAuthorize("@securityFilterServiceImpl.filter(authentication, #book)")
+    public void delete(Book book) {
+        commentService.deleteAll(commentService.getAll(book.getId()));
+        bookRepository.delete(bookRepository.findById(book.getId()));
     }
 
 }

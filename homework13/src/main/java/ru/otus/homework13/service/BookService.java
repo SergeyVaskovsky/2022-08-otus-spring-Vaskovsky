@@ -9,7 +9,7 @@ public interface BookService {
 
     Book getById(long bookId);
 
-    Book upsert(long bookId, String bookName, long authorId, long genreIdId);
+    Book upsert(Book book);
 
-    void delete(long bookId);
+    void delete(Book book);
 }

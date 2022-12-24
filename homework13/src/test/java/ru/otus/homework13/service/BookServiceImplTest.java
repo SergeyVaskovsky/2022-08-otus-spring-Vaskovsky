@@ -12,7 +12,6 @@ import ru.otus.homework13.repository.BookRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
@@ -60,7 +59,7 @@ public class BookServiceImplTest {
             return a.getArgument(0);
         });
 
-        bookServiceImpl.upsert(0L, "Котики", 1L, 1L);
+        bookServiceImpl.upsert(book);
         Book actualBook = bookServiceImpl
                 .getAll()
                 .stream()
@@ -94,7 +93,7 @@ public class BookServiceImplTest {
             return null;
         }).when(bookRepository).deleteById(bookToDelete.getId());
 
-        bookServiceImpl.delete(bookToDelete.getId());
+        bookServiceImpl.delete(bookToDelete);
         assertThat(bookServiceImpl
                 .getAll()
                 .stream()
@@ -117,7 +116,7 @@ public class BookServiceImplTest {
             return null;
         }).when(bookRepository).save(bookToUpdate);
 
-        bookServiceImpl.upsert(1L, "Хроники", 3L, 3L);
+        bookServiceImpl.upsert(new Book(1L, "Хроники", new Author(3L, "Ученый"), new Genre(3L, "Наука")));
         assertThat(bookServiceImpl
                 .getAll()
                 .stream()

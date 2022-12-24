@@ -1,15 +1,13 @@
 package ru.otus.homework13.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -24,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -32,10 +29,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@SpringBootTest
-//@AutoConfigureMockMvc
-@WebMvcTest
-@ContextConfiguration
+@SpringBootTest
+@AutoConfigureMockMvc
 public class BookControllerTest {
 
     @Autowired
@@ -100,7 +95,7 @@ public class BookControllerTest {
                 .perform(get("/api/books/" + bookId).with(user(user).authorities(new SimpleGrantedAuthority(role))))
                 .andExpect(statusMatcher);
 
-        if (!("SOMEONE".equals(role) || ("USER".equals(role) && "1".equals(bookId)))) {
+        if (!("SOMEONE".equals(role) || ("USER".equals(role) && "2".equals(bookId)))) {
             resultActions.andExpect(content().json(mapper.writeValueAsString(expectedResult)));
         }
     }
@@ -112,53 +107,30 @@ public class BookControllerTest {
                 .andExpect(statusMatcher);
     }
 
-    @WithMockUser(
-            username = "admin"
-    )
-    @Test
-    void shouldCorrectSaveNewBook() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideParamsForTest")
+    void shouldCorrectSaveNewBook(String user, String role, ResultMatcher statusMatcher) throws Exception {
         Book book = new Book(0, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
-        given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
+
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 
-        mockMvc.perform(post("/api/books").with(csrf()).contentType(APPLICATION_JSON)
+        mockMvc.perform(post("/api/books").with(csrf()).with(user(user).authorities(new SimpleGrantedAuthority(role)))
+                        .contentType(APPLICATION_JSON)
                         .content(expectedResult))
-                .andExpect(status().isOk());
+                .andExpect(statusMatcher);
     }
 
-    @Test
-    void shouldReturn403ForSaveNewBook() throws Exception {
-        Book book = new Book(0, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
-        given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
-        String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
-
-        mockMvc.perform(post("/api/books").contentType(APPLICATION_JSON)
-                        .content(expectedResult))
-                .andExpect(status().isForbidden());
-    }
-
-    @WithMockUser(
-            username = "admin"
-    )
-    @Test
-    void shouldCorrectUpdateBook() throws Exception {
+    @ParameterizedTest
+    @MethodSource("provideParamsForTestGetById")
+    void shouldCorrectUpdateBook(String user, String role, ResultMatcher statusMatcher, String bookId) throws Exception {
         Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
-        given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
+
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 
-        mockMvc.perform(put("/api/books/1").with(csrf()).contentType(APPLICATION_JSON)
+        mockMvc.perform(put("/api/books/" + bookId).with(csrf()).with(user(user).authorities(new SimpleGrantedAuthority(role)))
+                        .contentType(APPLICATION_JSON)
                         .content(expectedResult))
-                .andExpect(status().isOk());
+                .andExpect(statusMatcher);
     }
 
-    @Test
-    void shouldReturn403ForUpdateBook() throws Exception {
-        Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
-        given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
-        String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
-
-        mockMvc.perform(put("/api/books/1").with(csrf()).contentType(APPLICATION_JSON)
-                        .content(expectedResult))
-                .andExpect(status().isUnauthorized());
-    }
 }

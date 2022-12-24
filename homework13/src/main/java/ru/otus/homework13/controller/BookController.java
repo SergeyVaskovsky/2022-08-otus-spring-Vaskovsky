@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.homework13.mapping.BookDto;
+import ru.otus.homework13.model.Author;
 import ru.otus.homework13.model.Book;
+import ru.otus.homework13.model.Genre;
+import ru.otus.homework13.service.AuthorService;
 import ru.otus.homework13.service.BookService;
+import ru.otus.homework13.service.GenreService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +19,8 @@ import java.util.stream.Collectors;
 public class BookController {
 
     private final BookService bookService;
+    private final AuthorService authorService;
+    private final GenreService genreService;
 
     @GetMapping("/api/books")
     public List<BookDto> getBooks() {
@@ -28,7 +34,8 @@ public class BookController {
 
     @DeleteMapping("/api/books/{id}")
     public void deleteBook(@PathVariable long id) {
-        bookService.delete(id);
+        Book book = bookService.getById(id);
+        bookService.delete(book);
     }
 
     @GetMapping("/api/books/{id}")
@@ -38,20 +45,18 @@ public class BookController {
     }
 
     @PostMapping("/api/books")
-    public void createBook(@RequestBody BookDto book) {
-        bookService.upsert(
-                -1L,
-                book.getName(),
-                book.getAuthorId(),
-                book.getGenreId());
+    public void createBook(@RequestBody BookDto bookDto) {
+        Author author = authorService.getById(bookDto.getAuthorId());
+        Genre genre = genreService.getById(bookDto.getGenreId());
+        Book book = new Book(-1L, bookDto.getName(), author, genre);
+        bookService.upsert(book);
     }
 
     @PutMapping("/api/books/{id}")
-    public void updateBook(@PathVariable Long id, @RequestBody BookDto book) {
-        bookService.upsert(
-                id,
-                book.getName(),
-                book.getAuthorId(),
-                book.getGenreId());
+    public void updateBook(@PathVariable Long id, @RequestBody BookDto bookDto) {
+        Author author = authorService.getById(bookDto.getAuthorId());
+        Genre genre = genreService.getById(bookDto.getGenreId());
+        Book book = new Book(id, bookDto.getName(), author, genre);
+        bookService.upsert(book);
     }
 }
