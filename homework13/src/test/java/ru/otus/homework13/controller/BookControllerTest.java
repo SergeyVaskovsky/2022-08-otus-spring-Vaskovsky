@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -15,7 +16,6 @@ import ru.otus.homework13.mapping.BookDto;
 import ru.otus.homework13.model.Author;
 import ru.otus.homework13.model.Book;
 import ru.otus.homework13.model.Genre;
-import ru.otus.homework13.service.BookService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class BookControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper mapper;
-    @Autowired
-    private BookService bookService;
 
 
     private static Stream<Arguments> provideParamsForTest() {
@@ -107,10 +106,19 @@ public class BookControllerTest {
                 .andExpect(statusMatcher);
     }
 
+    private static Stream<Arguments> provideParamsForTestWithGenreId() {
+        return Stream.of(
+                Arguments.of("admin", "ADMIN", status().isOk(), 1),
+                Arguments.of("user", "USER", status().isForbidden(), 1),
+                Arguments.of("user", "USER", status().isOk(), 2),
+                Arguments.of("someone", "SOMEONE", status().isForbidden(), 1)
+        );
+    }
+
     @ParameterizedTest
-    @MethodSource("provideParamsForTest")
-    void shouldCorrectSaveNewBook(String user, String role, ResultMatcher statusMatcher) throws Exception {
-        Book book = new Book(0, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
+    @MethodSource("provideParamsForTestWithGenreId")
+    void shouldCorrectSaveNewBook(String user, String role, ResultMatcher statusMatcher, long genreId) throws Exception {
+        Book book = new Book(0, "Роман", new Author(1L, "Писатель"), new Genre(genreId, "Для женщин"));
 
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 
@@ -121,13 +129,13 @@ public class BookControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideParamsForTestGetById")
-    void shouldCorrectUpdateBook(String user, String role, ResultMatcher statusMatcher, String bookId) throws Exception {
-        Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
+    @MethodSource("provideParamsForTestWithGenreId")
+    void shouldCorrectUpdateBook(String user, String role, ResultMatcher statusMatcher, long genreId) throws Exception {
+        Book book = new Book(1L, "Роман", new Author(1L, "Писатель"), new Genre(genreId, "Для женщин"));
 
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 
-        mockMvc.perform(put("/api/books/" + bookId).with(csrf()).with(user(user).authorities(new SimpleGrantedAuthority(role)))
+        mockMvc.perform(put("/api/books/1").with(csrf()).with(user(user).authorities(new SimpleGrantedAuthority(role)))
                         .contentType(APPLICATION_JSON)
                         .content(expectedResult))
                 .andExpect(statusMatcher);
