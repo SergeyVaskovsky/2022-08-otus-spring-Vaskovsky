@@ -15,6 +15,8 @@ const login = async (username, password) => {
       if (response.status === 200) {
         localStorage.setItem("user", username);
         return;
+      } else if (response.status === 403) {
+        throw new Error("У Вас нет доступа к данному ресурсу или неправильные логин или пароль");
       }
       throw new Error("Неправильные логин или пароль");
     });
