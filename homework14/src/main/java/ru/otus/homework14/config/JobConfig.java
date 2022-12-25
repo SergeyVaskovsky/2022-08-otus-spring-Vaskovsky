@@ -6,9 +6,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.MongoItemReader;
-import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.homework14.model.mongo.Author;
@@ -29,6 +27,7 @@ public class JobConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
+
     @Bean
     public Job importUserJob(
             Step transformAuthorsStep,
@@ -46,14 +45,11 @@ public class JobConfig {
     }
 
     @Bean
-    public Step transformAuthorsStep(
-            MongoItemReader<Author> reader,
-            JpaItemWriter<ru.otus.homework14.model.rdb.Author> writer,
-            ItemProcessor<Author, ru.otus.homework14.model.rdb.Author> itemProcessor) {
+    public Step transformAuthorsStep(MongoItemReader<Author> reader,
+                                     CustomAuthorWriter writer) {
         return stepBuilderFactory.get(STEP_AUTHOR_NAME)
-                .<Author, ru.otus.homework14.model.rdb.Author>chunk(CHUNK_SIZE)
+                .<Author, Author>chunk(CHUNK_SIZE)
                 .reader(reader)
-                .processor(itemProcessor)
                 .writer(writer)
                 .build();
     }
@@ -61,12 +57,11 @@ public class JobConfig {
     @Bean
     public Step transformGenresStep(
             MongoItemReader<Genre> reader,
-            JpaItemWriter<ru.otus.homework14.model.rdb.Genre> writer,
-            ItemProcessor<Genre, ru.otus.homework14.model.rdb.Genre> itemProcessor) {
+            CustomGenreWriter writer
+    ) {
         return stepBuilderFactory.get(STEP_GENRE_NAME)
-                .<Genre, ru.otus.homework14.model.rdb.Genre>chunk(CHUNK_SIZE)
+                .<Genre, Genre>chunk(CHUNK_SIZE)
                 .reader(reader)
-                .processor(itemProcessor)
                 .writer(writer)
                 .build();
     }
@@ -74,12 +69,10 @@ public class JobConfig {
     @Bean
     public Step transformBooksStep(
             MongoItemReader<Book> reader,
-            JpaItemWriter<ru.otus.homework14.model.rdb.Book> writer,
-            ItemProcessor<Book, ru.otus.homework14.model.rdb.Book> itemProcessor) {
+            CustomBookWriter writer) {
         return stepBuilderFactory.get(STEP_BOOK_NAME)
-                .<Book, ru.otus.homework14.model.rdb.Book>chunk(CHUNK_SIZE)
+                .<Book, Book>chunk(CHUNK_SIZE)
                 .reader(reader)
-                .processor(itemProcessor)
                 .writer(writer)
                 .build();
     }
@@ -87,12 +80,10 @@ public class JobConfig {
     @Bean
     public Step transformCommentsStep(
             MongoItemReader<Comment> reader,
-            JpaItemWriter<ru.otus.homework14.model.rdb.Comment> writer,
-            ItemProcessor<Comment, ru.otus.homework14.model.rdb.Comment> itemProcessor) {
+            CustomCommentWriter writer) {
         return stepBuilderFactory.get(STEP_COMMENT_NAME)
-                .<Comment, ru.otus.homework14.model.rdb.Comment>chunk(CHUNK_SIZE)
+                .<Comment, Comment>chunk(CHUNK_SIZE)
                 .reader(reader)
-                .processor(itemProcessor)
                 .writer(writer)
                 .build();
     }
