@@ -11,8 +11,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "author")
-public class Author {
+@Table(name = "genre")
+public class RdbGenre {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Author {
     @Column(name = "name")
     private String name;
 
-    public Author(String name) {
+    public RdbGenre(String name) {
         this.name = name;
     }
 }

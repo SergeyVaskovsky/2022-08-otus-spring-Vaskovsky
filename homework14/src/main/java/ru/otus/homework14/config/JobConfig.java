@@ -9,10 +9,10 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.data.MongoItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.otus.homework14.model.mongo.Author;
-import ru.otus.homework14.model.mongo.Book;
-import ru.otus.homework14.model.mongo.Comment;
-import ru.otus.homework14.model.mongo.Genre;
+import ru.otus.homework14.model.mongo.MongoAuthor;
+import ru.otus.homework14.model.mongo.MongoBook;
+import ru.otus.homework14.model.mongo.MongoComment;
+import ru.otus.homework14.model.mongo.MongoGenre;
 
 @Configuration
 @RequiredArgsConstructor
@@ -45,10 +45,10 @@ public class JobConfig {
     }
 
     @Bean
-    public Step transformAuthorsStep(MongoItemReader<Author> reader,
+    public Step transformAuthorsStep(MongoItemReader<MongoAuthor> reader,
                                      CustomAuthorWriter writer) {
         return stepBuilderFactory.get(STEP_AUTHOR_NAME)
-                .<Author, Author>chunk(CHUNK_SIZE)
+                .<MongoAuthor, MongoAuthor>chunk(CHUNK_SIZE)
                 .reader(reader)
                 .writer(writer)
                 .build();
@@ -56,11 +56,11 @@ public class JobConfig {
 
     @Bean
     public Step transformGenresStep(
-            MongoItemReader<Genre> reader,
+            MongoItemReader<MongoGenre> reader,
             CustomGenreWriter writer
     ) {
         return stepBuilderFactory.get(STEP_GENRE_NAME)
-                .<Genre, Genre>chunk(CHUNK_SIZE)
+                .<MongoGenre, MongoGenre>chunk(CHUNK_SIZE)
                 .reader(reader)
                 .writer(writer)
                 .build();
@@ -68,10 +68,10 @@ public class JobConfig {
 
     @Bean
     public Step transformBooksStep(
-            MongoItemReader<Book> reader,
+            MongoItemReader<MongoBook> reader,
             CustomBookWriter writer) {
         return stepBuilderFactory.get(STEP_BOOK_NAME)
-                .<Book, Book>chunk(CHUNK_SIZE)
+                .<MongoBook, MongoBook>chunk(CHUNK_SIZE)
                 .reader(reader)
                 .writer(writer)
                 .build();
@@ -79,10 +79,10 @@ public class JobConfig {
 
     @Bean
     public Step transformCommentsStep(
-            MongoItemReader<Comment> reader,
+            MongoItemReader<MongoComment> reader,
             CustomCommentWriter writer) {
         return stepBuilderFactory.get(STEP_COMMENT_NAME)
-                .<Comment, Comment>chunk(CHUNK_SIZE)
+                .<MongoComment, MongoComment>chunk(CHUNK_SIZE)
                 .reader(reader)
                 .writer(writer)
                 .build();

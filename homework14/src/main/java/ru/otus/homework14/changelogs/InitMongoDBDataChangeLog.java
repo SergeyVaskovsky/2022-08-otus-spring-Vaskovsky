@@ -4,25 +4,25 @@ import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.github.cloudyrock.mongock.driver.mongodb.springdata.v3.decorator.impl.MongockTemplate;
 import com.mongodb.client.MongoDatabase;
-import ru.otus.homework14.model.mongo.Author;
-import ru.otus.homework14.model.mongo.Book;
-import ru.otus.homework14.model.mongo.Comment;
-import ru.otus.homework14.model.mongo.Genre;
+import ru.otus.homework14.model.mongo.MongoAuthor;
+import ru.otus.homework14.model.mongo.MongoBook;
+import ru.otus.homework14.model.mongo.MongoComment;
+import ru.otus.homework14.model.mongo.MongoGenre;
 
 @ChangeLog(order = "001")
 public class InitMongoDBDataChangeLog {
-    private Author pushkin = new Author("1", "Пушкин Александр Сергеевич");
-    private Author kyte = new Author("2", "Кайт Том");
-    private Author mcConnell = new Author("3", "Макконел Стивен");
-    private Genre fiction = new Genre("1", "Фантастика");
-    private Genre novell = new Genre("2", "Роман");
-    private Genre science = new Genre("3", "Научпоп");
-    private Book fictionAndOrdinaryPeople = new Book("1", "Фантастика и обычные люди", kyte, fiction);
-    private Comment good = new Comment("1", "Хорошо", fictionAndOrdinaryPeople);
-    private Comment bad = new Comment("2", "Плохо", fictionAndOrdinaryPeople);
-    private Comment soso = new Comment("3", "Ни рыба не мясо", fictionAndOrdinaryPeople);
-    private Book novellAndSomething = new Book("2", "Онегин и прочий бред", pushkin, novell);
-    private Book code = new Book("3", "Совершенный код", mcConnell, science);
+    private MongoAuthor pushkin = new MongoAuthor("1", "Пушкин Александр Сергеевич");
+    private MongoAuthor kyte = new MongoAuthor("2", "Кайт Том");
+    private MongoAuthor mcConnell = new MongoAuthor("3", "Макконел Стивен");
+    private MongoGenre fiction = new MongoGenre("1", "Фантастика");
+    private MongoGenre novell = new MongoGenre("2", "Роман");
+    private MongoGenre science = new MongoGenre("3", "Научпоп");
+    private MongoBook fictionAndOrdinaryPeople = new MongoBook("1", "Фантастика и обычные люди", kyte, fiction);
+    private MongoComment good = new MongoComment("1", "Хорошо", fictionAndOrdinaryPeople);
+    private MongoComment bad = new MongoComment("2", "Плохо", fictionAndOrdinaryPeople);
+    private MongoComment soso = new MongoComment("3", "Ни рыба не мясо", fictionAndOrdinaryPeople);
+    private MongoBook novellAndSomething = new MongoBook("2", "Онегин и прочий бред", pushkin, novell);
+    private MongoBook code = new MongoBook("3", "Совершенный код", mcConnell, science);
 
     @ChangeSet(order = "000", id = "dropDB", author = "vaskovsky", runAlways = true)
     public void dropDB(MongoDatabase database) {

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "book")
-public class Book {
+public class RdbBook {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Book {
     @Column(name = "genreId")
     private long genreId;
 
-    public Book(String name, Long authorId, Long genreId) {
+    public RdbBook(String name, Long authorId, Long genreId) {
         this.name = name;
         this.authorId = authorId;
         this.genreId = genreId;

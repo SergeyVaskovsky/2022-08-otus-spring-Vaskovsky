@@ -10,11 +10,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "genre")
-public class Genre {
+@Document(collection = "comment")
+public class MongoComment {
     @Id
     private String id;
 
     @EqualsAndHashCode.Exclude
-    private String name;
+    private String description;
+
+    @EqualsAndHashCode.Exclude
+    private MongoBook mongoBook;
+
+    public MongoComment(String description, MongoBook mongoBook) {
+        this.description = description;
+        this.mongoBook = mongoBook;
+    }
 }

@@ -15,10 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.otus.homework14.model.mongo.Author;
-import ru.otus.homework14.model.mongo.Book;
-import ru.otus.homework14.model.mongo.Comment;
-import ru.otus.homework14.model.mongo.Genre;
+import ru.otus.homework14.model.mongo.MongoAuthor;
+import ru.otus.homework14.model.mongo.MongoBook;
+import ru.otus.homework14.model.mongo.MongoComment;
+import ru.otus.homework14.model.mongo.MongoGenre;
+import ru.otus.homework14.model.rdb.RdbAuthor;
+import ru.otus.homework14.model.rdb.RdbBook;
+import ru.otus.homework14.model.rdb.RdbComment;
+import ru.otus.homework14.model.rdb.RdbGenre;
 import ru.otus.homework14.repository.AuthorRepository;
 import ru.otus.homework14.repository.BookRepository;
 import ru.otus.homework14.repository.CommentRepository;
@@ -39,7 +43,7 @@ class ImportJobTest {
     @Autowired
     private JobRepositoryTestUtils jobRepositoryTestUtils;
     @Autowired
-    private MongoItemReader<Book> readerBook;
+    private MongoItemReader<MongoBook> readerBook;
     @Autowired
     private MongoTemplate template;
     @Autowired
@@ -81,14 +85,14 @@ class ImportJobTest {
                 .createStepExecution();
 
         StepScopeTestUtils.doInStepScope(stepExecution, () -> {
-            Book actualBook;
+            MongoBook actualMongoBook;
             readerBook.open(stepExecution.getExecutionContext());
-            while ((actualBook = readerBook.read()) != null) {
+            while ((actualMongoBook = readerBook.read()) != null) {
 
-                Book expectedBook = template.findById(actualBook.getId(), Book.class);
-                assertThat(actualBook.getName()).isEqualTo(expectedBook.getName());
-                assertThat(actualBook.getAuthor().getId()).isEqualTo(expectedBook.getAuthor().getId());
-                assertThat(actualBook.getGenre().getId()).isEqualTo(expectedBook.getGenre().getId());
+                MongoBook expectedMongoBook = template.findById(actualMongoBook.getId(), MongoBook.class);
+                assertThat(actualMongoBook.getName()).isEqualTo(expectedMongoBook.getName());
+                assertThat(actualMongoBook.getMongoAuthor().getId()).isEqualTo(expectedMongoBook.getMongoAuthor().getId());
+                assertThat(actualMongoBook.getMongoGenre().getId()).isEqualTo(expectedMongoBook.getMongoGenre().getId());
 
             }
             readerBook.close();
@@ -98,31 +102,31 @@ class ImportJobTest {
 
     @Test
     public void shouldCorrectSaveAuthor() {
-        Author author = new Author("1", "My name");
-        customAuthorWriter.write(List.of(author));
-        Optional<ru.otus.homework14.model.rdb.Author> a = authorRepository.findById(1L);
+        MongoAuthor mongoAuthor = new MongoAuthor("1", "My name");
+        customAuthorWriter.write(List.of(mongoAuthor));
+        Optional<RdbAuthor> a = authorRepository.findById(1L);
         assertNotNull(a.get());
         assertThat(a.get().getName()).isEqualTo("My name");
     }
 
     @Test
     public void shouldCorrectSaveGenre() {
-        Genre genre = new Genre("2", "My favorite genre");
-        customGenreWriter.write(List.of(genre));
-        Optional<ru.otus.homework14.model.rdb.Genre> g = genreRepository.findById(1L);
+        MongoGenre mongoGenre = new MongoGenre("2", "My favorite genre");
+        customGenreWriter.write(List.of(mongoGenre));
+        Optional<RdbGenre> g = genreRepository.findById(1L);
         assertNotNull(g.get());
         assertThat(g.get().getName()).isEqualTo("My favorite genre");
     }
 
     @Test
     public void shouldCorrectSaveBook() {
-        Author author = new Author("1", "My name");
-        Genre genre = new Genre("2", "My favorite genre");
-        Book book = new Book("3", "My book", author, genre);
-        customAuthorWriter.write(List.of(author));
-        customGenreWriter.write(List.of(genre));
-        customBookWriter.write(List.of(book));
-        Optional<ru.otus.homework14.model.rdb.Book> b = bookRepository.findById(1L);
+        MongoAuthor mongoAuthor = new MongoAuthor("1", "My name");
+        MongoGenre mongoGenre = new MongoGenre("2", "My favorite genre");
+        MongoBook mongoBook = new MongoBook("3", "My book", mongoAuthor, mongoGenre);
+        customAuthorWriter.write(List.of(mongoAuthor));
+        customGenreWriter.write(List.of(mongoGenre));
+        customBookWriter.write(List.of(mongoBook));
+        Optional<RdbBook> b = bookRepository.findById(1L);
         assertNotNull(b.get());
         assertThat(b.get().getName()).isEqualTo("My book");
         assertThat(b.get().getAuthorId()).isEqualTo(1L);
@@ -131,15 +135,15 @@ class ImportJobTest {
 
     @Test
     public void shouldCorrectSaveComment() {
-        Author author = new Author("1", "My name");
-        Genre genre = new Genre("2", "My favorite genre");
-        Book book = new Book("3", "My book", author, genre);
-        Comment comment = new Comment("4", "My lovely testimonials", book);
-        customAuthorWriter.write(List.of(author));
-        customGenreWriter.write(List.of(genre));
-        customBookWriter.write(List.of(book));
-        customCommentWriter.write(List.of(comment));
-        Optional<ru.otus.homework14.model.rdb.Comment> c = commentRepository.findById(1L);
+        MongoAuthor mongoAuthor = new MongoAuthor("1", "My name");
+        MongoGenre mongoGenre = new MongoGenre("2", "My favorite genre");
+        MongoBook mongoBook = new MongoBook("3", "My book", mongoAuthor, mongoGenre);
+        MongoComment mongoComment = new MongoComment("4", "My lovely testimonials", mongoBook);
+        customAuthorWriter.write(List.of(mongoAuthor));
+        customGenreWriter.write(List.of(mongoGenre));
+        customBookWriter.write(List.of(mongoBook));
+        customCommentWriter.write(List.of(mongoComment));
+        Optional<RdbComment> c = commentRepository.findById(1L);
         assertNotNull(c.get());
         assertThat(c.get().getDescription()).isEqualTo("My lovely testimonials");
         assertThat(c.get().getBookId()).isEqualTo(1L);

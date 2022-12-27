@@ -2,6 +2,7 @@ package ru.otus.homework14.model.rdb;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -10,21 +11,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "comment")
-public class Comment {
+@Table(name = "author")
+public class RdbAuthor {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "description")
-    private String description;
+    @EqualsAndHashCode.Exclude
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "bookId")
-    private long bookId;
-
-    public Comment(String description, Long bookId) {
-        this.description = description;
-        this.bookId = bookId;
+    public RdbAuthor(String name) {
+        this.name = name;
     }
 }

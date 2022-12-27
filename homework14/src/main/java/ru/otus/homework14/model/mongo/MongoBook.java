@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "book")
-public class Book {
+public class MongoBook {
     @Id
     private String id;
 
@@ -19,14 +19,14 @@ public class Book {
     private String name;
 
     @EqualsAndHashCode.Exclude
-    private Author author;
+    private MongoAuthor mongoAuthor;
 
     @EqualsAndHashCode.Exclude
-    private Genre genre;
+    private MongoGenre mongoGenre;
 
-    public Book(String name, Author author, Genre genre) {
+    public MongoBook(String name, MongoAuthor mongoAuthor, MongoGenre mongoGenre) {
         this.name = name;
-        this.author = author;
-        this.genre = genre;
+        this.mongoAuthor = mongoAuthor;
+        this.mongoGenre = mongoGenre;
     }
 }

@@ -2,14 +2,6 @@ package ru.otus.homework14.service;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @Service
-public class GenreIdsService {
-    private final Map<String, Long> ids = new ConcurrentHashMap<>();
-
-    public Map<String, Long> getIds() {
-        return ids;
-    }
+public class GenreIdsService extends IdsService {
 }
