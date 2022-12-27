@@ -6,7 +6,7 @@ import ru.otus.homework15.model.Cocoon;
 
 @Service
 public class SleepingService {
-    public Cocoon toSleep(Caterpillar caterpillar) {
+    public Cocoon sleep(Caterpillar caterpillar) {
         return new Cocoon(caterpillar.getName());
     }
 }
