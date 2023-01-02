@@ -14,6 +14,7 @@ import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.scheduling.PollerMetadata;
 import ru.otus.homework15.model.*;
 
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 @IntegrationComponentScan
@@ -38,15 +39,12 @@ public class Integration {
     }
 
     @Bean
-    //@BridgeTo(value = "outputChannel")
     QueueChannel produceCarBodyChannel() { return new QueueChannel(); }
 
     @Bean
-    //@BridgeTo(value = "outputChannel")
     QueueChannel produceEngineChannel() { return new QueueChannel(); }
 
     @Bean
-    //@BridgeTo(value = "outputChannel")
     QueueChannel produceOptionsChannel() { return new QueueChannel(); }
 
     @Bean
@@ -71,9 +69,9 @@ public class Integration {
                 .aggregate(a -> a.releaseStrategy(g -> g.size() == 3)
                         .correlationStrategy(m -> m.getHeaders().get("correlationId"))
                         .outputProcessor(group -> {
-                            CarBody carBody = (CarBody) produceCarBodyChannel().receive().getPayload();
-                            Engine engine = (Engine) produceEngineChannel().receive().getPayload();
-                            Options options = (Options) produceOptionsChannel().receive().getPayload();
+                            CarBody carBody = (CarBody) Objects.requireNonNull(produceCarBodyChannel().receive()).getPayload();
+                            Engine engine = (Engine) Objects.requireNonNull(produceEngineChannel().receive()).getPayload();
+                            Options options = (Options) Objects.requireNonNull(produceOptionsChannel().receive()).getPayload();
                             return new Car(carBody, engine, options);
                         }))
                 .channel( "outputChannel" )
