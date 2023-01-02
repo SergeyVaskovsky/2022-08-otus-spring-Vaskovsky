@@ -1,17 +1,18 @@
 package ru.otus.homework15.service;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.homework15.model.Engine;
 import ru.otus.homework15.model.Part;
 
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class EngineService {
+    private final OutputService outputService;
     public Engine produce(Part part) throws InterruptedException {
-        log.info("Begin construction of engine");
+        outputService.outputString("Begin construction of engine");
         Thread.sleep(1000);
-        log.info("Engine constructed");
+        outputService.outputString("Engine constructed");
         return new Engine(Float.parseFloat(part.getValue()));
     }
 }

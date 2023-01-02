@@ -6,6 +6,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.homework15.gateway.CarFactory;
 import ru.otus.homework15.model.*;
+import ru.otus.homework15.service.OutputService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,9 @@ import java.util.List;
 @ShellComponent
 @RequiredArgsConstructor
 public class CarFactoryShell {
+
+    private final OutputService outputService;
+
     private final CarFactory carFactory;
     private final static String[] CAR_BODY_NAMES = {
             "Седан", "Универсал", "Кабриолет", "Хэтчбек"
@@ -35,7 +39,7 @@ public class CarFactoryShell {
                 generateOptions().getOptionsNames());
 
         Car car = carFactory.process(order);
-        System.out.println(car);
+        outputService.outputString(car.toString());
     }
 
     private CarBody generateCarBody() {

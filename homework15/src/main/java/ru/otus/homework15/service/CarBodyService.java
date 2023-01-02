@@ -1,17 +1,19 @@
 package ru.otus.homework15.service;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.homework15.model.CarBody;
 import ru.otus.homework15.model.Part;
 
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class CarBodyService {
+    private final OutputService outputService;
+
     public CarBody produce(Part part) throws InterruptedException {
-        log.info("Begin construction of car body");
+        outputService.outputString("Begin construction of car body");
         Thread.sleep(1000);
-        log.info("Car body constructed");
+        outputService.outputString("Car body constructed");
         return new CarBody(part.getValue());
     }
 }
