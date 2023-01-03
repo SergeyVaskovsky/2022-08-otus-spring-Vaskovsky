@@ -17,3 +17,29 @@ spring:
         format_sql: true
 
     show-sql: true
+
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+      defaults:
+        enabled: true
+
+logging:
+  file:
+    path: .
+
+
+  logback:
+    rollingpolicy:
+      max-file-size: 1MB
