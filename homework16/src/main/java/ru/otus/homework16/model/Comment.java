@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +27,16 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Book book;
 
+    private static LocalDateTime lastAddCommentInstant = LocalDateTime.now();
     public Comment(String description) {
         this.description = description;
+    }
+    @PrePersist
+    public void onInsert(){
+        lastAddCommentInstant = LocalDateTime.now();
+    }
+
+    public static LocalDateTime getLastAddCommentInstant(){
+        return lastAddCommentInstant;
     }
 }
