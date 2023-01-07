@@ -7,7 +7,6 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.otus.homework16.controller.CommentController;
 import ru.otus.homework16.model.Comment;
 
 import java.time.LocalDateTime;
