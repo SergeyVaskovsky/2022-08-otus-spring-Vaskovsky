@@ -25,4 +25,8 @@ public class Comment {
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     private Book book;
+
+    public Comment(String description) {
+        this.description = description;
+    }
 }

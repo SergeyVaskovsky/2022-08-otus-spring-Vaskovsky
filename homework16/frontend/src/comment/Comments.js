@@ -8,12 +8,14 @@ export default function Comments(data) {
     const commentsService = new CommentsService();
 
     useEffect(() => {
-        commentsService.getComments(data.book.id).then(d => setComments(d));
+        commentsService.getComments(data.book).then(d => {
+            setComments(d._embedded.comments);
+        });
     }, [data]);
 
-    const remove = id => {
-        commentsService.remove(id).then(() => {
-            let updatedComments = [...comments].filter(i => i.id !== id);
+    const remove = comment => {
+        commentsService.remove(comment._links.self.href).then(() => {
+            let updatedComments = [...comments].filter(i => i._links.self.href !== comment._links.self.href);
             setComments(updatedComments);
         });
     }
@@ -22,8 +24,9 @@ export default function Comments(data) {
         if (!description) {
             return;
         }
-        commentsService.add(description, data.book.id)
+        commentsService.add(description, data.book)
             .then(d => {
+                console.log(d);
                 comments.push(d);
                 setComments([...comments]);
             })
@@ -35,11 +38,11 @@ export default function Comments(data) {
                 <tbody>
                 {comments.map(comment => {
                         return (
-                            <tr key={comment.id}>
+                            <tr key={comment._links.self.href}>
                                 <td style={{whiteSpace: 'nowrap'}}>{comment.description}</td>
                                 <td>
                                     <ButtonGroup>
-                                        <Button size="sm" color="danger" onClick={() => remove(comment.id)}>Удалить</Button>
+                                        <Button size="sm" color="danger" onClick={() => remove(comment)}>Удалить</Button>
                                     </ButtonGroup>
                                 </td>
                             </tr>

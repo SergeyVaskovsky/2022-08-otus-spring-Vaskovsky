@@ -1,29 +1,42 @@
 export default class CommentsService {
 
-    getComments = async id => {
-        return await fetch(`/api/books/${id}/comments`)
+    getComments = async book => {
+        return await fetch(book._links.comments.href)
             .then(response => response.json());
     }
 
-    remove = async id => {
-        return await fetch(`/api/books/comments/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
+    remove = async href => {
+        return await fetch(href, {
+            method: 'DELETE'
         });
     }
 
-    add = async (description, id) => {
-        return await fetch(`/api/books/${id}/comments`, {
+    add = async (description, book) => {
+
+        return await fetch('/datarest/comments', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: description,
-        }).then(response => response.json());
+            body: JSON.stringify(description)
+        }).then(response => response.json())
+            .then(data => {
+                    console.log(data);
+
+                    fetch(data._links.book.href.replace('{?projection}', ''), {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'text/uri-list'
+                        },
+                        body: book._links.self.href
+                    }).then(response => {
+                        console.log(response);
+                        return data;
+                    });
+
+                    return data;
+                });
     }
 }
 

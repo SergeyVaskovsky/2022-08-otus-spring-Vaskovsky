@@ -1,11 +1,14 @@
 package ru.otus.homework16.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.rest.core.config.Projection;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -29,4 +32,19 @@ public class Book {
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     private Genre genre;
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, mappedBy = "book")
+    private List<Comment> comments;
+
+    public Book(long bookId, String bookName, Author author, Genre genre) {
+        this.id = bookId;
+        this.name = bookName;
+        this.author = author;
+        this.genre = genre;
+    }
+
+    public Book(String bookName) {
+        this.name = bookName;
+    }
 }

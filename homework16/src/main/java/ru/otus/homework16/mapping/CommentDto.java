@@ -10,6 +10,6 @@ public class CommentDto {
     Long bookId;
 
     public static CommentDto toDto(Comment c) {
-        return new CommentDto(c.getId(), c.getDescription(), c.getBook().getId());
+        return new CommentDto(c.getId(), c.getDescription(), -1L/*, c.getBook().getId()*/);
     }
 }

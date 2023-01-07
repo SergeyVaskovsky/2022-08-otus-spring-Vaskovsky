@@ -9,14 +9,14 @@ export default function GenreSelect({itemGenreId, onSelectGenre = f => f}) {
 
     useEffect(() => {
         genreService.getGenres()
-            .then(data => setGenres(data));
+            .then(data => setGenres(data._embedded.genres));
     }, [setGenres]);
 
     const handleChange = value => {
         const tmpGenres = genres.filter(function (genre) {
-            return genre.id == value;
+            return genre._links.self.href === value;
         });
-        onSelectGenre(tmpGenres[0]);
+        onSelectGenre(tmpGenres[0]._links.self.href);
     }
 
     return (
@@ -26,9 +26,9 @@ export default function GenreSelect({itemGenreId, onSelectGenre = f => f}) {
                 id="genreDropDown"
                 onChange={(event) => handleChange(event.target.value)}>
                 <option key={-1} value={-1} selected disabled>Выберите жанр</option>
-                {genres.map(genre => <option key={genre.id}
-                                             value={genre.id}
-                                             selected={genre.id == itemGenreId}>{genre.name}</option>)}
+                {genres.map(genre => <option key={genre._links.self.href}
+                                             value={genre._links.self.href}
+                                             selected={genre._links.self.href === itemGenreId}>{genre.name}</option>)}
             </select>
         </FormGroup>
     );

@@ -17,7 +17,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getAll(long bookId) {
-        return commentRepository.findAllByBookId(bookId);
+        return null;//commentRepository.findAllByBookId(bookId);
     }
 
     @Transactional

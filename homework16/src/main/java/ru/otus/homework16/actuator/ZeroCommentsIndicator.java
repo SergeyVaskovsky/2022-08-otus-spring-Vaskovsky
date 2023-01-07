@@ -1,4 +1,4 @@
-package ru.otus.homework16.controller;
+package ru.otus.homework16.actuator;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.health.Health;
@@ -7,6 +7,7 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ru.otus.homework16.controller.CommentController;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
