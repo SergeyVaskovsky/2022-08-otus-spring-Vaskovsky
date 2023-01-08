@@ -17,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 @EnableScheduling
 public class ZeroCommentsIndicator implements HealthIndicator {
     private final static long IDLE_PERIOD_IN_SECONDS = 10;
+    private final static long DELAY = 1000;
     private long periodWithoutAddComment;
 
     @Override
@@ -32,7 +33,7 @@ public class ZeroCommentsIndicator implements HealthIndicator {
         }
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = DELAY)
     public void checkTimeOfNewComments() {
         periodWithoutAddComment = ChronoUnit.SECONDS.between(
                 Comment.getLastAddCommentInstant(),

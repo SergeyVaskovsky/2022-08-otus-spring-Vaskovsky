@@ -22,7 +22,7 @@ export default class BookService {
                 'Content-Type': 'text/uri-list'
             },
             body: item.author
-        }).then(response => console.log(response));
+        });
 
         await fetch(data._links.genre.href, {
             method: 'PUT',
@@ -30,7 +30,7 @@ export default class BookService {
                 'Content-Type': 'text/uri-list'
             },
             body: item.genre
-        }).then(response => console.log(response));
+        });
     }
 
     change = async item => {
@@ -44,8 +44,6 @@ export default class BookService {
             body: JSON.stringify(item),
         }).then(response => response.json())
             .then(async data => {
-                console.log(data);
-
                 await fetch(data._links.author.href, {
                     method: 'DELETE'
                 });
@@ -55,7 +53,6 @@ export default class BookService {
                 });
 
                 await this.changeRelations(item, data);
-                console.log("end");
                 return data;
             });
     }
@@ -70,9 +67,7 @@ export default class BookService {
             body: JSON.stringify(item.name),
         }).then(response => response.json())
             .then(async data => {
-                    console.log(data);
                     await this.changeRelations(item, data);
-                    console.log("end");
                     return data;
                 }
             );

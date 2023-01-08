@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, ButtonGroup, Container, Table} from 'reactstrap';
 import AppNavbar from '../main/AppNavbar';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Comments from "../comment/Comments";
 import BookService from "../service/BookService";
 
@@ -32,7 +32,6 @@ export default function BookList() {
 
     const showComments = book => {
         setIsShow(true);
-        console.log(book);
         setCurrentBook(book);
     }
 

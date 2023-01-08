@@ -9,7 +9,7 @@ export default function AuthorSelect({itemAuthorId, onSelectAuthor = f => f}) {
 
     useEffect(() => {
         authorService.getAuthors()
-            .then(data => {console.log(data); return setAuthors(data._embedded.authors);});
+            .then(data => setAuthors(data._embedded.authors));
     }, [setAuthors]);
 
     const handleChange = value => {

@@ -26,7 +26,6 @@ export default function Comments(data) {
         }
         commentsService.add(description, data.book)
             .then(d => {
-                console.log(d);
                 comments.push(d);
                 setComments([...comments]);
             })

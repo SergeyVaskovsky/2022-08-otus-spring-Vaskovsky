@@ -1,7 +1,7 @@
 export default class AuthorService {
     getAuthors = async () => {
         return await fetch(`/datarest/authors`)
-            .then(response => {console.log(response); return response.json()});
+            .then(response => response.json());
     }
 
     getAuthor = async href => {

@@ -22,19 +22,13 @@ export default class CommentsService {
             body: JSON.stringify(description)
         }).then(response => response.json())
             .then(data => {
-                    console.log(data);
-
                     fetch(data._links.book.href.replace('{?projection}', ''), {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'text/uri-list'
                         },
                         body: book._links.self.href
-                    }).then(response => {
-                        console.log(response);
-                        return data;
                     });
-
                     return data;
                 });
     }

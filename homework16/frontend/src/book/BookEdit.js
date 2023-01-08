@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link, useNavigate, useParams, useLocation} from 'react-router-dom';
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import AppNavbar from '../main/AppNavbar';
 import AuthorSelect from "../author/AuthorSelect";
@@ -46,7 +46,6 @@ export default function BookEdit() {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        console.log(item);
         if (id !=='new' ) {
             await bookService.change(item);
         } else {
