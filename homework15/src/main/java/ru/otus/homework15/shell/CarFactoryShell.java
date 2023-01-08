@@ -31,7 +31,7 @@ public class CarFactoryShell {
             "HI-FI музыкальная система"
     };
 
-    @ShellMethod(value = "start turning into", key = "start")
+    @ShellMethod(value = "start constructing car", key = "start")
     public void start() {
         Order order = new Order(
                 generateCarBody().getName(),
