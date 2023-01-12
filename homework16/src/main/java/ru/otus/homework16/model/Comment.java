@@ -4,14 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import ru.otus.homework16.actuator.CommentListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EntityListeners(CommentListener.class)
 @Table(name = "comment")
 public class Comment {
     @Id
@@ -27,16 +28,7 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Book book;
 
-    private static LocalDateTime lastAddCommentInstant = LocalDateTime.now();
     public Comment(String description) {
         this.description = description;
-    }
-    @PrePersist
-    public void onInsert(){
-        lastAddCommentInstant = LocalDateTime.now();
-    }
-
-    public static LocalDateTime getLastAddCommentInstant(){
-        return lastAddCommentInstant;
     }
 }

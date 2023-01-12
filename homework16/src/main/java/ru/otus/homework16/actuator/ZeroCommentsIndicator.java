@@ -7,7 +7,6 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.otus.homework16.model.Comment;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,6 +18,7 @@ public class ZeroCommentsIndicator implements HealthIndicator {
     private final static long IDLE_PERIOD_IN_SECONDS = 10;
     private final static long DELAY = 1000;
     private long periodWithoutAddComment;
+    private final CommentListener commentListener;
 
     @Override
     public Health health() {
@@ -35,8 +35,10 @@ public class ZeroCommentsIndicator implements HealthIndicator {
 
     @Scheduled(fixedDelay = DELAY)
     public void checkTimeOfNewComments() {
+
         periodWithoutAddComment = ChronoUnit.SECONDS.between(
-                Comment.getLastAddCommentInstant(),
+                commentListener.getLastAddCommentInstant(),
                 LocalDateTime.now());
+
     }
 }
