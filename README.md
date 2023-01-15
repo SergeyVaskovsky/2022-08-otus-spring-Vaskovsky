@@ -35,3 +35,7 @@ homework12 - Spring Security: Механизмы аутентификации
 homework13 - Spring Security: ACL 
 
 homework14 - Spring Batch
+
+homework15 - Spring Integration: Endpoints и Flow Components
+
+homework16 - Монолиты vs. Microservices (Round 2), Spring Boot Actuator - must have в микросервисах
