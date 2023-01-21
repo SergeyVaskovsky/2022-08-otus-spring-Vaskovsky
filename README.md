@@ -39,3 +39,6 @@ homework14 - Spring Batch
 homework15 - Spring Integration: Endpoints и Flow Components
 
 homework16 - Монолиты vs. Microservices (Round 2), Spring Boot Actuator - must have в микросервисах
+
+homework17 - Docker, оркестрация, облака, облачные хостинги 
+
