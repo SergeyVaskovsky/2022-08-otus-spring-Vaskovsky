@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,7 +6,7 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: homework17
+      homework17: web
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -16,18 +15,19 @@ spec:
   template:
     metadata:
       labels:
-        app: homework17
+        homework17: web
     spec:
       containers:
-        - image: homework17:1.0.0
+        - image: homework17_app:latest
           name: homework17
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           readinessProbe:
             failureThreshold: 3
             httpGet:
               path: /actuator/health/readiness
-              port: 8090
+              port: 8080
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
@@ -35,10 +35,23 @@ spec:
             failureThreshold: 3
             httpGet:
               path: /actuator/health/liveness
-              port: 8090
+              port: 8080
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
             initialDelaySeconds: 10
-      imagePullSecrets:
-        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homework17
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    homework17: web
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30001
+      protocol: TCP
