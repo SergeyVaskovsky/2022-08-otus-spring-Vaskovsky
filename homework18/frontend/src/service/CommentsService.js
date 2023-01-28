@@ -12,8 +12,14 @@ export default class CommentsService {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
+        }).then(response => {
+            console.log(response.status + " " + response.ok);
+            if (!response.ok) {
+                throw new Error();
+            }
         });
     }
+
 
     add = async (description, id) => {
         return await fetch(`/api/books/${id}/comments`, {

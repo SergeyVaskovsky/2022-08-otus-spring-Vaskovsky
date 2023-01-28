@@ -1,7 +1,9 @@
 package ru.otus.homework18.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.otus.homework18.exception.BookNotDeletedException;
 import ru.otus.homework18.exception.BookNotFoundException;
 import ru.otus.homework18.model.Author;
 import ru.otus.homework18.model.Book;
@@ -19,22 +21,47 @@ public class BookServiceImpl implements BookService {
     private final GenreService genreService;
     private final BookRepository bookRepository;
     private final CommentService commentService;
+    private final RandomTimeoutService randomTimeoutService;
 
+    @HystrixCommand(fallbackMethod = "buildFallbackBooks")
     @Override
     public List<Book> getAll() {
+        //randomTimeoutService.sleepRandomTimeout();
         return bookRepository.findAll();
     }
 
+    public List<Book> buildFallbackBooks() {
+        Book book = new Book();
+        book.setId(0L);
+        book.setName("По техническим причинам список книг недоступен");
+        book.setAuthor(new Author(0L, "Н/Д"));
+        book.setGenre(new Genre(0L, "Н/Д"));
+        List<Book> books = List.of(book);
+        return books;
+    }
+
+    @HystrixCommand(fallbackMethod = "buildFallbackBook")
     @Override
     public Book getById(long bookId) {
+        randomTimeoutService.sleepRandomTimeout();
         return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(
                 String.format("Book with id = %d not found", bookId)
         ));
     }
 
-    @Transactional
+    public Book buildFallbackBook() {
+        Book book = new Book();
+        book.setId(0L);
+        book.setName("По техническим причинам книга недоступна");
+        book.setAuthor(new Author(0L, "Н/Д"));
+        book.setGenre(new Genre(0L, "Н/Д"));
+        return book;
+    }
+
+    @HystrixCommand(fallbackMethod = "buildFallbackUpsert")
     @Override
     public Book upsert(long bookId, String bookName, long authorId, long genreId) {
+        randomTimeoutService.sleepRandomTimeout();
         Author author = authorService.getById(authorId);
         Genre genre = genreService.getById(genreId);
         Book book = new Book(bookId, bookName, author, genre);
@@ -42,11 +69,26 @@ public class BookServiceImpl implements BookService {
         return book;
     }
 
+    public Book buildFallbackUpsert(long bookId, String bookName, long authorId, long genreId) {
+        Book book = new Book();
+        book.setId(0L);
+        book.setName("По техническим причинам книга недоступна");
+        book.setAuthor(new Author(0L, "Н/Д"));
+        book.setGenre(new Genre(0L, "Н/Д"));
+        return book;
+    }
+
+    @HystrixCommand(fallbackMethod = "buildFallbackDelete")
     @Transactional
     @Override
     public void delete(long bookId) {
         commentService.deleteAll(commentService.getAll(bookId));
+        randomTimeoutService.sleepRandomTimeout();
         bookRepository.deleteById(bookId);
+    }
+
+    public void buildFallbackDelete(long bookId) {
+        throw new BookNotDeletedException();
     }
 
 }

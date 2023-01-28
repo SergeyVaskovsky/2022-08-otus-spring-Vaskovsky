@@ -17,3 +17,11 @@ spring:
         format_sql: true
 
     show-sql: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000

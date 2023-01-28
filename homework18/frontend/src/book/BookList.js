@@ -4,17 +4,22 @@ import AppNavbar from '../main/AppNavbar';
 import {Link} from 'react-router-dom';
 import Comments from "../comment/Comments";
 import BookService from "../service/BookService";
+import logo from '../assets/loading.gif'
 
 export default function BookList() {
 
     const [books, setBooks] = useState([]);
     const [isShow, setIsShow] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [currentBook, setCurrentBook] = useState({});
     const bookService = new BookService();
 
     useEffect(() => {
         bookService.getBooks()
-            .then(data => setBooks(data));
+            .then(data => {
+                setBooks(data);
+                setIsLoading(false);
+            });
     }, []);
 
     const remove = async id => {
@@ -39,16 +44,18 @@ export default function BookList() {
                 <td style={{whiteSpace: 'nowrap'}}>{book.name}</td>
                 <td>{book.authorName}</td>
                 <td>{book.genreName}</td>
-                <td>
+                <td> {book.id !== 0 ?
                     <ButtonGroup>
                         <Button size="sm" color="primary" onClick={() => showComments(book)}>Отзывы</Button>
-                    </ButtonGroup>
+                    </ButtonGroup> : ""
+                }
                 </td>
-                <td>
+                <td> {book.id !== 0 ?
                     <ButtonGroup>
                         <Button size="sm" color="primary" tag={Link} to={"/books/" + book.id}>Изменить</Button>
                         <Button size="sm" color="danger" onClick={() => remove(book.id)}>Удалить</Button>
-                    </ButtonGroup>
+                    </ButtonGroup> : ""
+                }
                 </td>
             </tr>
         });
@@ -72,9 +79,12 @@ export default function BookList() {
                         <th width="10%">Действие</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {bookList}
-                    </tbody>
+                    {isLoading ?
+                        <img src={logo} alt="loading..."/> :
+                        <tbody>
+                        {bookList}
+                        </tbody>
+                    }
                 </Table>
             </Container>
             {isShow &&

@@ -12,6 +12,7 @@ public class BookCommentServiceImpl implements BookCommentService {
 
     private final BookRepository bookRepository;
 
+
     @Override
     public Book getById(long bookId) {
         return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(
