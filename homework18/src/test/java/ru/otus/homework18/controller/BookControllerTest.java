@@ -71,7 +71,7 @@ public class BookControllerTest {
 
     @Test
     void shouldCorrectSaveNewBook() throws Exception {
-        Book book = new Book(0, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
+        Book book = new Book(-1L, "Роман", new Author(1L, "Писатель"), new Genre(1L, "Для женщин"));
         given(bookService.upsert(book.getId(), book.getName(), book.getAuthor().getId(), book.getGenre().getId())).willReturn(book);
         String expectedResult = mapper.writeValueAsString(BookDto.toDto(book));
 

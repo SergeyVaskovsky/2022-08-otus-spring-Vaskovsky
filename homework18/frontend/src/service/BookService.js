@@ -16,17 +16,21 @@ export default class BookService {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error();
+            }
         });
     }
 
     save = async item => {
-        await fetch('/api/books' + (item.id ? '/' + item.id : ''), {
+        return await fetch('/api/books' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(item),
-        });
+        }).then(response => response.json());
     }
 }

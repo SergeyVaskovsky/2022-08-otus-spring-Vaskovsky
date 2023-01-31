@@ -1,9 +1,11 @@
 package ru.otus.homework18.mapping;
 
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import ru.otus.homework18.model.Book;
 
 @Value
+@Slf4j
 public class BookDto {
 
     long id;

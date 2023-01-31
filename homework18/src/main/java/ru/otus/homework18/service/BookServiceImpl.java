@@ -26,7 +26,7 @@ public class BookServiceImpl implements BookService {
     @HystrixCommand(fallbackMethod = "buildFallbackBooks")
     @Override
     public List<Book> getAll() {
-        //randomTimeoutService.sleepRandomTimeout();
+        randomTimeoutService.sleepRandomTimeout();
         return bookRepository.findAll();
     }
 
@@ -49,7 +49,7 @@ public class BookServiceImpl implements BookService {
         ));
     }
 
-    public Book buildFallbackBook() {
+    public Book buildFallbackBook(long bookId) {
         Book book = new Book();
         book.setId(0L);
         book.setName("По техническим причинам книга недоступна");

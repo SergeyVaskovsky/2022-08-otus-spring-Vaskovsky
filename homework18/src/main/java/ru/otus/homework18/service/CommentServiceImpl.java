@@ -24,7 +24,7 @@ public class CommentServiceImpl implements CommentService {
     @HystrixCommand(fallbackMethod = "buildFallbackComments")
     @Override
     public List<Comment> getAll(long bookId) {
-        //randomTimeoutService.sleepRandomTimeout();
+        randomTimeoutService.sleepRandomTimeout();
         return commentRepository.findAllByBookId(bookId);
     }
 

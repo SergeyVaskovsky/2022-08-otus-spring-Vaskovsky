@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(properties = "spring.shell.interactive.enabled=false",
         classes = {BookServiceImpl.class})
+//@RunWith(SpringRunner.class)
 public class BookServiceImplTest {
 
     @Autowired
@@ -32,6 +33,8 @@ public class BookServiceImplTest {
     private BookRepository bookRepository;
     @MockBean
     private CommentService commentService;
+    @MockBean
+    private RandomTimeoutService randomTimeoutService;
 
     @Test
     void shouldReturnAllBooks() {

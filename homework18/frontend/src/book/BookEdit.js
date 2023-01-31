@@ -17,11 +17,18 @@ export default function BookEdit() {
     let navigate = useNavigate();
     const {id} = useParams();
     const bookService = new BookService();
+    const [crash, setCrash] = useState(false);
 
     useEffect(() => {
+        setCrash(false);
         if (id !== 'new') {
             bookService.getBook(id)
-                .then(data => setItem(data));
+                .then(data => {
+                    if (data.id === 0) {
+                        setCrash(true);
+                    }
+                    setItem(data);
+                });
         }
     }, [id, setItem]);
 
@@ -33,8 +40,18 @@ export default function BookEdit() {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        await bookService.save(item);
-        navigate('/books');
+        if (item.id === 0 || item.authorId === 0 || item.genreId === 0) {
+            setCrash(true);
+            return;
+        }
+        await bookService.save(item).then(book => {
+            console.log(book);
+            if (!book || book.id === 0) {
+                setCrash(true);
+            } else {
+                navigate('/books');
+            }
+        })
     }
 
     return (
@@ -45,33 +62,38 @@ export default function BookEdit() {
                 <Form onSubmit={(event) => {
                     handleSubmit(event)
                 }}>
+                    {!crash ?
+                        <div>
+                            <FormGroup>
+                                <Label for="name">Название</Label>
+                                <Input type="text" name="name" id="name" value={item.name || ''}
+                                       onChange={(event) => handleChange(event.target.value)} autoComplete="name"/>
+                            </FormGroup>
+
+                            <AuthorSelect
+                                itemAuthorId={item.authorId}
+                                onSelectAuthor={(author) => {
+                                    item.authorId = author.id;
+                                    item.authorName = author.name;
+                                    setItem(item);
+                                }}
+                            />
+
+                            <GenreSelect
+                                itemGenreId={item.genreId}
+                                onSelectGenre={(genre) => {
+                                    item.genreId = genre.id;
+                                    item.genreName = genre.name;
+                                    setItem(item);
+                                }}
+                            />
+
+                            <br/>
+                        </div> :
+                        "Сервис недоступен. Попробуйте позже."
+                    }
                     <FormGroup>
-                        <Label for="name">Название</Label>
-                        <Input type="text" name="name" id="name" value={item.name || ''}
-                               onChange={(event) => handleChange(event.target.value)} autoComplete="name"/>
-                    </FormGroup>
-
-                    <AuthorSelect
-                        itemAuthorId={item.authorId}
-                        onSelectAuthor={(author) => {
-                            item.authorId = author.id;
-                            item.authorName = author.name;
-                            setItem(item);
-                        }}
-                    />
-
-                    <GenreSelect
-                        itemGenreId={item.genreId}
-                        onSelectGenre={(genre) => {
-                            item.genreId = genre.id;
-                            item.genreName = genre.name;
-                            setItem(item);
-                        }}
-                    />
-
-                    <br/>
-                    <FormGroup>
-                        <Button color="primary" type="submit">Сохранить</Button>{' '}
+                        {!crash ? <Button color="primary" type="submit">Сохранить</Button> : ""}
                         <Button color="secondary" tag={Link} to="/books">Отмена</Button>
                     </FormGroup>
                 </Form>

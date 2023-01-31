@@ -36,20 +36,22 @@ public class BookController {
     }
 
     @PostMapping("/api/books")
-    public void createBook(@RequestBody BookDto book) {
-        bookService.upsert(
+    public BookDto createBook(@RequestBody BookDto book) {
+        Book b = bookService.upsert(
                 -1L,
                 book.getName(),
                 book.getAuthorId(),
                 book.getGenreId());
+        return BookDto.toDto(b);
     }
 
     @PutMapping("/api/books/{id}")
-    public void updateBook(@PathVariable Long id, @RequestBody BookDto book) {
-        bookService.upsert(
+    public BookDto updateBook(@PathVariable Long id, @RequestBody BookDto book) {
+        Book b = bookService.upsert(
                 id,
                 book.getName(),
                 book.getAuthorId(),
                 book.getGenreId());
+        return BookDto.toDto(b);
     }
 }

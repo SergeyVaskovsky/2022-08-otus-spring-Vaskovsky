@@ -13,6 +13,7 @@ export default function BookList() {
     const [isLoading, setIsLoading] = useState(true);
     const [currentBook, setCurrentBook] = useState({});
     const bookService = new BookService();
+    const [available, setAvailable] = useState(true);
 
     useEffect(() => {
         bookService.getBooks()
@@ -23,6 +24,7 @@ export default function BookList() {
     }, []);
 
     const remove = async id => {
+        setAvailable(true);
         bookService.remove(id).then(() => {
             let updatedBooks = [...books].filter(i => i.id !== id);
             setBooks(updatedBooks);
@@ -30,6 +32,8 @@ export default function BookList() {
                 setIsShow(false);
                 setCurrentBook({});
             }
+        }).catch((error) => {
+            setAvailable(false);
         });
     }
 
@@ -65,30 +69,34 @@ export default function BookList() {
             <AppNavbar/>
             <Container fluid>
                 <h2>Книги</h2>
-                <div className="float-right">
-                    <Button color="success" tag={Link} to="/books/new">Добавить книгу</Button>
-                </div>
+                {available ?
+                    <div>
+                        <div className="float-right">
+                            <Button color="success" tag={Link} to="/books/new">Добавить книгу</Button>
+                        </div>
 
-                <Table className="mt-4">
-                    <thead>
-                    <tr>
-                        <th width="50%">Название</th>
-                        <th width="15%">Автор</th>
-                        <th width="15%">Жанр</th>
-                        <th width="10%">Отзывы</th>
-                        <th width="10%">Действие</th>
-                    </tr>
-                    </thead>
-                    {isLoading ?
-                        <img src={logo} alt="loading..."/> :
-                        <tbody>
-                        {bookList}
-                        </tbody>
-                    }
-                </Table>
+                        <Table className="mt-4">
+                            <thead>
+                            <tr>
+                                <th width="50%">Название</th>
+                                <th width="15%">Автор</th>
+                                <th width="15%">Жанр</th>
+                                <th width="10%">Отзывы</th>
+                                <th width="10%">Действие</th>
+                            </tr>
+                            </thead>
+                            {isLoading ?
+                                <img src={logo} alt="loading..."/> :
+                                <tbody>
+                                {bookList}
+                                </tbody>
+                            }
+                        </Table>
+                    </div> : "По техническим причинам удалить книгу из библиотеки не получилось. Попробуйте повторить позднее"}
             </Container>
             {isShow &&
                 <Comments book={currentBook}/>
+
             }
         </div>
     );
