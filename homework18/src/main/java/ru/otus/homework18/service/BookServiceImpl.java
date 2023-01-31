@@ -83,7 +83,6 @@ public class BookServiceImpl implements BookService {
     @Override
     public void delete(long bookId) {
         commentService.deleteAll(commentService.getAll(bookId));
-        randomTimeoutService.sleepRandomTimeout();
         bookRepository.deleteById(bookId);
     }
 

@@ -4,7 +4,7 @@ import AppNavbar from '../main/AppNavbar';
 import {Link} from 'react-router-dom';
 import Comments from "../comment/Comments";
 import BookService from "../service/BookService";
-import logo from '../assets/loading.gif'
+import Loading from "../main/Loading";
 
 export default function BookList() {
 
@@ -25,6 +25,7 @@ export default function BookList() {
 
     const remove = async id => {
         setAvailable(true);
+        setIsLoading(true);
         bookService.remove(id).then(() => {
             let updatedBooks = [...books].filter(i => i.id !== id);
             setBooks(updatedBooks);
@@ -32,8 +33,10 @@ export default function BookList() {
                 setIsShow(false);
                 setCurrentBook({});
             }
+            setIsLoading(false);
         }).catch((error) => {
             setAvailable(false);
+            setIsLoading(false);
         });
     }
 
@@ -68,6 +71,7 @@ export default function BookList() {
         <div>
             <AppNavbar/>
             <Container fluid>
+                <Loading isLoading={isLoading}/>
                 <h2>Книги</h2>
                 {available ?
                     <div>
@@ -85,19 +89,17 @@ export default function BookList() {
                                 <th width="10%">Действие</th>
                             </tr>
                             </thead>
-                            {isLoading ?
-                                <img src={logo} alt="loading..."/> :
-                                <tbody>
-                                {bookList}
-                                </tbody>
-                            }
+                            <tbody>
+                            {bookList}
+                            </tbody>
+
                         </Table>
+                        {isShow &&
+                            <Comments book={currentBook}/>
+                        }
                     </div> : "По техническим причинам удалить книгу из библиотеки не получилось. Попробуйте повторить позднее"}
             </Container>
-            {isShow &&
-                <Comments book={currentBook}/>
 
-            }
         </div>
     );
 

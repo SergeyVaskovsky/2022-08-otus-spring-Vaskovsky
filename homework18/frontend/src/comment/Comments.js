@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, ButtonGroup} from 'reactstrap';
 import CommentsService from "../service/CommentsService";
-import logo from "../assets/loading.gif";
+import Loading from "../main/Loading";
 
 export default function Comments(data) {
     const [comments, setComments] = useState([]);
@@ -24,12 +24,15 @@ export default function Comments(data) {
     }, [data]);
 
     const remove = id => {
+        setIsLoading(true);
         commentsService.remove(id).then(() => {
             let updatedComments = [...comments].filter(i => i.id !== id);
             setComments(updatedComments);
+            setIsLoading(false);
         }).catch((error) => {
             setComments([{id: 0, description: 'По техническим причинам комментарии недоступны', bookId: 0}]);
             setAvailable(false);
+            setIsLoading(false);
         });
     }
 
@@ -37,9 +40,10 @@ export default function Comments(data) {
         if (!description) {
             return;
         }
+        setIsLoading(true)
         commentsService.add(description, data.book.id)
             .then(d => {
-                console.log(d);
+                setIsLoading(false);
                 if (d.id === 0) {
                     setComments([{id: 0, description: 'По техническим причинам комментарии недоступны', bookId: 0}]);
                     setAvailable(false);
@@ -51,18 +55,18 @@ export default function Comments(data) {
     }
 
     return (
-        <div> {isLoading ?
-            <img src={logo} alt="loading..."/> :
+        <div>
+            <Loading isLoading={isLoading}/>
             <div>
                 <table className="mt-4">
                     <tbody>
                     {comments.map(comment => {
-                            return (
-                                <tr key={comment.id}>
-                                    <td style={{whiteSpace: 'nowrap'}}>{comment.description}</td>
-                                    <td> {comment.id !== 0 ?
-                                        <ButtonGroup>
-                                            <Button size="sm" color="danger"
+                        return (
+                            <tr key={comment.id}>
+                                <td style={{whiteSpace: 'nowrap'}}>{comment.description}</td>
+                                <td> {comment.id !== 0 ?
+                                    <ButtonGroup>
+                                        <Button size="sm" color="danger"
                                                     onClick={() => remove(comment.id)}>Удалить</Button>
                                         </ButtonGroup> : ""
                                     }
@@ -82,7 +86,6 @@ export default function Comments(data) {
                     </div> : ""
                 }
             </div>
-        }
         </div>
     );
 }

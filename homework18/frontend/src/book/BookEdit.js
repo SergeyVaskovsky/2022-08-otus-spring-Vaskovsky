@@ -5,6 +5,7 @@ import AppNavbar from '../main/AppNavbar';
 import AuthorSelect from "../author/AuthorSelect";
 import GenreSelect from "../genre/GenreSelect";
 import BookService from "../service/BookService";
+import Loading from "../main/Loading";
 
 export default function BookEdit() {
 
@@ -18,15 +19,20 @@ export default function BookEdit() {
     const {id} = useParams();
     const bookService = new BookService();
     const [crash, setCrash] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setCrash(false);
+        setIsLoading(false);
         if (id !== 'new') {
+            setIsLoading(true);
             bookService.getBook(id)
                 .then(data => {
+                    setIsLoading(false);
                     if (data.id === 0) {
                         setCrash(true);
                     }
+
                     setItem(data);
                 });
         }
@@ -44,8 +50,9 @@ export default function BookEdit() {
             setCrash(true);
             return;
         }
+        setIsLoading(true);
         await bookService.save(item).then(book => {
-            console.log(book);
+            setIsLoading(false);
             if (!book || book.id === 0) {
                 setCrash(true);
             } else {
@@ -58,6 +65,7 @@ export default function BookEdit() {
         <div>
             <AppNavbar/>
             <Container>
+                <Loading isLoading={isLoading}/>
                 <h2>{item.id ? 'Изменить книгу' : 'Добавить книгу'}</h2>
                 <Form onSubmit={(event) => {
                     handleSubmit(event)

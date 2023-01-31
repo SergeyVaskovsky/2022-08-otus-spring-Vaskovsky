@@ -4,7 +4,6 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.homework18.exception.CommentNotDeletedException;
-import ru.otus.homework18.exception.CommentsNotDeletedException;
 import ru.otus.homework18.model.Author;
 import ru.otus.homework18.model.Book;
 import ru.otus.homework18.model.Comment;
@@ -59,15 +58,9 @@ public class CommentServiceImpl implements CommentService {
         throw new CommentNotDeletedException();
     }
 
-    @HystrixCommand(fallbackMethod = "buildFallbackDeleteAll")
     @Override
     public void deleteAll(Iterable<Comment> comments) {
-        randomTimeoutService.sleepRandomTimeout();
         commentRepository.deleteAll(comments);
-    }
-
-    public void buildFallbackDeleteAll(Iterable<Comment> comments) {
-        throw new CommentsNotDeletedException();
     }
 
     private Comment getEmptyComment() {
