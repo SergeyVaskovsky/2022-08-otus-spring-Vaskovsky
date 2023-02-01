@@ -13,7 +13,6 @@ export default class CommentsService {
                 'Content-Type': 'application/json'
             }
         }).then(response => {
-            console.log(response.status + " " + response.ok);
             if (!response.ok) {
                 throw new Error();
             }

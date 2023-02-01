@@ -15,7 +15,6 @@ export default function Comments(data) {
         setAvailable(true);
         commentsService.getComments(data.book.id).then(d => {
             setComments(d);
-            console.log(d);
             setIsLoading(false);
             if (d.length === 1 && d[0].id === 0) {
                 setAvailable(false);
