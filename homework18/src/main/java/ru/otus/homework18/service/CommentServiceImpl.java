@@ -10,6 +10,7 @@ import ru.otus.homework18.model.Comment;
 import ru.otus.homework18.model.Genre;
 import ru.otus.homework18.repository.CommentRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -35,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
     @HystrixCommand(fallbackMethod = "buildFallbackUpsert")
     @Override
+    @Transactional
     public Comment upsert(long commentId, String description, long bookId) {
         randomTimeoutService.sleepRandomTimeout();
         Comment comment = new Comment(commentId, description, bookService.getById(bookId));
@@ -59,8 +61,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteAll(Iterable<Comment> comments) {
-        commentRepository.deleteAll(comments);
+    public void deleteAllByBookId(long bookId) {
+        commentRepository.deleteAllByBookId(bookId);
     }
 
     private Comment getEmptyComment() {

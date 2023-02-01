@@ -3,7 +3,6 @@ package ru.otus.homework18.service;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.homework18.exception.BookNotDeletedException;
 import ru.otus.homework18.exception.BookNotFoundException;
 import ru.otus.homework18.model.Author;
 import ru.otus.homework18.model.Book;
@@ -44,7 +43,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getById(long bookId) {
         randomTimeoutService.sleepRandomTimeout();
-        return bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(
+        return bookRepository.findWithAuthorWithGenreById(bookId).orElseThrow(() -> new BookNotFoundException(
                 String.format("Book with id = %d not found", bookId)
         ));
     }
@@ -78,16 +77,11 @@ public class BookServiceImpl implements BookService {
         return book;
     }
 
-    @HystrixCommand(fallbackMethod = "buildFallbackDelete")
     @Transactional
     @Override
     public void delete(long bookId) {
-        commentService.deleteAll(commentService.getAll(bookId));
+        bookRepository.findById(bookId);
+        commentService.deleteAllByBookId(bookId);
         bookRepository.deleteById(bookId);
     }
-
-    public void buildFallbackDelete(long bookId) {
-        throw new BookNotDeletedException();
-    }
-
 }

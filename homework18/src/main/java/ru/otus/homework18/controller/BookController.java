@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.otus.homework18.mapping.BookDto;
 import ru.otus.homework18.model.Book;
 import ru.otus.homework18.service.BookService;
+import ru.otus.homework18.service.DeleteBookService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 public class BookController {
 
     private final BookService bookService;
+    private final DeleteBookService deleteBookService;
 
     @GetMapping("/api/books")
     public List<BookDto> getBooks() {
@@ -26,7 +28,7 @@ public class BookController {
 
     @DeleteMapping("/api/books/{id}")
     public void deleteBook(@PathVariable long id) {
-        bookService.delete(id);
+        deleteBookService.delete(id);
     }
 
     @GetMapping("/api/books/{id}")

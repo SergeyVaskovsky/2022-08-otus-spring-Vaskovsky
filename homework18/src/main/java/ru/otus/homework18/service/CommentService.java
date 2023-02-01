@@ -11,5 +11,5 @@ public interface CommentService {
 
     void delete(long commentId);
 
-    void deleteAll(Iterable<Comment> comments);
+    void deleteAllByBookId(long bookId);
 }
