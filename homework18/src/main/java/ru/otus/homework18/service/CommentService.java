@@ -12,4 +12,6 @@ public interface CommentService {
     void delete(long commentId);
 
     void deleteAllByBookId(long bookId);
+
+    Comment getEmptyComment();
 }

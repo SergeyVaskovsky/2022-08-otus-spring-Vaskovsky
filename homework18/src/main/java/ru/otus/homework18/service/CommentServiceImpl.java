@@ -34,18 +34,11 @@ public class CommentServiceImpl implements CommentService {
         return comments;
     }
 
-    @HystrixCommand(fallbackMethod = "buildFallbackUpsert")
     @Override
     @Transactional
     public Comment upsert(long commentId, String description, long bookId) {
-        randomTimeoutService.sleepRandomTimeout();
         Comment comment = new Comment(commentId, description, bookService.getById(bookId));
         commentRepository.save(comment);
-        return comment;
-    }
-
-    public Comment buildFallbackUpsert(long commentId, String description, long bookId) {
-        Comment comment = getEmptyComment();
         return comment;
     }
 
@@ -65,7 +58,8 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteAllByBookId(bookId);
     }
 
-    private Comment getEmptyComment() {
+    @Override
+    public Comment getEmptyComment() {
         Comment comment = new Comment();
         comment.setId(0L);
         comment.setDescription("По техническим причинам комментарии недоступны");

@@ -4,11 +4,14 @@ INSERT INTO AUTHOR(NAME)
 VALUES ('Кайт Том');
 INSERT INTO AUTHOR(NAME)
 VALUES ('Макконел Стивен');
+INSERT INTO AUTHOR(NAME)
+VALUES ('Рей Бредбери');
 INSERT INTO GENRE(NAME)
 VALUES ('Стихи');
 INSERT INTO GENRE(NAME)
 VALUES ('Программирование для профессионалов');
-
+INSERT INTO GENRE(NAME)
+VALUES ('Комиксы');
 
 INSERT INTO BOOK(NAME, AUTHOR_ID, GENRE_ID)
 VALUES ('Евгений Онегин', 1, 1);

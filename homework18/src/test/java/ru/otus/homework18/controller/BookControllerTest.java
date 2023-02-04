@@ -11,7 +11,7 @@ import ru.otus.homework18.model.Author;
 import ru.otus.homework18.model.Book;
 import ru.otus.homework18.model.Genre;
 import ru.otus.homework18.service.BookService;
-import ru.otus.homework18.service.DeleteBookService;
+import ru.otus.homework18.service.CallTransactionalMethodService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class BookControllerTest {
     @MockBean
     private BookService bookService;
     @MockBean
-    private DeleteBookService deleteBookService;
+    private CallTransactionalMethodService callTransactionalMethodService;
 
     @Test
     public void shouldReturnCorrectBookList() throws Exception {
@@ -70,7 +70,7 @@ public class BookControllerTest {
     void shouldCorrectDeleteBook() throws Exception {
         mockMvc.perform(delete("/api/books/1"))
                 .andExpect(status().isOk());
-        verify(deleteBookService, times(1)).delete(1L);
+        verify(callTransactionalMethodService, times(1)).delete(1L);
     }
 
     @Test
