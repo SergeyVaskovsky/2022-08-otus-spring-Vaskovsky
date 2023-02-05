@@ -11,13 +11,16 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-//@Table(name = "poem_element")
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class PoemElement {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     @NotNull
     long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Poem poem;
 }

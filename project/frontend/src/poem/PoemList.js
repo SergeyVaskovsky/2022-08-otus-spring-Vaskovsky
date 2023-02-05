@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Button, ButtonGroup, Container, Table} from 'reactstrap';
+import {Button, Container, Table} from 'reactstrap';
 import AppNavbar from '../main/AppNavbar';
 import {Link} from 'react-router-dom';
-//import Comments from "../comment/Comments";
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
 
@@ -20,7 +19,7 @@ export default function PoemList() {
                 setPoems(data);
                 setIsLoading(false);
             });
-    }, []);
+    });
 
     /*const remove = async id => {
         setAvailable(true);
@@ -47,7 +46,9 @@ export default function PoemList() {
     const poemList =
         poems.map(poem => {
             return <tr key={poem.id}>
-                <td style={{whiteSpace: 'nowrap'}}>{poem.title}</td>
+                <td style={{whiteSpace: 'nowrap'}}>
+                    <Link to={"/poems/" + poem.id}>{poem.title}</Link>
+                </td>
             </tr>
         });
 

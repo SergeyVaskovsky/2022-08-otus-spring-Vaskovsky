@@ -1,15 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import AppNavbar from '../main/AppNavbar';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
+import PoemTextElementEdit from "./PoemTextElementEdit";
 
 export default function PoemEdit() {
 
     const emptyItem = {
-        title: ''
+        title: '',
+        elements: []
     };
+
     const [item, setItem] = useState(emptyItem);
     let navigate = useNavigate();
     const {id} = useParams();
@@ -18,18 +21,14 @@ export default function PoemEdit() {
 
     useEffect(() => {
         setIsLoading(false);
-        /*if (id !== 'new') {
+        if (id !== 'new') {
             setIsLoading(true);
-            poemService.getBook(id)
+            poemService.getPoem(id)
                 .then(data => {
                     setIsLoading(false);
-                    if (data.id === 0) {
-                        setCrash(true);
-                    }
-
                     setItem(data);
                 });
-        }*/
+        }
     }, [id, setItem]);
 
     const handleChange = value => {
@@ -48,6 +47,21 @@ export default function PoemEdit() {
         })
     }
 
+    const handleAddText = event => {
+
+        item.elements.push({});
+        setItem(item);
+    }
+
+    function handleAddPicture() {
+        return undefined;
+    }
+
+    const elementsList =
+        item.elements.map(element => {
+            return <PoemTextElementEdit />
+        });
+
     return (
         <div>
             <AppNavbar/>
@@ -61,6 +75,12 @@ export default function PoemEdit() {
                         <Label for="name">Название</Label>
                         <Input type="text" name="title" id="title" value={item.title || ''}
                                onChange={(event) => handleChange(event.target.value)} autoComplete="title"/>
+                        {elementsList}
+                        <br/>
+                        <Link to={""} onClick={(event) => handleAddText(event)}>Добавить текст</Link>
+                        <br/>
+                        <Link to={""} onClick={handleAddPicture()}>Добавить иллюстрацию</Link>
+                        <br/>
                     </FormGroup>
                     <FormGroup>
                         <Button color="primary" type="submit">Сохранить</Button>

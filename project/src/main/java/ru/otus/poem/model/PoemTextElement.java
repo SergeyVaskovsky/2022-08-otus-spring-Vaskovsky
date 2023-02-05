@@ -14,5 +14,5 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class PoemTextElement extends PoemElement {
     @Column(name = "content")
-    String text;
+    String content;
 }

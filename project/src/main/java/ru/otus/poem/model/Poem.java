@@ -27,7 +27,7 @@ public class Poem {
     @Column(name = "title")
     private String title;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "poem")
     private List<PoemElement> elements = new ArrayList<>();
 
     @Column(name = "publish_time")

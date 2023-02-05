@@ -3,12 +3,12 @@ export default class PoemService {
         return await fetch('/api/poems')
             .then(response => response.json());
     }
-/*
-    getBook = async id => {
-        return await fetch(`/api/books/${id}`)
+
+    getPoem = async id => {
+        return await fetch(`/api/poems/${id}`)
             .then(response => response.json())
     }
-
+/*
     remove = async id => {
         return await fetch(`/api/books/${id}`, {
             method: 'DELETE',
