@@ -1,9 +1,9 @@
-export default class BookService {
-    getBooks = async () => {
-        return await fetch('/api/books')
+export default class PoemService {
+    getPoems = async () => {
+        return await fetch('/api/poems')
             .then(response => response.json());
     }
-
+/*
     getBook = async id => {
         return await fetch(`/api/books/${id}`)
             .then(response => response.json())
@@ -21,10 +21,10 @@ export default class BookService {
                 throw new Error();
             }
         });
-    }
+    }*/
 
     save = async item => {
-        return await fetch('/api/books' + (item.id ? '/' + item.id : ''), {
+        return await fetch('/api/poems' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -33,4 +33,6 @@ export default class BookService {
             body: JSON.stringify(item),
         }).then(response => response.json());
     }
+
+
 }

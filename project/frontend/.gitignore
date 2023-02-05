@@ -9,3 +9,5 @@ lib/
 .vs/
 .vscode/
 .DS_Store
+/node/
+/node_modules/

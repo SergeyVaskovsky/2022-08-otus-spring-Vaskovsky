@@ -16,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class PoemElement {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     @NotNull
     long id;

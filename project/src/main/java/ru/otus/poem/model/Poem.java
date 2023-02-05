@@ -13,11 +13,12 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "poem")
+@SequenceGenerator(name = "poem_gen", sequenceName = "poem_id_seq", allocationSize = 1)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Poem {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "poem_gen")
     @Column(name = "id")
     @NotNull
     private long id;

@@ -1,0 +1,74 @@
+import React, {useEffect, useState} from 'react';
+import {Button, ButtonGroup, Container, Table} from 'reactstrap';
+import AppNavbar from '../main/AppNavbar';
+import {Link} from 'react-router-dom';
+//import Comments from "../comment/Comments";
+import PoemService from "../service/PoemService";
+import Loading from "../main/Loading";
+
+export default function PoemList() {
+
+    const [poems, setPoems] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(true);
+    const poemService = new PoemService();
+
+
+    useEffect(() => {
+        poemService.getPoems()
+            .then(data => {
+                setPoems(data);
+                setIsLoading(false);
+            });
+    }, []);
+
+    /*const remove = async id => {
+        setAvailable(true);
+        setIsLoading(true);
+        bookService.remove(id).then(() => {
+            let updatedBooks = [...books].filter(i => i.id !== id);
+            setBooks(updatedBooks);
+            if (currentBook.id === id) {
+                setIsShow(false);
+                setCurrentBook({});
+            }
+            setIsLoading(false);
+        }).catch((error) => {
+            setAvailable(false);
+            setIsLoading(false);
+        });
+    }
+
+    const showComments = book => {
+        setIsShow(true);
+        setCurrentBook(book);
+    }*/
+
+    const poemList =
+        poems.map(poem => {
+            return <tr key={poem.id}>
+                <td style={{whiteSpace: 'nowrap'}}>{poem.title}</td>
+            </tr>
+        });
+
+    return (
+        <div>
+            <AppNavbar/>
+            <Container fluid>
+                <Loading isLoading={isLoading}/>
+                <h2>Список стихотворений</h2>
+                    <div>
+                        <div className="float-right">
+                            <Button color="success" tag={Link} to="/poems/new">Добавить стихотворение</Button>
+                        </div>
+
+                        <Table className="mt-4">
+                            <tbody>
+                            {poemList}
+                            </tbody>
+                        </Table>
+                    </div>
+            </Container>
+        </div>
+    );
+}
