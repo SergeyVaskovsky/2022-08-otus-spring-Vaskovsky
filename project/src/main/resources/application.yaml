@@ -1,0 +1,21 @@
+main:
+  datasource:
+    server: localhost
+    port: 5432
+    dbname: poem
+    schema: public
+    username: postgres
+    password: 1
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${main.datasource.server}:${main.datasource.port}/${main.datasource.dbname}?ApplicationName=poem
+    username: ${main.datasource.username}
+    password: ${main.datasource.password}
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: none
+        show-sql: true
