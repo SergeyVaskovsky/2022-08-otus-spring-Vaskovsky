@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import {Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 import AppNavbar from '../main/AppNavbar';
@@ -12,6 +12,18 @@ export default function PoemEdit() {
         title: '',
         elements: []
     };
+
+    const emptyTextElement = {
+        id: -1,
+        content: '',
+        type: 'text'
+    }
+
+    const emptyPictureElement = {
+        id: -1,
+        picture: '',
+        type: 'picture'
+    }
 
     const [item, setItem] = useState(emptyItem);
     let navigate = useNavigate();
@@ -48,18 +60,27 @@ export default function PoemEdit() {
     }
 
     const handleAddText = event => {
-
-        item.elements.push({});
+        item.elements.push(emptyTextElement);
         setItem(item);
     }
 
-    function handleAddPicture() {
-        return undefined;
-    }
+    const onChangeTextState = (index, text) => {
+        item.elements[index].content = text;
+        setItem(item);
+    };
+
+    const onDeleteTextState = (outerIndex) => {
+        let remainingElements = [...item.elements].filter((value, innerIndex) => innerIndex !== outerIndex)
+        item.elements = [];
+        item.elements = remainingElements.slice();
+        setItem(item);
+    };
 
     const elementsList =
-        item.elements.map(element => {
-            return <PoemTextElementEdit />
+        item.elements.map((element, index) => {
+            return <PoemTextElementEdit state={{"index": index, "element": element}}
+                                        onChangeTextState={onChangeTextState}
+                                        onDeleteTextState={onDeleteTextState}/>
         });
 
     return (
@@ -79,8 +100,8 @@ export default function PoemEdit() {
                         <br/>
                         <Link to={""} onClick={(event) => handleAddText(event)}>Добавить текст</Link>
                         <br/>
-                        <Link to={""} onClick={handleAddPicture()}>Добавить иллюстрацию</Link>
-                        <br/>
+                        {/*<Link to={""} onClick={handleAddPicture()}>Добавить иллюстрацию</Link>
+                        <br/>*/}
                     </FormGroup>
                     <FormGroup>
                         <Button color="primary" type="submit">Сохранить</Button>

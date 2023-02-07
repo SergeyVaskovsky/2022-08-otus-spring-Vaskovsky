@@ -15,4 +15,9 @@ import javax.persistence.Table;
 public class PoemPictureElement extends PoemElement {
     @Column(name = "picture")
     byte[] picture;
+
+    public PoemPictureElement(long id, Poem poem, byte[] picture) {
+        super(id, poem);
+        this.picture = picture;
+    }
 }

@@ -15,4 +15,9 @@ import javax.persistence.Table;
 public class PoemTextElement extends PoemElement {
     @Column(name = "content")
     String content;
+
+    public PoemTextElement(long id, Poem poem, String content) {
+        super(id, poem);
+        this.content = content;
+    }
 }

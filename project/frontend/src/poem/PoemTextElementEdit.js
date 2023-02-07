@@ -5,19 +5,26 @@ import AppNavbar from '../main/AppNavbar';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
 
-export default function PoemTextElementEdit() {
+export default function PoemTextElementEdit ({ state, onChangeTextState, onDeleteTextState }) {
 
+    const handleChangeState = (value) => {
+        onChangeTextState(state.index, value);
+    };
+
+    const handleDeleteText = () => {
+        onDeleteTextState(state.index);
+    };
 
     return (
-        <div>
+        <div key = {state.index}>
             <Container>
-                <Form onSubmit={(event) => {}}>
+               {/* <Form onSubmit={(event) => {}}>*/}
                     <FormGroup>
-                        <textarea type="text" name="title" id="title"/>
+                        <textarea type="text" name="title" id="title" defaultValue={state.element.content} onChange={(event) => handleChangeState(event.target.value)}/>
                         <br/>
-                        <Button color="secondary">Удалить</Button>
+                        <Button color="secondary" onClick={() => handleDeleteText()}>Удалить</Button>
                     </FormGroup>
-                </Form>
+                {/*</Form>*/}
             </Container>
         </div>
     );

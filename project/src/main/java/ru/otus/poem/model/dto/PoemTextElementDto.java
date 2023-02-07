@@ -6,12 +6,18 @@ import ru.otus.poem.model.PoemTextElement;
 
 @Value
 public class PoemTextElementDto extends PoemElementDto {
-    long id;
     String content;
+
+    public PoemTextElementDto(long id, String type, String content) {
+        this.id = id;
+        this.type = type;
+        this.content = content;
+    }
 
     public static PoemTextElementDto toDto(PoemTextElement element) {
         return new PoemTextElementDto(
                 element.getId(),
+                "text",
                 element.getContent()
         );
     }
