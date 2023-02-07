@@ -5,6 +5,7 @@ import AppNavbar from '../main/AppNavbar';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
 import PoemTextElementEdit from "./PoemTextElementEdit";
+import PoemPictureElementEdit from "./PoemPictureElementEdit";
 
 export default function PoemEdit() {
 
@@ -21,11 +22,13 @@ export default function PoemEdit() {
 
     const emptyPictureElement = {
         id: -1,
+        file: '',
         picture: '',
         type: 'picture'
     }
 
     const [item, setItem] = useState(emptyItem);
+    const [elements, setElements] = useState([]);
     let navigate = useNavigate();
     const {id} = useParams();
     const poemService = new PoemService();
@@ -39,9 +42,10 @@ export default function PoemEdit() {
                 .then(data => {
                     setIsLoading(false);
                     setItem(data);
+                    setElements(data.elements);
                 });
         }
-    }, [id, setItem]);
+    }, [id, setItem, setElements]);
 
     const handleChange = value => {
         let poem = {...item};
@@ -53,6 +57,7 @@ export default function PoemEdit() {
         event.preventDefault();
 
         setIsLoading(true);
+        item.elements = elements;
         await poemService.save(item).then(poem => {
             setIsLoading(false);
             navigate('/poems');
@@ -60,27 +65,41 @@ export default function PoemEdit() {
     }
 
     const handleAddText = event => {
-        item.elements.push(emptyTextElement);
-        setItem(item);
+        elements.push(emptyTextElement);
+        setElements([...elements]);
     }
 
     const onChangeTextState = (index, text) => {
-        item.elements[index].content = text;
-        setItem(item);
+        elements[index].content = text;
+        setElements(elements);
     };
 
-    const onDeleteTextState = (outerIndex) => {
-        let remainingElements = [...item.elements].filter((value, innerIndex) => innerIndex !== outerIndex)
-        item.elements = [];
-        item.elements = remainingElements.slice();
-        setItem(item);
+    const onDeleteState = (outerIndex) => {
+        let remainingElements = [...elements].filter((value, innerIndex) => innerIndex !== outerIndex)
+        setElements(remainingElements);
+    };
+
+    const handleAddPicture = event => {
+        elements.push(emptyPictureElement);
+        setElements([...elements]);
+    }
+
+    const onChangePictureState = (index, file) => {
+        elements[index].file = file;
+        setElements(elements);
     };
 
     const elementsList =
-        item.elements.map((element, index) => {
-            return <PoemTextElementEdit state={{"index": index, "element": element}}
-                                        onChangeTextState={onChangeTextState}
-                                        onDeleteTextState={onDeleteTextState}/>
+        elements.map((element, index) => {
+            return element.type === "text" ?
+                    <PoemTextElementEdit state={{"index": index, "element": element}}
+                                         onChangeTextState={onChangeTextState}
+                                         onDeleteState={onDeleteState}/> :
+                    <PoemPictureElementEdit state={{"index": index, "element": element}}
+                                            onChangePictureState={onChangePictureState}
+                                            onDeleteState={onDeleteState}/>
+
+
         });
 
     return (
@@ -100,8 +119,8 @@ export default function PoemEdit() {
                         <br/>
                         <Link to={""} onClick={(event) => handleAddText(event)}>Добавить текст</Link>
                         <br/>
-                        {/*<Link to={""} onClick={handleAddPicture()}>Добавить иллюстрацию</Link>
-                        <br/>*/}
+                        <Link to={""} onClick={(event) => handleAddPicture(event)}>Добавить иллюстрацию</Link>
+                        <br/>
                     </FormGroup>
                     <FormGroup>
                         <Button color="primary" type="submit">Сохранить</Button>

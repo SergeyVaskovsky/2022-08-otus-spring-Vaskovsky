@@ -19,7 +19,7 @@ export default function PoemList() {
                 setPoems(data);
                 setIsLoading(false);
             });
-    });
+    }, [setPoems, setIsLoading]);
 
     /*const remove = async id => {
         setAvailable(true);

@@ -1,16 +1,18 @@
 package ru.otus.poem.model.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.Value;
 import ru.otus.poem.model.Poem;
 import ru.otus.poem.model.PoemTextElement;
 
-@Value
+@Getter
+@Setter
 public class PoemTextElementDto extends PoemElementDto {
-    String content;
+    private String content;
 
     public PoemTextElementDto(long id, String type, String content) {
-        this.id = id;
-        this.type = type;
+        super(id, type);
         this.content = content;
     }
 

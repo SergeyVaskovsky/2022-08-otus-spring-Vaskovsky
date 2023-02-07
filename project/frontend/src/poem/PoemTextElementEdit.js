@@ -5,14 +5,14 @@ import AppNavbar from '../main/AppNavbar';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
 
-export default function PoemTextElementEdit ({ state, onChangeTextState, onDeleteTextState }) {
+export default function PoemTextElementEdit ({ state, onChangeTextState, onDeleteState }) {
 
     const handleChangeState = (value) => {
         onChangeTextState(state.index, value);
     };
 
     const handleDeleteText = () => {
-        onDeleteTextState(state.index);
+        onDeleteState(state.index);
     };
 
     return (

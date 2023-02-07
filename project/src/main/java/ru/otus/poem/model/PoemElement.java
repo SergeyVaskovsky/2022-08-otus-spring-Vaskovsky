@@ -19,7 +19,7 @@ public class PoemElement {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     @NotNull
-    long id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Poem poem;

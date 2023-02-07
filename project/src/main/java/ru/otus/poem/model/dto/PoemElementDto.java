@@ -2,6 +2,7 @@ package ru.otus.poem.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import ru.otus.poem.model.PoemElement;
@@ -18,7 +19,8 @@ import ru.otus.poem.model.PoemTextElement;
 })
 @Getter
 @Setter
+@AllArgsConstructor
 public abstract class PoemElementDto {
-    protected long id;
-    protected String type;
+    private long id;
+    private String type;
 }

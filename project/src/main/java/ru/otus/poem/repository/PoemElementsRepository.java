@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.otus.poem.model.PoemElement;
 
 public interface PoemElementsRepository extends JpaRepository<PoemElement, Long> {
+    void deleteAllByPoemId(Long id);
 }

@@ -27,7 +27,7 @@ public class PoemController {
         return poemServiceImpl.addNewPoem(poemDto);
     }
 
-    @PutMapping("/api/poems/{id}")
+    @PutMapping(path = "/api/poems/{id}")
     public PoemDto updatePoem(@PathVariable Long id, @RequestBody PoemDto poemDto) {
         return poemServiceImpl.updatePoem(id, poemDto);
     }

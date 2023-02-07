@@ -24,13 +24,17 @@ export default class PoemService {
     }*/
 
     save = async item => {
+        const formData = new FormData();
+        formData.append("poem", item);
         return await fetch('/api/poems' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                //'Accept': 'application/json',
+                //'Content-Type': 'application/json'
+                //'Content-Type': 'multipart/form-data'
             },
-            body: JSON.stringify(item),
+            //body: JSON.stringify(item),
+            data: formData
         }).then(response => response.json());
     }
 
