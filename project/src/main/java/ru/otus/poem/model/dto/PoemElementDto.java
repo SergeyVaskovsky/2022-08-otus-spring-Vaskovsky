@@ -23,4 +23,17 @@ import ru.otus.poem.model.PoemTextElement;
 public abstract class PoemElementDto {
     private long id;
     private String type;
+    private PoemDto poemDto;
+
+    public static PoemElementDto toDto(PoemElement element) {
+        return element instanceof PoemTextElement ?
+                PoemTextElementDto.toDto((PoemTextElement) element) :
+                PoemPictureElementDto.toDto((PoemPictureElement) element);
+    }
+
+    public static PoemElement toEntity(PoemElementDto elementDto) {
+        return elementDto instanceof PoemTextElementDto ?
+                new PoemTextElement(elementDto.getId(), PoemDto.toEntity(elementDto.poemDto), ((PoemTextElementDto) elementDto).getContent()) :
+                new PoemPictureElement(elementDto.getId(), PoemDto.toEntity(elementDto.poemDto), ((PoemPictureElementDto) elementDto).getPicture());
+    }
 }

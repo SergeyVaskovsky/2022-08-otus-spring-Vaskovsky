@@ -48,15 +48,7 @@ public class PoemServiceImpl implements PoemService{
     @Override
     public PoemDto addNewPoem(PoemDto poemDto) {
         Poem poem = new Poem(poemDto.getTitle());
-        List<PoemElement> poemElements = new ArrayList<>();
-        poemDto.getElements().forEach(elementDto -> poemElements.add(
-                elementDto instanceof PoemTextElementDto ?
-                        new PoemTextElement(-1L, poem, ((PoemTextElementDto) elementDto).getContent()) :
-                        new PoemPictureElement(-1L, poem, ((PoemPictureElementDto) elementDto).getPicture())
-        ));
         Poem savedPoem = poemRepository.save(poem);
-        List<PoemElement> savedPoemElements = poemElementsRepository.saveAll(poemElements);
-        savedPoem.setElements(savedPoemElements);
         return PoemDto.toDto(savedPoem);
     }
 
@@ -66,23 +58,8 @@ public class PoemServiceImpl implements PoemService{
         Poem poem = poemRepository
                 .findById(id)
                 .orElseThrow(() -> new PoemNotFoundException("Poem not found by id = " + id));
-        List<PoemElement> poemElements = new ArrayList<>();
-        poemDto.getElements().forEach(elementDto -> {
-            try {
-                poemElements.add(
-                        elementDto instanceof PoemTextElementDto ?
-                                new PoemTextElement(elementDto.getId(), poem, ((PoemTextElementDto) elementDto).getContent()) :
-                                new PoemPictureElement(elementDto.getId(), poem, ((PoemPictureElementDto) elementDto).getFile().getBytes())
-                );
-            } catch (IOException e) {
-                throw new IORuntimeException(e);
-            }
-        });
         poem.setTitle(poemDto.getTitle());
-        poemElementsRepository.deleteAllByPoemId(id);
         Poem savedPoem = poemRepository.save(poem);
-        List<PoemElement> savedPoemElements = poemElementsRepository.saveAll(poemElements);
-        savedPoem.setElements(savedPoemElements);
         return PoemDto.toDto(savedPoem);
     }
 }

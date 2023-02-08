@@ -11,22 +11,19 @@ import ru.otus.poem.model.PoemPictureElement;
 @Getter
 @Setter
 public class PoemPictureElementDto extends PoemElementDto {
-
-    private MultipartFile file;
     private byte[] picture;
 
-    public PoemPictureElementDto(long id, String type, byte[] picture, MultipartFile file) {
-        super(id, type);
+    public PoemPictureElementDto(long id, String type, PoemDto poemDto, byte[] picture) {
+        super(id, type, poemDto);
         this.picture = picture;
-        this.file = file;
     }
 
     public static PoemPictureElementDto toDto(PoemPictureElement element) {
         return new PoemPictureElementDto(
                 element.getId(),
                 "picture",
-                element.getPicture(),
-                null
+                PoemDto.toDto(element.getPoem()),
+                element.getPicture()
         );
     }
 }

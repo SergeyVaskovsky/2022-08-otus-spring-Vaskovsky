@@ -10,21 +10,21 @@ import PoemPictureElementEdit from "./PoemPictureElementEdit";
 export default function PoemEdit() {
 
     const emptyItem = {
-        title: '',
-        elements: []
+        title: ''
     };
 
     const emptyTextElement = {
-        id: -1,
+        id: 'new',
         content: '',
-        type: 'text'
+        type: 'text',
+        poem: {}
     }
 
     const emptyPictureElement = {
-        id: -1,
+        id: 'new',
         file: '',
-        picture: '',
-        type: 'picture'
+        type: 'picture',
+        poem: {}
     }
 
     const [item, setItem] = useState(emptyItem);
@@ -40,10 +40,13 @@ export default function PoemEdit() {
             setIsLoading(true);
             poemService.getPoem(id)
                 .then(data => {
-                    setIsLoading(false);
                     setItem(data);
-                    setElements(data.elements);
-                });
+                    poemService.getPoemElements(id)
+                        .then(data => {
+                            setElements(data.elements);
+                            setIsLoading(false);
+                })
+            });
         }
     }, [id, setItem, setElements]);
 
@@ -57,36 +60,54 @@ export default function PoemEdit() {
         event.preventDefault();
 
         setIsLoading(true);
-        item.elements = elements;
-        await poemService.save(item).then(poem => {
+
+        await poemService.savePoem(item).then(poem => {
             setIsLoading(false);
             navigate('/poems');
         })
     }
 
     const handleAddText = event => {
-        elements.push(emptyTextElement);
-        setElements([...elements]);
+        let element = emptyTextElement;
+        element.poem = item;
+        poemService.addPoemElement(element)
+            .then(data => {
+                elements.push(data);
+                setElements([...elements]);
+            });
     }
 
     const onChangeTextState = (index, text) => {
         elements[index].content = text;
-        setElements(elements);
+        poemService.updatePoemTextElement(elements[index])
+            .then(data => {
+                setElements([...elements]);
+            });
     };
 
     const onDeleteState = (outerIndex) => {
+        const id = elements[outerIndex].id;
         let remainingElements = [...elements].filter((value, innerIndex) => innerIndex !== outerIndex)
         setElements(remainingElements);
+        poemService.deletePoemElement(id);
     };
 
     const handleAddPicture = event => {
-        elements.push(emptyPictureElement);
-        setElements([...elements]);
+        let element = emptyPictureElement;
+        element.poem = item;
+        poemService.addPoemElement(element)
+            .then(data => {
+                elements.push(data);
+                setElements([...elements]);
+            });
     }
 
     const onChangePictureState = (index, file) => {
         elements[index].file = file;
-        setElements(elements);
+        poemService.updatePoemPictureElement(elements[index])
+            .then(data => {
+                setElements([...elements]);
+            });
     };
 
     const elementsList =
