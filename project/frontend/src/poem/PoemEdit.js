@@ -14,17 +14,18 @@ export default function PoemEdit() {
     };
 
     const emptyTextElement = {
-        id: 'new',
+        id: -1,
         content: '',
         type: 'text',
         poem: {}
     }
 
     const emptyPictureElement = {
-        id: 'new',
+        id: -1,
         file: '',
         type: 'picture',
-        poem: {}
+        poem: {},
+        scale: 100
     }
 
     const [item, setItem] = useState(emptyItem);
@@ -43,7 +44,8 @@ export default function PoemEdit() {
                     setItem(data);
                     poemService.getPoemElements(id)
                         .then(data => {
-                            setElements(data.elements);
+                            data.sort((a, b) => a.id - b.id);
+                            setElements(data);
                             setIsLoading(false);
                 })
             });
@@ -87,7 +89,7 @@ export default function PoemEdit() {
 
     const onDeleteState = (outerIndex) => {
         const id = elements[outerIndex].id;
-        let remainingElements = [...elements].filter((value, innerIndex) => innerIndex !== outerIndex)
+        let remainingElements = [...elements].filter((value, innerIndex) => value.id !== id)
         setElements(remainingElements);
         poemService.deletePoemElement(id);
     };
@@ -102,11 +104,20 @@ export default function PoemEdit() {
             });
     }
 
-    const onChangePictureState = (index, file) => {
+    const onChangePictureState = (index, file, scale) => {
         elements[index].file = file;
+        elements[index].scale = scale;
         poemService.updatePoemPictureElement(elements[index])
             .then(data => {
-                setElements([...elements]);
+                //setElements([...elements]);
+            });
+    };
+
+    const onChangePictureScale = (index, scale) => {
+        elements[index].scale = scale;
+        poemService.updatePoemPictureElementScale(elements[index])
+            .then(data => {
+                //setElements([...elements]);
             });
     };
 
@@ -118,7 +129,8 @@ export default function PoemEdit() {
                                          onDeleteState={onDeleteState}/> :
                     <PoemPictureElementEdit state={{"index": index, "element": element}}
                                             onChangePictureState={onChangePictureState}
-                                            onDeleteState={onDeleteState}/>
+                                            onDeleteState={onDeleteState}
+                                            onChangePictureScale={onChangePictureScale}/>
 
 
         });

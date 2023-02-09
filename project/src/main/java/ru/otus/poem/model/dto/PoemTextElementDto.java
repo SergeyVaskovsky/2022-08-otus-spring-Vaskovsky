@@ -11,8 +11,8 @@ import ru.otus.poem.model.PoemTextElement;
 public class PoemTextElementDto extends PoemElementDto {
     private String content;
 
-    public PoemTextElementDto(long id, String type, PoemDto poemDto,  String content) {
-        super(id, type, poemDto);
+    public PoemTextElementDto(long id, String type, String content) {
+        super(id, type);
         this.content = content;
     }
 
@@ -20,7 +20,6 @@ public class PoemTextElementDto extends PoemElementDto {
         return new PoemTextElementDto(
                 element.getId(),
                 "text",
-                PoemDto.toDto(element.getPoem()),
                 element.getContent()
         );
     }

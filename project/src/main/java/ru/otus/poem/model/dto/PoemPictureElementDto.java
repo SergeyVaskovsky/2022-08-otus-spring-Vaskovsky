@@ -12,18 +12,20 @@ import ru.otus.poem.model.PoemPictureElement;
 @Setter
 public class PoemPictureElementDto extends PoemElementDto {
     private byte[] picture;
+    private Byte scale;
 
-    public PoemPictureElementDto(long id, String type, PoemDto poemDto, byte[] picture) {
-        super(id, type, poemDto);
+    public PoemPictureElementDto(long id, String type, byte[] picture, Byte scale) {
+        super(id, type);
         this.picture = picture;
+        this.scale = scale;
     }
 
     public static PoemPictureElementDto toDto(PoemPictureElement element) {
         return new PoemPictureElementDto(
                 element.getId(),
                 "picture",
-                PoemDto.toDto(element.getPoem()),
-                element.getPicture()
+                element.getPicture(),
+                element.getScale()
         );
     }
 }

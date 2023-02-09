@@ -63,22 +63,30 @@ export default class PoemService {
 
     updatePoemPictureElement = async element => {
         const formData = new FormData();
-        formData.append("element", element);
         formData.append("file", element.file);
+        formData.append("scale", element.scale)
         return await fetch('/api/poems/picture-elements/'+element.id, {
             method: 'PUT',
-            data: formData
+            body: formData
+        }).then(response => response.json());
+    }
+
+    updatePoemPictureElementScale = async element => {
+
+        return await fetch('/api/poems/picture-elements/'+element.id + '/scale', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(element.scale)
         }).then(response => response.json());
     }
 
     deletePoemElement = async id => {
-        return await fetch('/api/poems/elements/' + id, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => response.json());
+        await fetch('/api/poems/elements/' + id, {
+            method: 'DELETE'
+        });
     }
 
 

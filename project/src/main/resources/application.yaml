@@ -13,6 +13,12 @@ spring:
     username: ${main.datasource.username}
     password: ${main.datasource.password}
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: -1
+      max-request-size: -1
+
   jpa:
     generate-ddl: true
     properties:

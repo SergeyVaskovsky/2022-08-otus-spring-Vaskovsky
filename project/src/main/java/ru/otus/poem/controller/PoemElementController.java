@@ -3,9 +3,7 @@ package ru.otus.poem.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.otus.poem.model.dto.PoemDto;
 import ru.otus.poem.model.dto.PoemElementDto;
-import ru.otus.poem.model.dto.PoemPictureElementDto;
 import ru.otus.poem.model.dto.PoemTextElementDto;
 import ru.otus.poem.service.PoemElementService;
 
@@ -23,8 +21,8 @@ public class PoemElementController {
     }
 
     @PostMapping("/api/poems/{id}/elements")
-    public PoemElementDto addPoemElement(@RequestBody PoemElementDto poemElementDto) {
-        return poemElementService.addNewPoemElement(poemElementDto);
+    public PoemElementDto addPoemElement(@PathVariable Long id, @RequestBody PoemElementDto poemElementDto) {
+        return poemElementService.addNewPoemElement(id, poemElementDto);
     }
 
     @PutMapping("/api/poems/text-elements/{id}")
@@ -32,14 +30,19 @@ public class PoemElementController {
         return poemElementService.updatePoemTextElement(id, poemTextElementDto);
     }
 
-    @PutMapping("/api/poems/picture-elements/{id}")
+    @PutMapping(path = "/api/poems/picture-elements/{id}")
     public PoemElementDto updatePoemPictureElement(
             @PathVariable Long id,
-            @RequestBody PoemPictureElementDto poemPictureElementDto,
-            MultipartFile file) throws IOException {
+            @RequestParam(value = "file") MultipartFile file,
+            @RequestParam(value = "scale") Byte scale) throws IOException {
+        return poemElementService.updatePoemPictureElement(id, file.getBytes(), scale);
+    }
 
-        poemPictureElementDto.setPicture(file.getBytes());
-        return poemElementService.updatePoemPictureElement(id, poemPictureElementDto);
+    @PutMapping(path = "/api/poems/picture-elements/{id}/scale")
+    public PoemElementDto updatePoemPictureElementScale(
+            @PathVariable Long id,
+            @RequestBody Byte scale) {
+        return poemElementService.updatePoemPictureElement(id, null, scale);
     }
 
     @DeleteMapping("/api/poems/elements/{id}")
