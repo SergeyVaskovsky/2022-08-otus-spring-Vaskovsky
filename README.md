@@ -42,3 +42,4 @@ homework16 - Монолиты vs. Microservices (Round 2), Spring Boot Actuator 
 
 homework17 - Docker, оркестрация, облака, облачные хостинги 
 
+homework18 - Zuul, Hystrix Circuit Breaker, Sleuth, Zipkin, Hystrix Dashboard, Secure Configuration Properties 
