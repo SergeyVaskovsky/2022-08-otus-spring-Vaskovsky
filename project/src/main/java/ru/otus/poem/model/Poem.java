@@ -2,12 +2,13 @@ package ru.otus.poem.model;
 
 
 import com.sun.istack.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -26,9 +27,6 @@ public class Poem {
     @NotNull
     @Column(name = "title")
     private String title;
-
-    //@OneToMany(fetch = FetchType.LAZY, mappedBy = "poem")
-    //private List<PoemElement> elements = new ArrayList<>();
 
     @Column(name = "publish_time")
     private LocalDateTime publishTime;
