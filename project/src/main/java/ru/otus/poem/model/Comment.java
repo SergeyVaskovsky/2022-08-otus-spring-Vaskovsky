@@ -17,10 +17,6 @@ import java.time.LocalDateTime;
 @Setter
 @SequenceGenerator(name = "comment_gen", sequenceName = "comment_id_seq", allocationSize = 1)
 public class Comment {
-    @Column(name = "publish_time")
-    LocalDateTime publishTime;
-    @Column(name = "moderated")
-    boolean moderated;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_gen")
     @Column(name = "id")
@@ -28,10 +24,16 @@ public class Comment {
     @NotNull
     @Column(name = "text")
     private String text;
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Poem poem;
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment rootComment;
+    @Column(name = "publish_time")
+    private LocalDateTime publishTime;
+    @Column(name = "moderated")
+    private boolean moderated;
 }

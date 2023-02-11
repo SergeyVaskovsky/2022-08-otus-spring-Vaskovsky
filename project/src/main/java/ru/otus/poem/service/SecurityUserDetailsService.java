@@ -16,10 +16,10 @@ public class SecurityUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) {
+        User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(email);
         }
         return new SecurityUserPrincipal(user);
     }

@@ -2,7 +2,7 @@ main:
   datasource:
     server: localhost
     port: 5432
-    dbname: poem
+    dbname: poem_test
     schema: public
     username: postgres
     password: 1
@@ -12,11 +12,6 @@ spring:
     url: jdbc:postgresql://${main.datasource.server}:${main.datasource.port}/${main.datasource.dbname}?ApplicationName=poem
     username: ${main.datasource.username}
     password: ${main.datasource.password}
-
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:data.sql
 
   servlet:
     multipart:
