@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,7 +21,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usr_gen")
     @Column(name = "id")
-    private Long id;
+    private long id;
 
     @NotNull
     @Column(name = "name")
@@ -37,8 +35,8 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(targetEntity = Role.class, cascade = CascadeType.ALL)
+    //@LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class, cascade = CascadeType.ALL)
     @JoinTable(name = "usr_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))

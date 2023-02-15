@@ -14,9 +14,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
+@SequenceGenerator(name = "poem_element_gen", sequenceName = "poem_element_id_seq", allocationSize = 1)
 public class PoemElement {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "poem_element_gen")
     @Column(name = "id")
     @NotNull
     private long id;

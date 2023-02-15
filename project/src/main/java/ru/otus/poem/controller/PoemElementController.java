@@ -15,6 +15,7 @@ import java.util.List;
 public class PoemElementController {
 
     private final PoemElementService poemElementService;
+
     @GetMapping("/api/poems/{id}/elements")
     public List<PoemElementDto> getPoemElements(@PathVariable Long id) {
         return poemElementService.getAll(id);
@@ -30,7 +31,7 @@ public class PoemElementController {
         return poemElementService.updatePoemTextElement(id, poemTextElementDto);
     }
 
-    @PutMapping(path = "/api/poems/picture-elements/{id}")
+    @PostMapping(path = "/api/poems/picture-elements/{id}")
     public PoemElementDto updatePoemPictureElement(
             @PathVariable Long id,
             @RequestParam(value = "file") MultipartFile file,

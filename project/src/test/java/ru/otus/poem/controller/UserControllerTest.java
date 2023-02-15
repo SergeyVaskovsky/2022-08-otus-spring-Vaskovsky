@@ -33,11 +33,11 @@ public class UserControllerTest {
     private static Stream<Arguments> provideParamsForTest() {
         return Stream.of(
                 Arguments.of(new UserDto(
-                        1L,
+                        4L,
                         "Sergey",
                         "123",
                         "myemail@yandex.ru",
-                        List.of(new Role(1L, "MODERATOR"))), status().isOk())
+                        List.of(new Role(4L, "MODERATOR"))), status().isOk())
         );
     }
 

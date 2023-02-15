@@ -3,6 +3,7 @@ package ru.otus.poem.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -25,16 +26,33 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll()
-                /*.antMatchers("/api/users").permitAll()
+                .antMatchers("/api/auth").permitAll()
+                .antMatchers("/api/users").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/poems/*/elements").permitAll()
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/comments").hasAnyRole("WRITER")
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/api/poems/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.GET, "/api/comments/**").hasAnyRole("READER")
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/poems").hasAuthority("AUTHOR")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.PUT, "/api/comments/**").hasAnyRole("MODERATOR")
+                .authorizeRequests().antMatchers(HttpMethod.PUT, "/api/poems/**").hasAuthority("AUTHOR")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/comments/**").hasAnyRole("MODERATOR")*/
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/comments").hasAuthority("WRITER")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/api/comments/**").hasAuthority("READER")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.PUT, "/api/comments/**").hasAuthority("MODERATOR")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/comments/**").hasAuthority("MODERATOR")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/poems/*/elements").hasAuthority("AUTHOR")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.PUT, "/api/poems/text-elements/**").hasAuthority("AUTHOR")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/poems/picture-elements/**").hasAuthority("AUTHOR")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.PUT, "/api/poems/picture-elements/**").hasAuthority("AUTHOR")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/poems/elements/**").hasAuthority("AUTHOR")
                 .anyRequest()
                 .authenticated();
         return http.build();
