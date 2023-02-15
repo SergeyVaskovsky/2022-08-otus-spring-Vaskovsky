@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.otus.poem.model.dto.PoemElementDto;
 import ru.otus.poem.model.dto.PoemPictureElementDto;
 import ru.otus.poem.model.dto.PoemTextElementDto;
@@ -57,10 +58,10 @@ public class PoemElementControllerTest {
                 Arguments.of(new PoemTextElementDto(3L, "text", "Первые строчки"), "myemail@yandex.ru", "MODERATOR", status().isForbidden()),
                 Arguments.of(new PoemTextElementDto(3L, "text", "Первые строчки"), "myemail@yandex.ru", "AUTHOR", status().isOk()),
                 Arguments.of(new PoemTextElementDto(3L, "text", "Первые строчки"), "myemail@yandex.ru", "READER", status().isForbidden()),
-                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, Byte.valueOf((byte) 100)), "myemail@yandex.ru", "WRITER", status().isForbidden()),
-                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, Byte.valueOf((byte) 100)), "myemail@yandex.ru", "MODERATOR", status().isForbidden()),
-                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, Byte.valueOf((byte) 100)), "myemail@yandex.ru", "AUTHOR", status().isOk()),
-                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, Byte.valueOf((byte) 100)), "myemail@yandex.ru", "READER", status().isForbidden())
+                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "WRITER", status().isForbidden()),
+                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "MODERATOR", status().isForbidden()),
+                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "AUTHOR", status().isOk()),
+                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "READER", status().isForbidden())
         );
     }
 
@@ -151,10 +152,15 @@ public class PoemElementControllerTest {
 
         String expectedResult = mapper.writeValueAsString(changedPoemPictureElementDto);
 
-        ResultActions resultActions = mockMvc.perform(fileUpload("/api/poems/picture-elements/1")
-                        .file(new MockMultipartFile("file", new byte[]{4, 5, 6}))
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "fileName",
+                "image/*", new byte[]{4, 5, 6});
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/poems/picture-elements/1")
+                        .file(mockMultipartFile)
                         .param("id", String.valueOf(1L))
-                        .param("scale", String.valueOf(100)).with(csrf()).with(user(userName).authorities(new SimpleGrantedAuthority(roleName))))
+                        .param("scale", String.valueOf(100))
+                        .with(csrf())
+                        .with(user(userName).authorities(new SimpleGrantedAuthority(roleName))))
                 .andExpect(statusMatcher);
 
         if (statusMatcher.equals(status().isOk())) {
