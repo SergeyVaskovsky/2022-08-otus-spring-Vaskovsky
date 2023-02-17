@@ -36,7 +36,6 @@ public class CommentControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private UserService userService;
     @Autowired

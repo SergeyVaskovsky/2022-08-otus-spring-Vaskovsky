@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.PUT, "/api/poems/**").hasAuthority("AUTHOR")
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/comments").hasAuthority("WRITER")
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/comments").permitAll()//.hasAuthority("WRITER")
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/api/comments/**").hasAuthority("READER")
                 .and()

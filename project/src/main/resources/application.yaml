@@ -17,6 +17,7 @@ spring:
     init:
       mode: always
       schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
 
   servlet:
     multipart:
@@ -36,4 +37,4 @@ app:
   server-address: http://localhost:8080
   bot-token: 5405164049:AAHxfT-200ZjxZmY0KKmT2hc2Y7JUP6zIMc
   bot-username: CommentsModeration
-  chat-id: 380730994
+  chat-id: -817864987
