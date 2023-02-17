@@ -2,11 +2,14 @@ package ru.otus.poem.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 @Data
-@Component
+@Configuration
 @ConfigurationProperties("app")
 public class AppProps {
     private String serverAddress;
+    private String botToken;
+    private String botUsername;
+    private String chatId;
 }

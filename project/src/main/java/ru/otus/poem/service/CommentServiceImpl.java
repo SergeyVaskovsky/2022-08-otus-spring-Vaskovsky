@@ -3,6 +3,7 @@ package ru.otus.poem.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.poem.exception.CommentNotFoundException;
+import ru.otus.poem.integration.ModeratorActivityGateway;
 import ru.otus.poem.model.Comment;
 import ru.otus.poem.model.dto.CommentDto;
 import ru.otus.poem.repository.CommentRepository;
@@ -15,10 +16,13 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-
+    private final ModeratorActivityGateway moderatorActivityGateway;
     @Override
     public CommentDto addNewComment(CommentDto commentDto) {
-        return CommentDto.toDto(commentRepository.save(CommentDto.toEntity(commentDto)));
+        Comment comment = CommentDto.toEntity(commentDto);
+        Comment savedComment = commentRepository.save(comment);
+        moderatorActivityGateway.processActivity(savedComment);
+        return CommentDto.toDto(savedComment);
     }
 
     @Override
