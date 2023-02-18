@@ -16,9 +16,9 @@ public class TelegramBotServiceImpl implements TelegramBotService {
         CommentDto commentDtoToSave = new CommentDto(
                 commentDto.getId(),
                 commentDto.getText(),
-                commentDto.getUser(),
-                commentDto.getPoem(),
-                commentDto.getRootComment(),
+                commentDto.getUserId(),
+                commentDto.getPoemId(),
+                commentDto.getRootCommentId(),
                 commentDto.getPublishTime(),
                 true
         );

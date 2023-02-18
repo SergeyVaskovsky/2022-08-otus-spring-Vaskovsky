@@ -1,14 +1,15 @@
 package ru.otus.poem.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import ru.otus.poem.exception.PoemElementNotFoundException;
+import ru.otus.poem.model.Poem;
 import ru.otus.poem.model.PoemElement;
 import ru.otus.poem.model.PoemPictureElement;
 import ru.otus.poem.model.PoemTextElement;
 import ru.otus.poem.model.dto.PoemDto;
 import ru.otus.poem.model.dto.PoemElementDto;
-import ru.otus.poem.model.dto.PoemPictureElementDto;
 import ru.otus.poem.model.dto.PoemTextElementDto;
 import ru.otus.poem.repository.PoemElementsRepository;
 
@@ -22,13 +23,14 @@ public class PoemElementServiceImpl implements PoemElementService {
 
     private final PoemElementsRepository poemElementsRepository;
     private final PoemService poemService;
+    private final ConversionService conversionService;
 
     @Override
     public List<PoemElementDto> getAll(Long id) {
         return poemElementsRepository
                 .findByPoemId(id)
                 .stream()
-                .map(PoemElementDto::toDto)
+                .map(it -> conversionService.convert(it, PoemElementDto.class))
                 .sorted(Comparator.comparingLong(PoemElementDto::getId))
                 .collect(Collectors.toList());
     }
@@ -39,23 +41,16 @@ public class PoemElementServiceImpl implements PoemElementService {
                 poemElementsRepository
                         .findById(id)
                         .orElseThrow(() -> new PoemElementNotFoundException("Poem element not found by id = " + id));
-        return PoemElementDto.toDto(poemElement);
+        return conversionService.convert(poemElement, PoemElementDto.class);
     }
 
     @Override
     public PoemElementDto addNewPoemElement(Long id, PoemElementDto poemElementDto) {
         PoemDto poemDto = poemService.getById(id);
-
-        PoemElement poemElement = poemElementDto instanceof PoemTextElementDto ?
-                new PoemTextElement(poemElementDto.getId(), PoemDto.toEntity(poemDto), "") :
-                new PoemPictureElement(
-                        poemElementDto.getId(),
-                        PoemDto.toEntity(poemDto),
-                        null,
-                        ((PoemPictureElementDto) poemElementDto).getScale());
-
+        PoemElement poemElement = conversionService.convert(poemElementDto, PoemElement.class);
+        poemElement.setPoem(conversionService.convert(poemDto, Poem.class));
         PoemElement savedPoemElement = poemElementsRepository.save(poemElement);
-        return PoemElementDto.toDto(savedPoemElement);
+        return conversionService.convert(savedPoemElement, PoemElementDto.class);
     }
 
     @Override
@@ -65,7 +60,7 @@ public class PoemElementServiceImpl implements PoemElementService {
                 .orElseThrow(() -> new PoemElementNotFoundException("Poem element not found by id = " + id));
         poemElement.setContent(poemElementDto.getContent());
         PoemElement savedPoemElement = poemElementsRepository.save(poemElement);
-        return PoemElementDto.toDto(savedPoemElement);
+        return conversionService.convert(savedPoemElement, PoemElementDto.class);
     }
 
     @Override
@@ -78,7 +73,7 @@ public class PoemElementServiceImpl implements PoemElementService {
         }
         poemElement.setScale(scale);
         PoemElement savedPoemElement = poemElementsRepository.save(poemElement);
-        return PoemElementDto.toDto(savedPoemElement);
+        return conversionService.convert(savedPoemElement, PoemElementDto.class);
     }
 
     @Override

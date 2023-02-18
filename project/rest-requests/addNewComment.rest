@@ -4,16 +4,8 @@ Content-Type: application/json
 {
   "id": -1,
   "text": "Восторг, это круто, это самое прекрасное стихотворение, которое я когда либо видел",
-  "user": {
-    "id": 2,
-    "email": "user@yandex.ru",
-    "name": "Sergey",
-    "password": ""
-  },
-  "poem": {
-    "id": 1,
-    "title": "Мое первое стихотворение"
-  },
+  "userId": 2,
+  "poemId": 1,
   "publishTime": "2023-02-17T22:49",
   "moderated": false
 }

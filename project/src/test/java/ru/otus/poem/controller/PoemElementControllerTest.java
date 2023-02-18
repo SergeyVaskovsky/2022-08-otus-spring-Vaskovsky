@@ -54,14 +54,14 @@ public class PoemElementControllerTest {
     private static Stream<Arguments> provideParamsForPost() {
 
         return Stream.of(
-                Arguments.of(new PoemTextElementDto(3L, "text", "Первые строчки"), "myemail@yandex.ru", "WRITER", status().isForbidden()),
-                Arguments.of(new PoemTextElementDto(3L, "text", "Первые строчки"), "myemail@yandex.ru", "MODERATOR", status().isForbidden()),
-                Arguments.of(new PoemTextElementDto(3L, "text", "Первые строчки"), "myemail@yandex.ru", "AUTHOR", status().isOk()),
-                Arguments.of(new PoemTextElementDto(3L, "text", "Первые строчки"), "myemail@yandex.ru", "READER", status().isForbidden()),
-                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "WRITER", status().isForbidden()),
-                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "MODERATOR", status().isForbidden()),
-                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "AUTHOR", status().isOk()),
-                Arguments.of(new PoemPictureElementDto(3L, "picture", new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "READER", status().isForbidden())
+                Arguments.of(new PoemTextElementDto(3L, 1L, "Первые строчки"), "myemail@yandex.ru", "WRITER", status().isForbidden()),
+                Arguments.of(new PoemTextElementDto(3L, 1L, "Первые строчки"), "myemail@yandex.ru", "MODERATOR", status().isForbidden()),
+                Arguments.of(new PoemTextElementDto(3L, 1L, "Первые строчки"), "myemail@yandex.ru", "AUTHOR", status().isOk()),
+                Arguments.of(new PoemTextElementDto(3L, 1L, "Первые строчки"), "myemail@yandex.ru", "READER", status().isForbidden()),
+                Arguments.of(new PoemPictureElementDto(3L, 1L, new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "WRITER", status().isForbidden()),
+                Arguments.of(new PoemPictureElementDto(3L, 1L, new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "MODERATOR", status().isForbidden()),
+                Arguments.of(new PoemPictureElementDto(3L, 1L, new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "AUTHOR", status().isOk()),
+                Arguments.of(new PoemPictureElementDto(3L, 1L, new byte[]{1, 2, 3}, (byte) 100), "myemail@yandex.ru", "READER", status().isForbidden())
         );
     }
 
@@ -122,7 +122,7 @@ public class PoemElementControllerTest {
         PoemTextElementDto poemTextElementDto = (PoemTextElementDto) poemElementService.getById(2L);
         PoemTextElementDto changedPoemTextElementDto = new PoemTextElementDto(
                 poemTextElementDto.getId(),
-                "text",
+                1L,
                 "fdsljksfdkjlfdakjldsfkjladsf"
         );
 
@@ -145,9 +145,9 @@ public class PoemElementControllerTest {
         PoemPictureElementDto poemPictureElementDto = (PoemPictureElementDto) poemElementService.getById(1L);
         PoemPictureElementDto changedPoemPictureElementDto = new PoemPictureElementDto(
                 poemPictureElementDto.getId(),
-                "picture",
+                1L,
                 new byte[]{4, 5, 6},
-                Byte.valueOf((byte) 100)
+                (byte) 100
         );
 
         String expectedResult = mapper.writeValueAsString(changedPoemPictureElementDto);
@@ -172,7 +172,7 @@ public class PoemElementControllerTest {
     @MethodSource("provideParamsForPut")
     void shouldCorrectUpdatePictureElementScale(String userName, String roleName, ResultMatcher statusMatcher) throws Exception {
 
-        String expectedResult = mapper.writeValueAsString(Byte.valueOf((byte) 50));
+        String expectedResult = mapper.writeValueAsString((byte) 50);
 
         ResultActions resultActions = mockMvc.perform(put("/api/poems/picture-elements/1/scale")
                         .with(csrf()).with(user(userName).authorities(new SimpleGrantedAuthority(roleName)))

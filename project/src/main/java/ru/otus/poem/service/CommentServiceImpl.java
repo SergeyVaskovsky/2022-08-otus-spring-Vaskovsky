@@ -1,6 +1,7 @@
 package ru.otus.poem.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import ru.otus.poem.exception.CommentNotFoundException;
 import ru.otus.poem.integration.ModeratorActivityGateway;
@@ -18,12 +19,13 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final ModeratorActivityGateway moderatorActivityGateway;
+    private final ConversionService conversionService;
     @Override
     public CommentDto addNewComment(CommentDto commentDto) {
-        Comment comment = CommentDto.toEntity(commentDto);
+        Comment comment = conversionService.convert(commentDto, Comment.class);
         Comment savedComment = commentRepository.save(comment);
         moderatorActivityGateway.processActivity(savedComment);
-        return CommentDto.toDto(savedComment);
+        return conversionService.convert(savedComment, CommentDto.class);
     }
 
     @Override
@@ -31,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository
                 .findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found by id = " + id));
-        return CommentDto.toDto(comment);
+        return conversionService.convert(comment, CommentDto.class);
     }
 
     @Override
@@ -40,13 +42,14 @@ public class CommentServiceImpl implements CommentService {
         CommentDto commentDtoToSave = new CommentDto(
                 id,
                 commentDto.getText(),
-                commentDto.getUser(),
-                commentDto.getPoem(),
-                commentDto.getRootComment(),
+                commentDto.getUserId(),
+                commentDto.getPoemId(),
+                commentDto.getRootCommentId(),
                 commentDto.getPublishTime(),
                 commentDto.isModerated()
         );
-        return CommentDto.toDto(commentRepository.save(CommentDto.toEntity(commentDtoToSave)));
+        Comment commentToSave = conversionService.convert(commentDtoToSave, Comment.class);
+        return conversionService.convert(commentRepository.save(commentToSave), CommentDto.class);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository
                 .findAllByPoemId(id)
                 .stream()
-                .map(CommentDto::toDto)
+                .map(it -> conversionService.convert(it, CommentDto.class))
                 .collect(Collectors.toList());
     }
 }

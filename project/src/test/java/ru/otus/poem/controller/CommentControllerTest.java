@@ -14,8 +14,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import ru.otus.poem.model.dto.CommentDto;
 import ru.otus.poem.service.CommentService;
-import ru.otus.poem.service.PoemService;
-import ru.otus.poem.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,10 +34,6 @@ public class CommentControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper mapper;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PoemService poemService;
     @Autowired
     private CommentService commentService;
 
@@ -73,8 +67,8 @@ public class CommentControllerTest {
         CommentDto commentDto = new CommentDto(
                 2L,
                 "Очень понравилось",
-                userService.getById(1L),
-                poemService.getById(1L),
+                1L,
+                1L,
                 null,
                 LocalDateTime.now(),
                 false);
@@ -98,9 +92,9 @@ public class CommentControllerTest {
         CommentDto changedCommentDto = new CommentDto(
                 commentDto.getId(),
                 commentDto.getText(),
-                commentDto.getUser(),
-                commentDto.getPoem(),
-                commentDto.getRootComment(),
+                commentDto.getUserId(),
+                commentDto.getPoemId(),
+                commentDto.getRootCommentId(),
                 commentDto.getPublishTime(),
                 true
         );
