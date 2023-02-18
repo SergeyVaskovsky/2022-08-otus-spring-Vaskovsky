@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "id": -1,
-  "text": "Восторг",
+  "text": "Восторг, это крутоsdfsdafasdf;lds`kfmv zdslkf 'lsajkd flkjsaf",
   "user": {
     "id": 2,
     "email": "user@yandex.ru",

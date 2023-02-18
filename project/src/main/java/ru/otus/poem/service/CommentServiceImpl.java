@@ -8,6 +8,7 @@ import ru.otus.poem.model.Comment;
 import ru.otus.poem.model.dto.CommentDto;
 import ru.otus.poem.repository.CommentRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public CommentDto updateComment(Long id, CommentDto commentDto) {
         CommentDto commentDtoToSave = new CommentDto(
                 id,

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -16,6 +17,7 @@ import ru.otus.poem.model.dto.TelegramMessage;
 import ru.otus.poem.service.CommentService;
 
 import java.util.List;
+
 
 @Component
 public class Bot extends TelegramLongPollingBot {
@@ -48,7 +50,7 @@ public class Bot extends TelegramLongPollingBot {
             var data = callbackQuery.getData();
             if (data.startsWith("accept_")) {
                 var id = data.replace("accept_", "");
-                CommentDto commentDto = commentService.getById(Long.getLong(id));
+                CommentDto commentDto = commentService.getById(Long.valueOf(id));
                 CommentDto commentDtoToSave = new CommentDto(
                         commentDto.getId(),
                         commentDto.getText(),
@@ -59,9 +61,41 @@ public class Bot extends TelegramLongPollingBot {
                         true
                 );
                 commentService.updateComment(commentDtoToSave.getId(), commentDtoToSave);
+
+
+                EditMessageReplyMarkup changedMessage = EditMessageReplyMarkup
+                        .builder()
+                        .chatId(appProps.getChatId())
+                        .messageId(update.getCallbackQuery().getMessage().getMessageId())
+                        .replyMarkup(null)
+                        .build();
+
+                try {
+
+                    execute(changedMessage);
+
+                } catch (TelegramApiException e) {
+                    new RuntimeException(e);
+                }
+
+
             } else if (data.startsWith("delete_")) {
                 var id = data.replace("delete_", "");
-                commentService.deleteById(Long.getLong(id));
+                commentService.deleteById(Long.valueOf(id));
+                EditMessageReplyMarkup changedMessage = EditMessageReplyMarkup
+                        .builder()
+                        .chatId(appProps.getChatId())
+                        .messageId(update.getCallbackQuery().getMessage().getMessageId())
+                        .replyMarkup(null)
+                        .build();
+
+                try {
+
+                    execute(changedMessage);
+
+                } catch (TelegramApiException e) {
+                    new RuntimeException(e);
+                }
             }
         }
     }
