@@ -12,9 +12,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.otus.poem.config.AppProps;
-import ru.otus.poem.model.dto.CommentDto;
+import ru.otus.poem.exception.TelegramApiRuntimeException;
 import ru.otus.poem.model.dto.TelegramMessage;
-import ru.otus.poem.service.CommentService;
+import ru.otus.poem.service.TelegramBotService;
 
 import java.util.List;
 
@@ -22,13 +22,15 @@ import java.util.List;
 @Component
 public class Bot extends TelegramLongPollingBot {
 
+    private static final String ACCEPT = "accept_";
+    private static final String DELETE = "delete_";
     private final AppProps appProps;
-    private final CommentService commentService;
+    private final TelegramBotService service;
 
     @Autowired
-    public Bot(AppProps appProps, CommentService commentService) throws TelegramApiException {
+    public Bot(AppProps appProps, TelegramBotService service) throws TelegramApiException {
         this.appProps = appProps;
-        this.commentService = commentService;
+        this.service = service;
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
         botsApi.registerBot(this);
     }
@@ -48,55 +50,29 @@ public class Bot extends TelegramLongPollingBot {
         var callbackQuery = update.getCallbackQuery();
         if (callbackQuery != null) {
             var data = callbackQuery.getData();
-            if (data.startsWith("accept_")) {
-                var id = data.replace("accept_", "");
-                CommentDto commentDto = commentService.getById(Long.valueOf(id));
-                CommentDto commentDtoToSave = new CommentDto(
-                        commentDto.getId(),
-                        commentDto.getText(),
-                        commentDto.getUser(),
-                        commentDto.getPoem(),
-                        commentDto.getRootComment(),
-                        commentDto.getPublishTime(),
-                        true
-                );
-                commentService.updateComment(commentDtoToSave.getId(), commentDtoToSave);
-
-
-                EditMessageReplyMarkup changedMessage = EditMessageReplyMarkup
-                        .builder()
-                        .chatId(appProps.getChatId())
-                        .messageId(update.getCallbackQuery().getMessage().getMessageId())
-                        .replyMarkup(null)
-                        .build();
-
-                try {
-
-                    execute(changedMessage);
-
-                } catch (TelegramApiException e) {
-                    new RuntimeException(e);
-                }
-
-
-            } else if (data.startsWith("delete_")) {
-                var id = data.replace("delete_", "");
-                commentService.deleteById(Long.valueOf(id));
-                EditMessageReplyMarkup changedMessage = EditMessageReplyMarkup
-                        .builder()
-                        .chatId(appProps.getChatId())
-                        .messageId(update.getCallbackQuery().getMessage().getMessageId())
-                        .replyMarkup(null)
-                        .build();
-
-                try {
-
-                    execute(changedMessage);
-
-                } catch (TelegramApiException e) {
-                    new RuntimeException(e);
-                }
+            if (data.startsWith(ACCEPT)) {
+                var id = data.replace(ACCEPT, "");
+                service.moderate(id);
+                hideKeyboard(update);
+            } else if (data.startsWith(DELETE)) {
+                var id = data.replace(DELETE, "");
+                service.delete(id);
+                hideKeyboard(update);
             }
+        }
+    }
+
+    private void hideKeyboard(Update update) {
+        EditMessageReplyMarkup changedMessage = EditMessageReplyMarkup
+                .builder()
+                .chatId(appProps.getChatId())
+                .messageId(update.getCallbackQuery().getMessage().getMessageId())
+                .replyMarkup(null)
+                .build();
+        try {
+            execute(changedMessage);
+        } catch (TelegramApiException e) {
+            throw new TelegramApiRuntimeException(e);
         }
     }
 
@@ -113,14 +89,16 @@ public class Bot extends TelegramLongPollingBot {
                 //.keyboardRow(List.of(url))
                 .build();
 
-        SendMessage sm = SendMessage.builder().chatId(appProps.getChatId())
-                .parseMode("HTML").text(message.getText())
+        SendMessage sm = SendMessage.builder()
+                .chatId(appProps.getChatId())
+                .parseMode("HTML")
+                .text(message.getText() + "\n" + message.getReference())
                 .replyMarkup(keyboard).build();
 
         try {
             execute(sm);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            throw new TelegramApiRuntimeException(e);
         }
     }
 
