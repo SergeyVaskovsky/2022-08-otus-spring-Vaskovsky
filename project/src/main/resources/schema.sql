@@ -1,13 +1,11 @@
-DROP TABLE public.usr_roles;
-DROP TABLE public."role";
-DROP TABLE public."comment";
-DROP TABLE public.usr;
-DROP TABLE public.poem_text_element;
-DROP TABLE public.poem_picture_element;
-DROP TABLE public.poem_element;
-DROP TABLE public.poem;
-
-
+DROP TABLE IF EXISTS public.usr_roles;
+DROP TABLE IF EXISTS public."role";
+DROP TABLE IF EXISTS public."comment";
+DROP TABLE IF EXISTS public.usr;
+DROP TABLE IF EXISTS public.poem_text_element;
+DROP TABLE IF EXISTS public.poem_picture_element;
+DROP TABLE IF EXISTS public.poem_element;
+DROP TABLE IF EXISTS public.poem;
 
 CREATE TABLE public."role"
 (

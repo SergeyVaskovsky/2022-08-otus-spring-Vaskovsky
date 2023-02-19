@@ -1,7 +1,9 @@
 package ru.otus.poem.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.otus.poem.exception.CommentNotFoundException;
 import ru.otus.poem.integration.ModeratorActivityGateway;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
@@ -54,7 +57,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteById(Long id) {
-        commentRepository.deleteById(id);
+        try {
+            commentRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            log.error("Comment with id " + id + " not exists", e);
+        }
     }
 
     @Override

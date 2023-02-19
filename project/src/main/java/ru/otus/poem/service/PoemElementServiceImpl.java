@@ -31,7 +31,7 @@ public class PoemElementServiceImpl implements PoemElementService {
                 .findByPoemId(id)
                 .stream()
                 .map(it -> conversionService.convert(it, PoemElementDto.class))
-                .sorted(Comparator.comparingLong(PoemElementDto::getId))
+                .sorted(Comparator.comparingLong(poemElementDto -> poemElementDto != null ? poemElementDto.getId() : null))
                 .collect(Collectors.toList());
     }
 
