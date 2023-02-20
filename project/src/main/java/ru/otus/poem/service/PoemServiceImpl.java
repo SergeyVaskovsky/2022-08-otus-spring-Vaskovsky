@@ -48,6 +48,7 @@ public class PoemServiceImpl implements PoemService{
                 .findById(id)
                 .orElseThrow(() -> new PoemNotFoundException("Poem not found by id = " + id));
         poem.setTitle(poemDto.getTitle());
+        poem.setPublishTime(poemDto.getPublishTime());
         Poem savedPoem = poemRepository.save(poem);
         return conversionService.convert(savedPoem, PoemDto.class);
     }

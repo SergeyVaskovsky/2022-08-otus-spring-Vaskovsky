@@ -26,7 +26,7 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .antMatchers("/api/auth").permitAll()
                 .antMatchers("/api/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/poems/*/elements").permitAll()

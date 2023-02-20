@@ -12,7 +12,6 @@ export default function PoemList() {
     const [isLoading, setIsLoading] = useState(true);
     const poemService = new PoemService();
 
-
     useEffect(() => {
         poemService.getPoems()
             .then(data => {
@@ -20,28 +19,6 @@ export default function PoemList() {
                 setIsLoading(false);
             });
     }, [setPoems, setIsLoading]);
-
-    /*const remove = async id => {
-        setAvailable(true);
-        setIsLoading(true);
-        bookService.remove(id).then(() => {
-            let updatedBooks = [...books].filter(i => i.id !== id);
-            setBooks(updatedBooks);
-            if (currentBook.id === id) {
-                setIsShow(false);
-                setCurrentBook({});
-            }
-            setIsLoading(false);
-        }).catch((error) => {
-            setAvailable(false);
-            setIsLoading(false);
-        });
-    }
-
-    const showComments = book => {
-        setIsShow(true);
-        setCurrentBook(book);
-    }*/
 
     const poemList =
         poems.map(poem => {

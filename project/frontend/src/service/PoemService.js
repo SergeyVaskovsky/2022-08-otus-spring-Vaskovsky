@@ -13,20 +13,6 @@ export default class PoemService {
         return await fetch(`/api/poems/${id}/elements`)
             .then(response => response.json())
     }
-/*
-    remove = async id => {
-        return await fetch(`/api/books/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error();
-            }
-        });
-    }*/
 
     savePoem = async item => {
         return await fetch('/api/poems' + (item.id ? '/' + item.id : ''), {
@@ -66,7 +52,7 @@ export default class PoemService {
         formData.append("file", element.file);
         formData.append("scale", element.scale)
         return await fetch('/api/poems/picture-elements/'+element.id, {
-            method: 'PUT',
+            method: 'POST',
             body: formData
         }).then(response => response.json());
     }

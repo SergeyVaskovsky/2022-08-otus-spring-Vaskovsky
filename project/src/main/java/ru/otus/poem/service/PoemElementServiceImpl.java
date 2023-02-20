@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import ru.otus.poem.exception.PoemElementNotFoundException;
-import ru.otus.poem.model.Poem;
 import ru.otus.poem.model.PoemElement;
 import ru.otus.poem.model.PoemPictureElement;
 import ru.otus.poem.model.PoemTextElement;
-import ru.otus.poem.model.dto.PoemDto;
 import ru.otus.poem.model.dto.PoemElementDto;
 import ru.otus.poem.model.dto.PoemTextElementDto;
 import ru.otus.poem.repository.PoemElementsRepository;
@@ -46,9 +44,8 @@ public class PoemElementServiceImpl implements PoemElementService {
 
     @Override
     public PoemElementDto addNewPoemElement(Long id, PoemElementDto poemElementDto) {
-        PoemDto poemDto = poemService.getById(id);
+        poemElementDto.setPoemId(id);
         PoemElement poemElement = conversionService.convert(poemElementDto, PoemElement.class);
-        poemElement.setPoem(conversionService.convert(poemDto, Poem.class));
         PoemElement savedPoemElement = poemElementsRepository.save(poemElement);
         return conversionService.convert(savedPoemElement, PoemElementDto.class);
     }
