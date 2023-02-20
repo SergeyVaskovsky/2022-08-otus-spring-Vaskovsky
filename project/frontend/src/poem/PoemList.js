@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
 
-export default function PoemList() {
+export default function PoemList(state) {
 
     const [poems, setPoems] = useState([]);
 
@@ -13,18 +13,21 @@ export default function PoemList() {
     const poemService = new PoemService();
 
     useEffect(() => {
-        poemService.getPoems()
+        poemService.getPoems(state.readonly)
             .then(data => {
                 setPoems(data);
                 setIsLoading(false);
             });
-    }, [setPoems, setIsLoading]);
+    }, [setPoems, setIsLoading, state.readonly]);
 
     const poemList =
         poems.map(poem => {
             return <tr key={poem.id}>
                 <td style={{whiteSpace: 'nowrap'}}>
-                    <Link to={"/poems/" + poem.id}>{poem.title}</Link>
+                    {state.readonly ?
+                        <Link to={"/readonly/poems/" + poem.id}>{poem.title}</Link> :
+                        <Link to={"/poems/" + poem.id}>{poem.title}</Link>
+                    }
                 </td>
             </tr>
         });
@@ -35,17 +38,17 @@ export default function PoemList() {
             <Container fluid>
                 <Loading isLoading={isLoading}/>
                 <h2>Список стихотворений</h2>
-                    <div>
-                        <div className="float-right">
-                            <Button color="success" tag={Link} to="/poems/new">Добавить стихотворение</Button>
-                        </div>
-
-                        <Table className="mt-4">
-                            <tbody>
-                            {poemList}
-                            </tbody>
-                        </Table>
-                    </div>
+                <div> {!state.readonly ?
+                    <div className="float-right">
+                        <Button color="success" tag={Link} to="/poems/new">Добавить стихотворение</Button>
+                    </div> : ""
+                }
+                    <Table className="mt-4">
+                        <tbody>
+                        {poemList}
+                        </tbody>
+                    </Table>
+                </div>
             </Container>
         </div>
     );

@@ -9,7 +9,8 @@ export default function Home() {
         <div>
             <AppNavbar/>
             <Container fluid>
-                <Button color="link"><Link to="/poems">К стихам</Link></Button>
+                <Button color="link"><Link to="/poems">К редактированию стихов</Link></Button>
+                <Button color="link"><Link to="/readonly/poems">К стихам</Link></Button>
             </Container>
         </div>
     );

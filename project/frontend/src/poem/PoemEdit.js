@@ -143,8 +143,6 @@ export default function PoemEdit() {
                                         onChangePictureState={onChangePictureState}
                                         onDeleteState={onDeleteState}
                                         onChangePictureScale={onChangePictureScale}/>
-
-
         });
 
     const checkbox = (

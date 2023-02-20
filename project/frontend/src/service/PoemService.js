@@ -1,6 +1,6 @@
 export default class PoemService {
-    getPoems = async () => {
-        return await fetch('/api/poems')
+    getPoems = async (readonly) => {
+        return await fetch('/api/poems' + (readonly ? "?readonly=true" : ""))
             .then(response => response.json());
     }
 

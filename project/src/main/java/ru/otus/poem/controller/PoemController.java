@@ -13,8 +13,8 @@ public class PoemController {
     private final PoemServiceImpl poemServiceImpl;
 
     @GetMapping("/api/poems")
-    public List<PoemDto> getPoems() {
-        return poemServiceImpl.getAll();
+    public List<PoemDto> getPoems(@RequestParam(required = false) boolean readonly) {
+        return poemServiceImpl.getAll(readonly);
     }
 
     @GetMapping("/api/poems/{id}")

@@ -19,9 +19,9 @@ public class PoemServiceImpl implements PoemService{
     private final ConversionService conversionService;
 
     @Override
-    public List<PoemDto> getAll() {
-        return poemRepository
-                .findAll()
+    public List<PoemDto> getAll(boolean readonly) {
+        List<Poem> poemList = readonly ? poemRepository.findByPublishTimeIsNotNull() : poemRepository.findAll();
+        return poemList
                 .stream()
                 .map(it -> conversionService.convert(it, PoemDto.class))
                 .collect(Collectors.toList());
