@@ -5,8 +5,9 @@ import AppNavbar from '../main/AppNavbar';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
 import PoemPictureElementRead from "./PoemPictureElementRead";
+import Comments from "../comment/Comments";
 
-export default function PoemRead() {
+export default function PoemRead(state) {
     const {id} = useParams();
 
     const [item, setItem] = useState({});
@@ -28,6 +29,7 @@ export default function PoemRead() {
             });
     }, [id, setItem, setElements]);
 
+
     const elementsList = elements.map((element, index) => {
         return element.type === "text" ?
             <div>
@@ -46,6 +48,7 @@ export default function PoemRead() {
                 <FormGroup>
                     <h1>{item.title}</h1>
                     {elementsList}
+                    {state.withComments && item !== {} ? <Comments poemId={id}/> : ""}
                 </FormGroup>
                 <FormGroup>
                     <Button color="secondary" tag={Link} to="/readonly/poems">Закрыть</Button>

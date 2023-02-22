@@ -1,90 +1,69 @@
 import React, {useEffect, useState} from 'react';
-import {Button, ButtonGroup} from 'reactstrap';
 import CommentsService from "../service/CommentsService";
-import Loading from "../main/Loading";
+import {Link} from "react-router-dom";
+import Comment from "./Comment";
+import "./Comments.css";
+
 
 export default function Comments(data) {
     const [comments, setComments] = useState([]);
-    const [description, setNewDescription] = useState("");
+    const [activeIndex, setActiveIndex] = useState(null);
     const commentsService = new CommentsService();
-    const [isLoading, setIsLoading] = useState(true);
-    const [available, setAvailable] = useState(true);
 
     useEffect(() => {
-        setIsLoading(true);
-        setAvailable(true);
-        commentsService.getComments(data.book.id).then(d => {
-            setComments(d);
-            setIsLoading(false);
-            if (d.length === 1 && d[0].id === 0) {
-                setAvailable(false);
-            }
+        commentsService.getComments(data.poemId).then(comments => {
+            setComments(comments);
         });
     }, [data]);
 
-    const remove = id => {
-        setIsLoading(true);
-        commentsService.remove(id).then(() => {
-            let updatedComments = [...comments].filter(i => i.id !== id);
-            setComments(updatedComments);
-            setIsLoading(false);
-        }).catch((error) => {
-            setComments([{id: 0, description: 'По техническим причинам комментарии недоступны', bookId: 0}]);
-            setAvailable(false);
-            setIsLoading(false);
-        });
+    const handleAddComment = (event, comment) => {
+        event.preventDefault();
+        if (comment !== null) {
+            setActiveIndex(comment.id);
+        } else {
+            setActiveIndex(-1);
+        }
     }
 
-    const add = () => {
-        if (!description) {
-            return;
-        }
-        setIsLoading(true)
-        commentsService.add(description, data.book.id)
-            .then(d => {
-                setIsLoading(false);
-                if (d.id === 0) {
-                    setComments([{id: 0, description: 'По техническим причинам комментарии недоступны', bookId: 0}]);
-                    setAvailable(false);
-                } else {
-                    comments.push(d);
-                    setComments([...comments]);
-                }
-            });
+    const onClose = () => {
+        setActiveIndex(null);
+    };
+
+    const commentsList = (rootId) => {
+        return comments.filter(comment => comment.rootCommentId === rootId).map((comment, index) => {
+
+            const commentsCore = (
+                <div key={index}>
+                    {comment.text.split("\n").map((i, key) => {
+                        return <div key={key}>{i}</div>;
+                    })}
+                    <Link to={""} onClick={(event) => handleAddComment(event, comment)}>Ответить</Link>
+                    {commentsList(comment.id)}
+                    <ul>
+                        <li>
+                            {activeIndex === comment.id ?
+                                <Comment data={{"poemId": data.poemId, "comment": comment}} onClose={onClose}/> : ""}
+                        </li>
+                    </ul>
+
+                </div>
+            );
+
+            if (rootId === null) {
+                return commentsCore;
+            } else {
+                return <ul>
+                    <li>{commentsCore}</li>
+                </ul>;
+            }
+        });
     }
 
     return (
         <div>
-            <Loading isLoading={isLoading}/>
-            <div>
-                <table className="mt-4">
-                    <tbody>
-                    {comments.map(comment => {
-                        return (
-                            <tr key={comment.id}>
-                                <td style={{whiteSpace: 'nowrap'}}>{comment.description}</td>
-                                <td> {comment.id !== 0 ?
-                                    <ButtonGroup>
-                                        <Button size="sm" color="danger"
-                                                    onClick={() => remove(comment.id)}>Удалить</Button>
-                                        </ButtonGroup> : ""
-                                    }
-                                    </td>
-                                </tr>
-                            )
-                        }
-                    )
-                    }
-                    </tbody>
-                </table>
-                {available ?
-                    <div>
-                        <textarea onChange={(event) => setNewDescription(event.target.value)}/>
-                        <br/>
-                        <Button size="sm" onClick={() => add()}>Добавить</Button>
-                    </div> : ""
-                }
-            </div>
+            <Link to={""} onClick={(event) => handleAddComment(event, null)}>Комментировать</Link>
+            {commentsList(null)}
+            {activeIndex === -1 ? <Comment data={{"poemId": data.poemId, "comment": null}} onClose={onClose}/> : ""}
         </div>
     );
 }

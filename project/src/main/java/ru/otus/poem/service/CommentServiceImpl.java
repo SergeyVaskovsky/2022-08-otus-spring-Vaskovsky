@@ -26,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto addNewComment(CommentDto commentDto) {
         Comment comment = conversionService.convert(commentDto, Comment.class);
+        comment.setModerated(false);
         Comment savedComment = commentRepository.save(comment);
         moderatorActivityGateway.processActivity(savedComment);
         return conversionService.convert(savedComment, CommentDto.class);

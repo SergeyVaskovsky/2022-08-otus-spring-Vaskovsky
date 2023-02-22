@@ -14,7 +14,7 @@ export default function App() {
                 <Route path='/poems' exact={true} element={<PoemList/>}/>
                 <Route path='/poems/:id' element={<PoemEdit/>}/>
                 <Route path='/readonly/poems' exact={true} element={<PoemList readonly={true}/>}/>
-                <Route path='/readonly/poems/:id' element={<PoemRead/>}/>
+                <Route path='/readonly/poems/:id' element={<PoemRead withComments={true}/>}/>
             </Routes>
         </Router>
     )

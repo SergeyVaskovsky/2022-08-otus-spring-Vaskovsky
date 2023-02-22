@@ -1,33 +1,26 @@
 export default class CommentsService {
 
     getComments = async id => {
-        return await fetch(`/api/books/${id}/comments`)
+        return await fetch(`/api/comments/poem/` + id)
             .then(response => response.json());
     }
 
-    remove = async id => {
-        return await fetch(`/api/books/comments/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error();
-            }
-        });
-    }
-
-
-    add = async (description, id) => {
-        return await fetch(`/api/books/${id}/comments`, {
+    add = async (description, poemId, comment) => {
+        return await fetch(`/api/comments`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: description,
+            body: JSON.stringify(
+                {
+                    'text': description,
+                    'userId': 1,
+                    'poemId': poemId,
+                    'rootCommentId': comment == null ? null : comment.id,
+                    'publishTime': new Date()
+                }
+            ),
         }).then(response => response.json());
     }
 }
