@@ -14,6 +14,13 @@ public class UserController {
 
     @PostMapping("/api/users")
     public UserDto addNewUser(@RequestBody UserDto userDto) {
-        return userService.addNewUser(userDto);
+        UserDto newUser = new UserDto(
+                -1L,
+                userDto.getName(),
+                userDto.getPassword(),
+                userDto.getEmail(),
+                userDto.getRoles()
+        );
+        return userService.addNewUser(newUser);
     }
 }

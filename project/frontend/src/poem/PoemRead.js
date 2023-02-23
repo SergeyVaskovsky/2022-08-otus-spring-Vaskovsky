@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import {Button, Container, FormGroup} from 'reactstrap';
-import AppNavbar from '../main/AppNavbar';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
 import PoemPictureElementRead from "./PoemPictureElementRead";
@@ -42,7 +41,6 @@ export default function PoemRead(state) {
 
     return (
         <div>
-            <AppNavbar/>
             <Container>
                 <Loading isLoading={isLoading}/>
                 <FormGroup>
@@ -50,9 +48,12 @@ export default function PoemRead(state) {
                     {elementsList}
                     {state.withComments && item !== {} ? <Comments poemId={id}/> : ""}
                 </FormGroup>
-                <FormGroup>
-                    <Button color="secondary" tag={Link} to="/readonly/poems">Закрыть</Button>
-                </FormGroup>
+                {
+                    state.withComments ?
+                        <FormGroup>
+                            <Button color="secondary" tag={Link} to="/readonly/poems">Закрыть</Button>
+                        </FormGroup> : ""
+                }
             </Container>
         </div>
     );

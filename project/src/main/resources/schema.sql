@@ -23,6 +23,8 @@ CREATE TABLE public.usr
     CONSTRAINT usr_pkey PRIMARY KEY (id)
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS public.unique_email on public.usr (email);
+
 CREATE TABLE public.usr_roles
 (
     user_id bigint NOT NULL,

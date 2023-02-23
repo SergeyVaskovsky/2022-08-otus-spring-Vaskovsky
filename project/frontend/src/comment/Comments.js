@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import CommentsService from "../service/CommentsService";
 import {Link} from "react-router-dom";
 import Comment from "./Comment";
-import "./Comments.css";
-
+import "./Comments.css"
 
 export default function Comments(data) {
     const [comments, setComments] = useState([]);

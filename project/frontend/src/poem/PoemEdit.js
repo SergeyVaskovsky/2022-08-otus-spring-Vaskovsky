@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
 import {Button, Container, FormGroup, Input, Label} from 'reactstrap';
-import AppNavbar from '../main/AppNavbar';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
 import PoemTextElementEdit from "./PoemTextElementEdit";
 import PoemPictureElementEdit from "./PoemPictureElementEdit";
+import PoemRead from "./PoemRead";
+import "./Poem.css"
 
 export default function PoemEdit() {
 
@@ -160,29 +161,32 @@ export default function PoemEdit() {
 
     return (
         <div>
-            <AppNavbar/>
+
             <Container>
                 <Loading isLoading={isLoading}/>
                 <h2> Редактировать стихотворение </h2>
-
-                <FormGroup>
-                    {checkbox}
-                </FormGroup>
-                <FormGroup>
-                    <Label for="name">Название</Label>
-                    <Input type="text" name="title" id="title" value={item.title || ''}
-                           onChange={(event) => handleChange(event.target.value)} autoComplete="title"/>
-                    {elementsList}
-                    <br/>
-                    <Link to={""} onClick={(event) => handleAddText(event)}>Добавить текст</Link>
-                    <br/>
-                    <Link to={""} onClick={(event) => handleAddPicture(event)}>Добавить иллюстрацию</Link>
-                    <br/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Button color="secondary" tag={Link} to="/poems">Закрыть</Button>
-                    </FormGroup>
-
+                <div id="parent">
+                    <div id="wide">
+                        <FormGroup>
+                            {checkbox}
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="name">Название</Label>
+                            <Input type="text" name="title" id="title" value={item.title || ''}
+                                   onChange={(event) => handleChange(event.target.value)} autoComplete="title"/>
+                            {elementsList}
+                            <br/>
+                            <Link to={""} onClick={(event) => handleAddText(event)}>Добавить текст</Link>
+                            <br/>
+                            <Link to={""} onClick={(event) => handleAddPicture(event)}>Добавить иллюстрацию</Link>
+                            <br/>
+                        </FormGroup>
+                        <FormGroup>
+                            <Button color="secondary" tag={Link} to="/poems">Закрыть</Button>
+                        </FormGroup>
+                    </div>
+                    <div id="narrow" className="center"><PoemRead withComments={false}/></div>
+                </div>
             </Container>
         </div>
     );

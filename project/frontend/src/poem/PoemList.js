@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Container, Table} from 'reactstrap';
-import AppNavbar from '../main/AppNavbar';
 import {Link} from 'react-router-dom';
 import PoemService from "../service/PoemService";
 import Loading from "../main/Loading";
@@ -34,7 +33,6 @@ export default function PoemList(state) {
 
     return (
         <div>
-            <AppNavbar/>
             <Container fluid>
                 <Loading isLoading={isLoading}/>
                 <h2>Список стихотворений</h2>
