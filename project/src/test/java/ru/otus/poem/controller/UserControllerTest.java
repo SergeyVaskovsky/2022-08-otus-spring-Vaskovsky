@@ -37,7 +37,7 @@ public class UserControllerTest {
                         "Sergey",
                         "123",
                         "myemail@yandex.ru",
-                        List.of(new Role(4L, "MODERATOR"))), status().isOk())
+                        List.of(new Role(2L, "READER"), new Role(3L, "WRITER"))), status().isOk())
         );
     }
 

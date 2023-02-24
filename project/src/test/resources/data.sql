@@ -37,6 +37,9 @@ VALUES (1, 1),
 INSERT INTO POEM(TITLE)
 VALUES ('Мое первое стихотворение');
 
+INSERT INTO POEM(TITLE, PUBLISH_TIME)
+VALUES ('Мое второе стихотворение', '2023-02-23');
+
 INSERT INTO COMMENT(MODERATED, PUBLISH_TIME, TEXT, POEM_ID, ROOT_COMMENT_ID, USER_ID)
 VALUES (FALSE, NULL, 'Очень классное стихотворение', 1, NULL, 1);
 

@@ -55,7 +55,7 @@ const Login = ({setUser}) => {
                     <Form onSubmit={handleLogin} ref={form}>
                         <div>
                             <FormGroup>
-                                <Label htmlFor="username">Имя пользователя</Label>
+                                <Label htmlFor="username">Email</Label>
                                 <Input
                                     type="text"
                                     name="username"

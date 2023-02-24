@@ -32,6 +32,16 @@ export default function App() {
                 <Route path='/register' exact={true} element={<RegisterUser/>}/>
                 <Route path='/poems' exact={true} element={<PoemList/>}/>
                 <Route path='/poems/:id' element={<PoemEdit/>}/>
+                {/*{
+                    AuthService.getCurrentAuthorities().includes("AUTHOR") ?
+                        <Route path='/poems' exact={true} element={<PoemList/>}/>
+                        : ""
+                }
+                {
+                    AuthService.getCurrentAuthorities().includes("AUTHOR") ?
+                        <Route path='/poems/:id' element={<PoemEdit/>}/>
+                    : ""
+                }*/}
                 <Route path='/readonly/poems' exact={true} element={<PoemList readonly={true}/>}/>
                 <Route path='/readonly/poems/:id' element={<PoemRead withComments={true}/>}/>
             </Routes>

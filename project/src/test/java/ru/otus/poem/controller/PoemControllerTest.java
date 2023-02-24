@@ -41,15 +41,18 @@ public class PoemControllerTest {
     private static Stream<Arguments> provideParamsForGet() {
 
         return Stream.of(
-                Arguments.of("myemail@yandex.ru", "WRITER", status().isOk()),
-                Arguments.of("myemail@yandex.ru", "MODERATOR", status().isOk()),
-                Arguments.of("myemail@yandex.ru", "AUTHOR", status().isOk()),
-                Arguments.of("myemail@yandex.ru", "READER", status().isOk())
+                Arguments.of("myemail@yandex.ru", "WRITER", status().isOk(), "?readonly=true"),
+                Arguments.of("myemail@yandex.ru", "MODERATOR", status().isOk(), "?readonly=true"),
+                Arguments.of("myemail@yandex.ru", "AUTHOR", status().isOk(), "?readonly=true"),
+                Arguments.of("myemail@yandex.ru", "READER", status().isOk(), "?readonly=true"),
+                Arguments.of("myemail@yandex.ru", "WRITER", status().isOk(), "?readonly=false"),
+                Arguments.of("myemail@yandex.ru", "MODERATOR", status().isOk(), "?readonly=false"),
+                Arguments.of("myemail@yandex.ru", "AUTHOR", status().isOk(), "?readonly=false"),
+                Arguments.of("myemail@yandex.ru", "READER", status().isOk(), "?readonly=false")
         );
     }
 
     private static Stream<Arguments> provideParamsForPostAndPut() {
-
         return Stream.of(
                 Arguments.of("myemail@yandex.ru", "WRITER", status().isForbidden()),
                 Arguments.of("myemail@yandex.ru", "MODERATOR", status().isForbidden()),
@@ -60,9 +63,14 @@ public class PoemControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideParamsForGet")
-    void shouldCorrectGetAllPoem(String userName, String roleName, ResultMatcher statusMatcher) throws Exception {
-        String expectedResult = mapper.writeValueAsString(List.of(poemService.getById(1L)));
-        mockMvc.perform(get("/api/poems")
+    void shouldCorrectGetAllPoem(String userName, String roleName, ResultMatcher statusMatcher, String readonly) throws Exception {
+        String expectedResult;
+        if ("?readonly=true".equals(readonly)) {
+            expectedResult = mapper.writeValueAsString(List.of(poemService.getById(2L)));
+        } else {
+            expectedResult = mapper.writeValueAsString(List.of(poemService.getById(1L), poemService.getById(2L)));
+        }
+        mockMvc.perform(get("/api/poems" + readonly)
                         .with(user(userName).authorities(new SimpleGrantedAuthority(roleName))))
                 .andExpect(statusMatcher)
                 .andExpect(content().json(expectedResult));
@@ -70,7 +78,7 @@ public class PoemControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideParamsForGet")
-    void shouldCorrectGetPoemById(String userName, String roleName, ResultMatcher statusMatcher) throws Exception {
+    void shouldCorrectGetPoemById(String userName, String roleName, ResultMatcher statusMatcher, String readonly) throws Exception {
         String expectedResult = mapper.writeValueAsString(poemService.getById(1L));
         mockMvc.perform(get("/api/poems/1")
                         .with(user(userName).authorities(new SimpleGrantedAuthority(roleName))))

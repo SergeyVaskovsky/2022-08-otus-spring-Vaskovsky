@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Button} from 'reactstrap';
 import CommentsService from "../service/CommentsService";
 
-export default function Comment({data, onClose}) {
+export default function Comment({data, onClose, onAdded}) {
     const [description, setNewDescription] = useState("");
     const commentsService = new CommentsService();
 
@@ -11,7 +11,7 @@ export default function Comment({data, onClose}) {
             return;
         }
         commentsService.add(description, data.poemId, data.comment)
-            .then(data => onClose());
+            .then(data => onAdded(data));
     }
 
     const close = () => {

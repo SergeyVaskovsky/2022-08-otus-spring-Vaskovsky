@@ -1,12 +1,13 @@
 import {Button, Container, FormGroup, Input, Label} from 'reactstrap';
 import React, {useState} from "react";
 import UserService from "../service/UserService";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 export default function RegisterUser() {
 
     const [newUser, setNewUser] = useState({});
     const userService = new UserService();
+    const navigate = useNavigate();
     const handleChangeName = async value => {
         let changeableUser = {...newUser};
         changeableUser.name = value;
@@ -26,8 +27,9 @@ export default function RegisterUser() {
     }
 
     const register = async () => {
-        await userService.register(newUser).then(user => {
+        await userService.register(newUser).then(() => {
         })
+        navigate("/");
     }
 
     return (

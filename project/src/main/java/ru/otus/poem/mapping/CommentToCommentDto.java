@@ -14,6 +14,7 @@ public class CommentToCommentDto implements Converter<Comment, CommentDto> {
                 source.getId(),
                 source.getText(),
                 source.getUser().getId(),
+                source.getUser().getName(),
                 source.getPoem().getId(),
                 source.getRootComment() == null ? null : source.getRootComment().getId(),
                 source.getPublishTime(),

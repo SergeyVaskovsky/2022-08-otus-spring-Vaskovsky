@@ -9,6 +9,7 @@ public class CommentDto {
     long id;
     String text;
     Long userId;
+    String name;
     Long poemId;
     Long rootCommentId;
     LocalDateTime publishTime;

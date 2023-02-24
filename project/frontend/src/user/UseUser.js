@@ -1,8 +1,9 @@
 import {useState} from 'react';
+import AuthService from "../service/AuthService";
 
 export default function useUser() {
 
-    const [user, setUser] = useState();
+    const [user, setUser] = useState(AuthService.getCurrentUser());
 
     const saveUser = user => {
         localStorage.setItem('user', user);

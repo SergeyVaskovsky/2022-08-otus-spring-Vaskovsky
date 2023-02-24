@@ -10,7 +10,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.otus.poem.model.SecurityUserPrincipal;
+import ru.otus.poem.model.dto.AuthDto;
 import ru.otus.poem.model.dto.AuthenticationRequestDto;
+
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +36,17 @@ public class AuthController {
         Authentication auth = authenticationManager.authenticate(authRequest);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        String authorities = auth
+                .getAuthorities()
+                .stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
+
+        AuthDto authDto = new AuthDto(
+                ((SecurityUserPrincipal) auth.getPrincipal()).getId(),
+                ((SecurityUserPrincipal) auth.getPrincipal()).getName(),
+                authorities);
+
+        return new ResponseEntity<>(authDto, HttpStatus.OK);
     }
 }

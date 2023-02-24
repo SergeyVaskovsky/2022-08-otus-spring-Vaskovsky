@@ -11,6 +11,7 @@ export default function Comments(data) {
 
     useEffect(() => {
         commentsService.getComments(data.poemId).then(comments => {
+            comments.sort((a, b) => a.id - b.id);
             setComments(comments);
         });
     }, [data]);
@@ -28,20 +29,34 @@ export default function Comments(data) {
         setActiveIndex(null);
     };
 
+    const onAdded = (data) => {
+        setActiveIndex(null);
+        let localComments = [...comments];
+        localComments.push(data);
+        setComments(localComments);
+    };
+
     const commentsList = (rootId) => {
         return comments.filter(comment => comment.rootCommentId === rootId).map((comment, index) => {
 
             const commentsCore = (
                 <div key={index}>
+                    <div>
+                        {comment.name}
+                    </div>
                     {comment.text.split("\n").map((i, key) => {
                         return <div key={key}>{i}</div>;
                     })}
-                    <Link to={""} onClick={(event) => handleAddComment(event, comment)}>Ответить</Link>
+
+                    {!comment.moderated ? "" :
+                        <Link to={""} onClick={(event) => handleAddComment(event, comment)}>Ответить</Link>
+                    }
                     {commentsList(comment.id)}
                     <ul>
                         <li>
                             {activeIndex === comment.id ?
-                                <Comment data={{"poemId": data.poemId, "comment": comment}} onClose={onClose}/> : ""}
+                                <Comment data={{"poemId": data.poemId, "comment": comment}} onClose={onClose}
+                                         onAdded={onAdded}/> : ""}
                         </li>
                     </ul>
 
@@ -62,7 +77,8 @@ export default function Comments(data) {
         <div>
             <Link to={""} onClick={(event) => handleAddComment(event, null)}>Комментировать</Link>
             {commentsList(null)}
-            {activeIndex === -1 ? <Comment data={{"poemId": data.poemId, "comment": null}} onClose={onClose}/> : ""}
+            {activeIndex === -1 ?
+                <Comment data={{"poemId": data.poemId, "comment": null}} onClose={onClose} onAdded={onAdded}/> : ""}
         </div>
     );
 }

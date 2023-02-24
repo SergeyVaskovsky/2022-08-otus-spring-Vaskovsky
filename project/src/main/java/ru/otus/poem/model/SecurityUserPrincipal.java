@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class SecurityUserPrincipal implements UserDetails {
 
-    private User user;
+    private final User user;
 
     public SecurityUserPrincipal(User user) {
         this.user = user;
@@ -52,5 +52,13 @@ public class SecurityUserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getName() {
+        return user.getName();
+    }
+
+    public Long getId() {
+        return user.getId();
     }
 }

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CommentServiceImpl implements CommentService {
 
+    private final static String ON_MODERATION = "Сообщение на модерации";
     private final CommentRepository commentRepository;
     private final ModeratorActivityGateway moderatorActivityGateway;
     private final ConversionService conversionService;
@@ -29,7 +30,16 @@ public class CommentServiceImpl implements CommentService {
         comment.setModerated(false);
         Comment savedComment = commentRepository.save(comment);
         moderatorActivityGateway.processActivity(savedComment);
-        return conversionService.convert(savedComment, CommentDto.class);
+        Comment resultComment = new Comment(
+                savedComment.getId(),
+                ON_MODERATION,
+                savedComment.getUser(),
+                savedComment.getPoem(),
+                savedComment.getRootComment(),
+                savedComment.getPublishTime(),
+                false
+        );
+        return conversionService.convert(resultComment, CommentDto.class);
     }
 
     @Override
@@ -47,6 +57,7 @@ public class CommentServiceImpl implements CommentService {
                 id,
                 commentDto.getText(),
                 commentDto.getUserId(),
+                commentDto.getName(),
                 commentDto.getPoemId(),
                 commentDto.getRootCommentId(),
                 commentDto.getPublishTime(),
@@ -70,7 +81,12 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository
                 .findAllByPoemId(id)
                 .stream()
-                .map(it -> conversionService.convert(it, CommentDto.class))
+                .map(it -> {
+                    if (!it.isModerated()) {
+                        it.setText(ON_MODERATION);
+                    }
+                    return conversionService.convert(it, CommentDto.class);
+                })
                 .collect(Collectors.toList());
     }
 }

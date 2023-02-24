@@ -17,6 +17,7 @@ public class TelegramBotServiceImpl implements TelegramBotService {
                 commentDto.getId(),
                 commentDto.getText(),
                 commentDto.getUserId(),
+                commentDto.getName(),
                 commentDto.getPoemId(),
                 commentDto.getRootCommentId(),
                 commentDto.getPublishTime(),

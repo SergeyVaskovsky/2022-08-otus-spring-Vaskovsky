@@ -1,3 +1,5 @@
+import AuthService from "./AuthService";
+
 export default class CommentsService {
 
     getComments = async id => {
@@ -15,7 +17,7 @@ export default class CommentsService {
             body: JSON.stringify(
                 {
                     'text': description,
-                    'userId': 1,
+                    'userId': AuthService.getCurrentUserId(),
                     'poemId': poemId,
                     'rootCommentId': comment == null ? null : comment.id,
                     'publishTime': new Date()
