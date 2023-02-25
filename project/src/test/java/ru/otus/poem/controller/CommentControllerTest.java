@@ -7,11 +7,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import ru.otus.poem.bot.Bot;
 import ru.otus.poem.model.dto.CommentDto;
 import ru.otus.poem.service.CommentService;
 
@@ -36,6 +38,8 @@ public class CommentControllerTest {
     private ObjectMapper mapper;
     @Autowired
     private CommentService commentService;
+    @MockBean
+    private Bot bot;
 
     private static Stream<Arguments> provideParamsForPost() {
 
@@ -68,6 +72,7 @@ public class CommentControllerTest {
                 2L,
                 "Очень понравилось",
                 1L,
+                "user",
                 1L,
                 null,
                 LocalDateTime.now(),
@@ -93,6 +98,7 @@ public class CommentControllerTest {
                 commentDto.getId(),
                 commentDto.getText(),
                 commentDto.getUserId(),
+                commentDto.getName(),
                 commentDto.getPoemId(),
                 commentDto.getRootCommentId(),
                 commentDto.getPublishTime(),

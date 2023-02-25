@@ -1,19 +1,36 @@
 package ru.otus.poem.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.otus.poem.exception.IncorrectEmailException;
+import ru.otus.poem.exception.IncorrectPasswordException;
 import ru.otus.poem.model.dto.UserDto;
 import ru.otus.poem.service.UserService;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+    private static final long PASSWORD_MIN_LENGTH = 8;
+    private static final String EMAIL = "^[a-zA-Z0-9_!#$%&'*+?{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+?{|}~^-]+)*@(?=.{4,253}$)((?:[a-zA-Zа-яА-ЯЁё0-9](?:[a-zA-Zа-яА-ЯЁё0-9-]{0,61}[a-zA-Zа-яА-ЯЁё0-9])?\\.)+[a-zA-Zа-яА-ЯЁё]{2,63}$)$";
     private final UserService userService;
 
     @PostMapping("/api/users")
-    public UserDto addNewUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<?> addNewUser(@RequestBody UserDto userDto) {
+        if (!isValidEmail(userDto.getEmail())) {
+            throw new IncorrectEmailException("Email " + userDto.getEmail() + " не корректный");
+        }
+
+        if (!isValidPassword(userDto.getPassword())) {
+            throw new IncorrectPasswordException("Длина пароля должна быть больше либо равна " + PASSWORD_MIN_LENGTH + " символов");
+        }
+
         UserDto newUser = new UserDto(
                 -1L,
                 userDto.getName(),
@@ -21,6 +38,16 @@ public class UserController {
                 userDto.getEmail(),
                 userDto.getRoles()
         );
-        return userService.addNewUser(newUser);
+        return new ResponseEntity<>(userService.addNewUser(newUser), HttpStatus.OK);
+    }
+
+    private boolean isValidEmail(String email) {
+        Pattern pattern = Pattern.compile(EMAIL);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= PASSWORD_MIN_LENGTH;
     }
 }

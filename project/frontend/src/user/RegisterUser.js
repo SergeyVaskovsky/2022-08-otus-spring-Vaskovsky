@@ -6,6 +6,8 @@ import {Link, useNavigate} from "react-router-dom";
 export default function RegisterUser() {
 
     const [newUser, setNewUser] = useState({});
+    const [message, setMessage] = useState("");
+
     const userService = new UserService();
     const navigate = useNavigate();
     const handleChangeName = async value => {
@@ -27,9 +29,14 @@ export default function RegisterUser() {
     }
 
     const register = async () => {
-        await userService.register(newUser).then(() => {
-        })
-        navigate("/");
+        await userService.register(newUser).then(data => {
+            if (data === null) {
+                navigate("/");
+            } else {
+                setMessage(data.message);
+            }
+        });
+
     }
 
     return (
@@ -50,6 +57,13 @@ export default function RegisterUser() {
                 <Button size="sm" onClick={() => register()}>Зарегистрироваться</Button>
                 <Button size="sm" color="secondary" tag={Link} to="/">Отменить</Button>
             </FormGroup>
+            {message && (
+                <div>
+                    <div className="alert alert-danger" role="alert">
+                        {message}
+                    </div>
+                </div>
+            )}
         </Container>
     );
 }

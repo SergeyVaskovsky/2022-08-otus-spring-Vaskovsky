@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.annotation.DirtiesContext;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.otus.poem.bot.Bot;
 import ru.otus.poem.model.dto.PoemElementDto;
 import ru.otus.poem.model.dto.PoemPictureElementDto;
 import ru.otus.poem.model.dto.PoemTextElementDto;
@@ -40,6 +42,8 @@ public class PoemElementControllerTest {
     private ObjectMapper mapper;
     @Autowired
     private PoemElementService poemElementService;
+    @MockBean
+    private Bot bot;
 
     private static Stream<Arguments> provideParamsForGet() {
 

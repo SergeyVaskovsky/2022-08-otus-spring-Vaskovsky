@@ -13,6 +13,12 @@ export default class UserService {
                     'password': user.password
                 }
             ),
-        }).then(response => response.json());
+        }).then(response => {
+            if (response.ok) {
+                return null;
+            } else {
+                return response.json();
+            }
+        });
     }
 }

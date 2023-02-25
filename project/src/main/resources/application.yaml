@@ -33,6 +33,10 @@ spring:
         ddl-auto: none
         show-sql: true
 
+server:
+  error:
+    include-message: always
+
 app:
   server-address: http://localhost:8080
   bot-token: 5405164049:AAHxfT-200ZjxZmY0KKmT2hc2Y7JUP6zIMc
