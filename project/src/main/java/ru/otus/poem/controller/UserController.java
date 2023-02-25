@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.poem.exception.IncorrectEmailException;
+import ru.otus.poem.exception.IncorrectNameException;
 import ru.otus.poem.exception.IncorrectPasswordException;
 import ru.otus.poem.model.dto.UserDto;
 import ru.otus.poem.service.UserService;
@@ -23,6 +24,10 @@ public class UserController {
 
     @PostMapping("/api/users")
     public ResponseEntity<?> addNewUser(@RequestBody UserDto userDto) {
+        if (!isValidName(userDto.getName())) {
+            throw new IncorrectNameException("Длина поле имя должно быть больше нуля");
+        }
+
         if (!isValidEmail(userDto.getEmail())) {
             throw new IncorrectEmailException("Email " + userDto.getEmail() + " не корректный");
         }
@@ -48,6 +53,10 @@ public class UserController {
     }
 
     private boolean isValidPassword(String password) {
-        return password.length() >= PASSWORD_MIN_LENGTH;
+        return password != null && password.length() >= PASSWORD_MIN_LENGTH;
+    }
+
+    private boolean isValidName(String name) {
+        return name != null && name.length() > 0;
     }
 }
