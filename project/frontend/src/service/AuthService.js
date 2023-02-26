@@ -48,7 +48,7 @@ const getCurrentUserName = () => {
 
 const getCurrentUser = () => {
     const user = localStorage.getItem("user");
-    return !user || user === null ? undefined : user;
+    return !user || user === null || user === 'undefined' ? undefined : user;
 };
 
 const getCurrentAuthorities = () => {
