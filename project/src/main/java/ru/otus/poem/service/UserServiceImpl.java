@@ -22,8 +22,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto addNewUser(UserDto userDto) {
         User user = conversionService.convert(userDto, User.class);
-        List<Role> roles = STANDARD_ROLES;
-        user.setRoles(roles);
+        user.setRoles(STANDARD_ROLES);
         return conversionService.convert(userRepository.save(user), UserDto.class);
     }
 

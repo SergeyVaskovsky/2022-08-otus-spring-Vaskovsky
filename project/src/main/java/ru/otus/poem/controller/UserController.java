@@ -25,7 +25,7 @@ public class UserController {
     @PostMapping("/api/users")
     public ResponseEntity<?> addNewUser(@RequestBody UserDto userDto) {
         if (!isValidName(userDto.getName())) {
-            throw new IncorrectNameException("Длина поле имя должно быть больше нуля");
+            throw new IncorrectNameException("Длина поле \"Как Вас зовут\" должно быть больше нуля");
         }
 
         if (!isValidEmail(userDto.getEmail())) {

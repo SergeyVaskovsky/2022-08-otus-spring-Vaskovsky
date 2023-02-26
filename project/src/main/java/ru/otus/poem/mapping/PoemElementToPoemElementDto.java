@@ -19,12 +19,10 @@ public class PoemElementToPoemElementDto implements Converter<PoemElement, PoemE
         return source instanceof PoemTextElement ?
                 new PoemTextElementDto(
                         source.getId(),
-                        //"text",
                         source.getPoem().getId(),
                         ((PoemTextElement) source).getContent()) :
                 new PoemPictureElementDto(
                         source.getId(),
-                        //"picture",
                         source.getPoem().getId(),
                         ((PoemPictureElement) source).getPicture(),
                         ((PoemPictureElement) source).getScale()

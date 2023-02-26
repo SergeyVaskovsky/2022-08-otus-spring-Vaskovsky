@@ -9,5 +9,4 @@ public interface PoemElementsRepository extends JpaRepository<PoemElement, Long>
 
     List<PoemElement> findByPoemId(Long id);
 
-    void deleteAllByPoemId(Long id);
 }

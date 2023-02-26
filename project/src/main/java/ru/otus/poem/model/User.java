@@ -35,7 +35,6 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    //@LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class, cascade = CascadeType.ALL)
     @JoinTable(name = "usr_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

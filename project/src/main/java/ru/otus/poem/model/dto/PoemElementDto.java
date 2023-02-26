@@ -14,10 +14,8 @@ import lombok.Setter;
 })
 @Getter
 @Setter
-//@AllArgsConstructor
 public abstract class PoemElementDto {
     private Long id;
-    //private String type;
     private Long poemId;
 
     public PoemElementDto(Long id, Long poemId) {

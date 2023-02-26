@@ -8,8 +8,8 @@ import lombok.Setter;
 public class PoemTextElementDto extends PoemElementDto {
     private String content;
 
-    public PoemTextElementDto(long id, /*String type,*/ Long poemId, String content) {
-        super(id, /*type,*/ poemId);
+    public PoemTextElementDto(long id, Long poemId, String content) {
+        super(id, poemId);
         this.content = content;
     }
 }
