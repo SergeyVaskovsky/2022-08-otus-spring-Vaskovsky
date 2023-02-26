@@ -34,8 +34,8 @@ VALUES (1, 1),
        (3, 3),
        (3, 4);
 
-INSERT INTO POEM(TITLE)
-VALUES ('Парус');
+INSERT INTO POEM(TITLE, PUBLISH_TIME)
+VALUES ('Парус', '2023-02-26');
 
 INSERT INTO POEM(TITLE)
 VALUES ('Кузнечик');
