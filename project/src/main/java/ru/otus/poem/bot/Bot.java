@@ -81,8 +81,8 @@ public class Bot extends TelegramLongPollingBot {
                 .text("Poem reference")
                 .url(message.getReference())
                 .build();*/
-        var accept = InlineKeyboardButton.builder().text("Accept").callbackData("accept_" + message.getId()).build();
-        var delete = InlineKeyboardButton.builder().text("Delete").callbackData("delete_" + message.getId()).build();
+        var accept = InlineKeyboardButton.builder().text("Accept").callbackData(ACCEPT + message.getId()).build();
+        var delete = InlineKeyboardButton.builder().text("Delete").callbackData(DELETE + message.getId()).build();
 
         var keyboard = InlineKeyboardMarkup.builder()
                 .keyboardRow(List.of(accept, delete))
