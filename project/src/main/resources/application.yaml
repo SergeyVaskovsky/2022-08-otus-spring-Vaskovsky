@@ -1,0 +1,44 @@
+main:
+  datasource:
+    server: localhost
+    port: 5436
+    dbname: poem
+    schema: public
+    username: postgres
+    password: 1
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${main.datasource.server}:${main.datasource.port}/${main.datasource.dbname}?ApplicationName=poem
+    username: ${main.datasource.username}
+    password: ${main.datasource.password}
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: -1
+      max-request-size: -1
+
+  jpa:
+    generate-ddl: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: none
+        show-sql: true
+
+server:
+  error:
+    include-message: always
+
+app:
+  server-address: http://localhost:8080
+  bot-token: 5405164049:AAHxfT-200ZjxZmY0KKmT2hc2Y7JUP6zIMc
+  bot-username: CommentsModeration
+  chat-id: -817864987

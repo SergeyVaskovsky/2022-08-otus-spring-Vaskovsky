@@ -1,0 +1,11 @@
+POST http://localhost:8080/api/comments
+Content-Type: application/json
+
+{
+  "id": -1,
+  "text": "Восторг, это круто, это самое прекрасное стихотворение, которое я когда либо видел",
+  "userId": 2,
+  "poemId": 1,
+  "publishTime": "2023-02-17T22:49",
+  "moderated": false
+}

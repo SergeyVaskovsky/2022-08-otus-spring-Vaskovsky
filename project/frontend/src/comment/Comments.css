@@ -1,0 +1,4 @@
+/* Remove default bullets */
+ul {
+    list-style-type: none;
+}

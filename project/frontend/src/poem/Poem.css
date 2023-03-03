@@ -1,0 +1,18 @@
+#parent {
+    display: flex;
+}
+
+#narrow {
+    width: 400px;
+    border: 1px solid green;
+    justify-content: center;
+    padding: 10px;
+    display: flex;
+}
+
+#wide {
+    flex: 1;
+    border: 1px solid green;
+    justify-content: center;
+    padding: 10px;
+}
